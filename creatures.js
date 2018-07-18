@@ -131,6 +131,8 @@ class Player extends Creature {
         this.posX = startX;
         this.posY = startY;
         this.hp = this.endurance / 10 + 4;
+        this.maxHP = hp;
+        this.maxMP = mp;
         this.mp = this.intelligence / 10;
         this.attack = this.strength / 10;
         this.initiative = this.agility / 10 + 8;
