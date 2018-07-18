@@ -1,4 +1,4 @@
-let dungeonSize = 15;
+let dungeonSize = 19;
 
 let map = new Array(dungeonSize);
 for (let i = 0; i < dungeonSize; i++) {
@@ -9,9 +9,9 @@ for (let i = 0; i < dungeonSize; i++)
     for (let j = 0; j < dungeonSize; j++)
         map[i][j] = '*';
 
-let currentStartX = Math.floor(Math.random() * dungeonSize);
-let currentStartY = Math.floor(Math.random() * dungeonSize);
-let maxFloorTiles = dungeonSize**2/16;
+let currentStartX = Math.floor(Math.random() * (dungeonSize-1))+1;
+let currentStartY = Math.floor(Math.random() * (dungeonSize-1))+1;
+let maxFloorTiles = dungeonSize**2/10;
 let floorTilesCount = 0;
 
 map[currentStartX][currentStartY] = '>';
@@ -27,7 +27,7 @@ for (let i = 0; i < 4; i++) {
 
         switch (direction) {
             case 0:
-                if (currentX - 1 >= 0) {
+                if (currentX - 2 >= 0) {
                     currentX--;
                     if (map[currentX][currentY] != '.' && map[currentX][currentY] != '>') {
                         map[currentX][currentY] = '.';
@@ -36,7 +36,7 @@ for (let i = 0; i < 4; i++) {
                 }
                 break;
             case 1:
-                if (currentX + 1 < dungeonSize) {
+                if (currentX + 2 < dungeonSize) {
                     currentX++;
                     if (map[currentX][currentY] != '.' && map[currentX][currentY] != '>') {
                         map[currentX][currentY] = '.';
@@ -45,7 +45,7 @@ for (let i = 0; i < 4; i++) {
                 }
                 break;
             case 2:
-                if (currentY - 1 >= 0) {
+                if (currentY - 2 >= 0) {
                     currentY--;
                     if (map[currentX][currentY] != '.' && map[currentX][currentY] != '>') {
                         map[currentX][currentY] = '.';
@@ -54,7 +54,7 @@ for (let i = 0; i < 4; i++) {
                 }
                 break;
             case 3:
-                if (currentY + 1 < dungeonSize) {
+                if (currentY + 2 < dungeonSize) {
                     currentY++;
                     if (map[currentX][currentY] != '.' && map[currentX][currentY] != '>') {
                         map[currentX][currentY] = '.';
@@ -67,25 +67,35 @@ for (let i = 0; i < 4; i++) {
 }
 document.body.onload = function() {
 	// draw field
+    const FONT_SIZE = 8;
+    const CELL_SIZE = 24;
+
+    function getCharX(charCode) {
+        return charCode * FONT_SIZE;
+    }
+
     let canvas = document.getElementById("gameBoard");
     let ctx = canvas.getContext("2d");
     ctx.imageSmoothingEnabled= false;
     let tiles = new Image();
     tiles.addEventListener('load', function () {
         console.log(tiles, ctx);
-        map.forEach((a, i) => {
-            let x = "";
-            a.forEach((b, j) => {
-                x += b;
+        map.forEach((a, y) => {
+            let z = "";
+            a.forEach((b, x) => {
+                z += b;
                 if (b === '*') {
-                    ctx.drawImage(tiles, 42 * 8, 0, 8, 8, 20 + j * 32, 20 + i * 32, 32, 32);
+                    ctx.drawImage(tiles, getCharX(42), 0, FONT_SIZE, FONT_SIZE,
+                        x*CELL_SIZE, y*CELL_SIZE, CELL_SIZE, CELL_SIZE);
                 } else if (b === '>') {
-                    ctx.drawImage(tiles, 62*8, 0, 8, 8, 20 + j * 32, 20 + i * 32, 32, 32);
+                    ctx.drawImage(tiles, getCharX(62), 0, FONT_SIZE, FONT_SIZE,
+                        x*CELL_SIZE, y*CELL_SIZE, CELL_SIZE, CELL_SIZE);
                 } else {
-                    ctx.drawImage(tiles, 46*8, 0, 8, 8, 20 + j * 32, 20 + i * 32, 32, 32);
+                    ctx.drawImage(tiles, getCharX(46), 0, FONT_SIZE, FONT_SIZE,
+                        x*CELL_SIZE, y*CELL_SIZE, CELL_SIZE, CELL_SIZE);
                 }
             });
-            console.log(x);
+            console.log(z);
         });
     }, false);
 
