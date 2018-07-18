@@ -2,9 +2,10 @@
 //TODO: всё, что связано с текстурами и тайлами -- тоже
 
 let game = null;//new GameState();
+let menu = null;
+let credits = null;
 let leaderboards = null; //TODO
 let settings = null; //TODO
-let credits = null;//new CreditsState();
 let gameOver = null;//new GameOverState();
 
 function getAsset(fileName) {
@@ -59,6 +60,39 @@ class State {
     }
 }
 
+class CreditsState extends State {
+    constructor() {
+        super();
+    }
+    keyHandler(scene, event) {
+        scene.setState(menu );
+        scene.update();
+    }
+    get events() {
+        return {
+            keyup: this.keyHandler,
+        }
+    }
+    update(context){
+        context.clearRect(0, 0, 960, 600);
+        context.fillStyle = "white";
+        context.font = "48px manaspc";
+        context.textAlign = "center";
+        context.fillText("Credits", 470, 40);
+        context.font = "36px manaspc";
+        context.fillText("Press any key to continue...", 470, 580);
+
+        context.textAlign = "left";
+        context.font = "24px manaspc";
+
+        context.fillText("Made by:", 10, 65);
+        context.fillText("Balashenko Igor (DwarfMason)", 10, 100);
+        context.fillText("Yury Kurlykov (t1meshift)", 10, 130);
+        context.fillText("Andrey Osadchii (smgks)", 10, 160);
+        super.update(context);
+    }
+}
+
 class MenuState extends State {
     constructor() {
         super();
@@ -82,12 +116,27 @@ class MenuState extends State {
                 break;
             case 13:
                 if (this.menuStates[this.menuPos] !== null) {
-                    scene.setState(this.menuStates[this.menuPos]);
+
+                    switch (this.menuPos){
+                        case 0:
+                            scene.setState(game);
+                            game.pushMessage("game started");
+                            break;
+                        case 1:
+                            alert("Not yet implemented!");
+                            break;
+                        case 2:
+                            alert("Not yet implemented!");
+                            break;
+                        case 3:
+                            scene.setState(credits);
+                            break;
+                    }
                 } else {
                     alert("Not yet implemented!");
                 }
                 break;
-            //case
+
         }
         scene.update();
     }
@@ -97,6 +146,9 @@ class MenuState extends State {
         }
     }
     update(context){
+        context.fillStyle = "black";
+        context.fillRect(0, 0, 1000, 650);
+
         console.log("menuPos", this.menuPos);
         if (this.menuPos < 0)
             this.menuPos = 3;
@@ -125,7 +177,7 @@ class GameState extends State {
         this.offsetX = 0;
         this.offsetY = 0;
         this.ctx = ctx;
-        this.messages = this.messages = ["qqww","ww","","","","","","",""];
+        this.messages = this.messages = ["","","","","","","","",""];
         this.map = dungeonGeneration.generateCave();
         this.rMenu = rMenu;
     }
@@ -159,11 +211,12 @@ class GameState extends State {
         this.ctx.fillStyle = "white";
         this.ctx.font  = "24px manaspc";
         this.ctx.fillText(this.rMenu.name, 815, 35);
-        this.ctx.fillText(this.rMenu.HPcurrent + '/' + this.rMenu.HPmax ,820,70);
-        this.ctx.fillText(this.rMenu.MPcurrent + '/' + this.rMenu.MPmax ,820,100);
+        this.ctx.fillText("HP:" + this.rMenu.HPcurrent + '/' + this.rMenu.HPmax ,820,70);
+        this.ctx.fillText("MP:" + this.rMenu.MPcurrent + '/' + this.rMenu.MPmax ,820,100);
         this.ctx.font  = "12px manaspc";
+        this.ctx.fillText("-status:", 820, 120);
         for (let i = 0; i < this.rMenu.baffs.length; ++i) {
-            this.ctx.fillText(this.rMenu.baffs[i], 820, 120 + (+20 * +i));
+            this.ctx.fillText(this.rMenu.baffs[i], 820, 140 + (+20 * +i));
         }
 
     }
@@ -216,17 +269,15 @@ class GameState extends State {
     }
 }
 
-game = new GameState(null);
-let mainMenu = new GameState(document.getElementById("gameBoard").getContext("2d"), new RMenu(["in pain","blindness","fear"]));
-mainMenu.pushMessage("qweqweqwewq");
-mainMenu.pushMessage("asdasdasdas");
-mainMenu.pushMessage("zxczxczxczx");
-mainMenu.pushMessage("rtyrtyrtyrt");
-mainMenu.pushMessage("fghfghfghfg");
-mainMenu.update();
+
+credits = new CreditsState();
+game = new GameState(document.getElementById("gameBoard").getContext("2d"), new RMenu(["in pain","blindness","fear"]));
+menu = new MenuState();
+
 let canvas = document.getElementById("gameBoard");
 let scene = new Scene(canvas);
-scene.setState(mainMenu);
+
+
+
+scene.setState(menu);
 scene.update();
-mainMenu.pushMessage("qweqweqwewq");
-//и коментить мой код не надо, юр
