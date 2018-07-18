@@ -108,13 +108,13 @@ class MenuState extends State {
     }
 }
 
-class RMenu{                                                            //rigth menu
-    constructor(name, HPmax, HPcurrent, MPmax, MPcurrent, baffsList){
-        this.name = name;
-        this.HPmax = HPmax;
-        this.HPcurrent = HPcurrent;
-        this.MPmax = MPmax;
-        this.MPcurrent = MPcurrent;
+class RMenu{                                                            //right menu
+    constructor(baffsList){
+        this.name = mainHero.name;
+        this.HPmax = mainHero.maxHP;
+        this.HPcurrent = mainHero.hp;
+        this.MPmax = mainHero.maxMP;
+        this.MPcurrent = mainHero.mp;
         this.baffs = baffsList;             //array
     }
 }
@@ -217,7 +217,7 @@ class GameState extends State {
 }
 
 game = new GameState(null);
-let mainMenu = new GameState(document.getElementById("gameBoard").getContext("2d"), new RMenu("Veto",20,17,40,6,["in pain","blindness","fear"]));
+let mainMenu = new GameState(document.getElementById("gameBoard").getContext("2d"), new RMenu(["in pain","blindness","fear"]));
 mainMenu.pushMessage("qweqweqwewq");
 mainMenu.pushMessage("asdasdasdas");
 mainMenu.pushMessage("zxczxczxczx");
