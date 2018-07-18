@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Dragon Shore</title>
     <style>
         @font-face {
             font-family: manaspc; /* Гарнитура шрифта */
@@ -10,9 +10,11 @@
         }
     </style>
 </head>
-<body >
-    <canvas id="gameWindow" width="1000" height="650">
-        <script src = "mainpage.js"></script>
-    </canvas>
+<body>
+<canvas id="gameBoard" width="1000" height="650" style="background: black"></canvas>
+<script src="gameObjects.js"></script>
+<script src="dungeonGeneration.js"></script>
+<script src="engine.js"></script>
+<script src="creatures.js"></script>
 </body>
 </html>
