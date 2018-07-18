@@ -1,25 +1,28 @@
-let dungeonSize = 19;
+let dungeonHeight = 28;
+let dungeonWidth = 48;
 
-let map = new Array(dungeonSize);
-for (let i = 0; i < dungeonSize; i++) {
-    map[i] = [];
+let map = new Array(dungeonHeight);
+for (let i = 0; i < dungeonHeight; i++) {
+    map[i] = new Array(dungeonWidth);
 }
 
-for (let i = 0; i < dungeonSize; i++)
-    for (let j = 0; j < dungeonSize; j++)
+for (let i = 0; i < dungeonHeight; i++)
+    for (let j = 0; j < dungeonWidth; j++)
         map[i][j] = '*';
 
-let currentStartX = Math.floor(Math.random() * (dungeonSize-1))+1;
-let currentStartY = Math.floor(Math.random() * (dungeonSize-1))+1;
-let maxFloorTiles = dungeonSize**2/10;
+let startX = Math.floor(Math.random() * (dungeonWidth-2))+1;
+let startY = Math.floor(Math.random() * (dungeonHeight-2))+1;
+let exitX = 0;
+let exitY = 0;
+let maxFloorTiles = dungeonHeight*dungeonWidth / 10;
 let floorTilesCount = 0;
 
-map[currentStartX][currentStartY] = '>';
+map[startY][startX] = '<';
 
 
 for (let i = 0; i < 4; i++) {
-    let currentX = currentStartX;
-    let currentY = currentStartY;
+    let currentX = startX;
+    let currentY = startY;
     floorTilesCount = 0;
     while (floorTilesCount < maxFloorTiles) {
 
@@ -29,17 +32,17 @@ for (let i = 0; i < 4; i++) {
             case 0:
                 if (currentX - 2 >= 0) {
                     currentX--;
-                    if (map[currentX][currentY] != '.' && map[currentX][currentY] != '>') {
-                        map[currentX][currentY] = '.';
+                    if (map[currentY][currentX] != '.' && map[currentY][currentX] != '<') {
+                        map[currentY][currentX] = '.';
                         floorTilesCount++;
                     }
                 }
                 break;
             case 1:
-                if (currentX + 2 < dungeonSize) {
+                if (currentX + 2 < dungeonWidth) {
                     currentX++;
-                    if (map[currentX][currentY] != '.' && map[currentX][currentY] != '>') {
-                        map[currentX][currentY] = '.';
+                    if (map[currentY][currentX] != '.' && map[currentY][currentX] != '<') {
+                        map[currentY][currentX] = '.';
                         floorTilesCount++;
                     }
                 }
@@ -47,28 +50,35 @@ for (let i = 0; i < 4; i++) {
             case 2:
                 if (currentY - 2 >= 0) {
                     currentY--;
-                    if (map[currentX][currentY] != '.' && map[currentX][currentY] != '>') {
-                        map[currentX][currentY] = '.';
+                    if (map[currentY][currentX] != '.' && map[currentY][currentX] != '<') {
+                        map[currentY][currentX] = '.';
                         floorTilesCount++;
                     }
                 }
                 break;
             case 3:
-                if (currentY + 2 < dungeonSize) {
+                if (currentY + 2 < dungeonHeight) {
                     currentY++;
-                    if (map[currentX][currentY] != '.' && map[currentX][currentY] != '>') {
-                        map[currentX][currentY] = '.';
+                    if (map[currentY][currentX] != '.' && map[currentY][currentX] != '<') {
+                        map[currentY][currentX] = '.';
                         floorTilesCount++;
                     }
                 }
                 break;
         }
     }
+    if (i === 3){
+        exitX = currentX;
+        exitY = currentY;
+    }
 }
+
+map[exitY][exitX] = '>';
+
 document.body.onload = function() {
 	// draw field
     const FONT_SIZE = 8;
-    const CELL_SIZE = 24;
+    const CELL_SIZE = 16;
 
     function getCharX(charCode) {
         return charCode * FONT_SIZE;
@@ -84,15 +94,23 @@ document.body.onload = function() {
             let z = "";
             a.forEach((b, x) => {
                 z += b;
-                if (b === '*') {
-                    ctx.drawImage(tiles, getCharX(42), 0, FONT_SIZE, FONT_SIZE,
-                        x*CELL_SIZE, y*CELL_SIZE, CELL_SIZE, CELL_SIZE);
-                } else if (b === '>') {
-                    ctx.drawImage(tiles, getCharX(62), 0, FONT_SIZE, FONT_SIZE,
-                        x*CELL_SIZE, y*CELL_SIZE, CELL_SIZE, CELL_SIZE);
-                } else {
-                    ctx.drawImage(tiles, getCharX(46), 0, FONT_SIZE, FONT_SIZE,
-                        x*CELL_SIZE, y*CELL_SIZE, CELL_SIZE, CELL_SIZE);
+                switch (b) {
+                    case '*':
+                        ctx.drawImage(tiles, getCharX(42), 0, FONT_SIZE, FONT_SIZE,
+                            x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+                        break;
+                    case '<':
+                            ctx.drawImage(tiles, getCharX(60), 0, FONT_SIZE, FONT_SIZE,
+                            x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+                            break;
+                    case '.':
+                            ctx.drawImage(tiles, getCharX(46), 0, FONT_SIZE, FONT_SIZE,
+                            x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+                            break;
+                    case '>':
+                        ctx.drawImage(tiles, getCharX(62), 0, FONT_SIZE, FONT_SIZE,
+                        x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+                        break;
                 }
             });
             console.log(z);
