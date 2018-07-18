@@ -1,6 +1,7 @@
 //TODO: вынести Scene, SceneObject и State в отдельный файл
 //TODO: всё, что связано с текстурами и тайлами -- тоже
 
+let mainMenu = null;
 let game = null;//new GameState();
 let leaderboards = null; //TODO
 let settings = null; //TODO
@@ -103,7 +104,7 @@ class MenuState extends State {
         this.menuImgs = [];
         this.menuStates = [game, leaderboards, settings, credits];
         for (let i = 0; i < 4; ++i) {
-            let imgPath = getAsset(`menu${i}.png`);
+        let imgPath = getAsset(`menu${i}.png`);
             let image = new Image();
             image.src = imgPath;
             this.menuImgs.push(image);
@@ -162,9 +163,43 @@ class GameState extends State {
         context.fillRect(7,487,986,156);
     }
 }
+class CreditsState extends State {
+    constructor() {
+        super();
+    }
+    keyHandler(scene, event) {
+        scene.setState(mainMenu);
+        scene.update();
+    }
+    get events() {
+        return {
+            keyup: this.keyHandler,
+        }
+    }
+    update(context){
+        context.clearRect(0, 0, 960, 600);
+        context.fillStyle = "white";
+        context.font = "48px manaspc";
+        context.textAlign = "center";
+        context.fillText("Credits", 470, 40);
+        context.font = "36px manaspc";
+        context.fillText("Press any key to continue...", 470, 580);
+
+        context.textAlign = "left";
+        context.font = "24px manaspc";
+
+        context.fillText("Made by:", 10, 65);
+        context.fillText("Balashenko Igor (DwarfMason)", 10, 100);
+        context.fillText("Yury Kurlykov (t1meshift)", 10, 130);
+        context.fillText("Andrey Osadchii (smgks)", 10, 160);
+        super.update(context);
+    }
+}
 
 game = new GameState(null);
-let mainMenu = new MenuState();
+credits = new CreditsState();
+mainMenu = new MenuState();
+
 let canvas = document.getElementById("gameBoard");
 let scene = new Scene(canvas);
 scene.setState(mainMenu);
