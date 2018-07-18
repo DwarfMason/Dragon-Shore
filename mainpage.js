@@ -6,11 +6,20 @@ class MainTexture{
         this.h = h;
     }
 }
+
 class SObject extends MainTexture{  //SceneObject
     constructor(imageURL,x,y){
         super(imageURL,16, 16);
         this.posX = x;
         this.posY = y;
+    }
+
+}
+
+class STerrain extends SObject{
+    constructor(imageURL,x,y, isMovable){
+        super(imageURL, x, y);
+        this.isMovable = isMovable;
     }
 }
 
@@ -23,6 +32,87 @@ class RMenu{                                                            //rigth 
         this.MPcurrent = MPcurrent;
         this.baffs = baffsList;             //array
     }
+}
+
+function getMap() {
+    let dungeonHeight = 30;
+    let dungeonWidth = 50;
+
+    let map = new Array(dungeonHeight);
+    for (let i = 0; i < dungeonHeight; i++) {
+        map[i] = new Array(dungeonWidth);
+    }
+
+    for (let i = 0; i < dungeonHeight; i++)
+        for (let j = 0; j < dungeonWidth; j++)
+            map[i][j] = '*';
+
+    let startX = Math.floor(Math.random() * (dungeonWidth-2))+1;
+    let startY = Math.floor(Math.random() * (dungeonHeight-2))+1;
+    let exitX = 0;
+    let exitY = 0;
+    let maxFloorTiles = dungeonHeight*dungeonWidth / 10;
+    let floorTilesCount = 0;
+
+    map[startY][startX] = '<';
+
+
+    for (let i = 0; i < 4; i++) {
+        let currentX = startX;
+        let currentY = startY;
+        floorTilesCount = 0;
+        while (floorTilesCount < maxFloorTiles) {
+
+            let direction = Math.floor(Math.random() * 4);
+
+            switch (direction) {
+                case 0:
+                    if (currentX - 2 >= 0) {
+                        currentX--;
+                        if (map[currentY][currentX] != '.' && map[currentY][currentX] != '<') {
+                            map[currentY][currentX] = '.';
+                            floorTilesCount++;
+                        }
+                    }
+                    break;
+                case 1:
+                    if (currentX + 2 < dungeonWidth) {
+                        currentX++;
+                        if (map[currentY][currentX] != '.' && map[currentY][currentX] != '<') {
+                            map[currentY][currentX] = '.';
+                            floorTilesCount++;
+                        }
+                    }
+                    break;
+                case 2:
+                    if (currentY - 2 >= 0) {
+                        currentY--;
+                        if (map[currentY][currentX] != '.' && map[currentY][currentX] != '<') {
+                            map[currentY][currentX] = '.';
+                            floorTilesCount++;
+                        }
+                    }
+                    break;
+                case 3:
+                    if (currentY + 2 < dungeonHeight) {
+                        currentY++;
+                        if (map[currentY][currentX] != '.' && map[currentY][currentX] != '<') {
+                            map[currentY][currentX] = '.';
+                            floorTilesCount++;
+                        }
+                    }
+                    break;
+            }
+        }
+        if (i === 3){
+            exitX = currentX;
+            exitY = currentY;
+        }
+    }
+
+
+    map[exitY][exitX] = '>';
+    return map;
 }
 
 class EMain{    //Engine
@@ -62,18 +152,53 @@ class EMain{    //Engine
     }
 
     //use this
-    updateMapPoints(arr, sizeX = 50, sizeY =30) {
-        this.lastarr = arr;
+    updateMapPoints(map, sizeX = 50, sizeY =30) {
+        this.lastarr = map;
         this.lastsizeX = sizeX;
         this.lastsizeY = sizeY;
 
         this.clearScene();
-        for (let i = 0;i < sizeY; ++i){
-            for (let j = 0; j <sizeX; ++j) {
-                let menu = new MainTexture("testpng.png",60,60);
-                this.scene.drawImage(arr[i][j].texture, arr[i][j].posX*16, arr[i][j].posY*16);
-            }
+
+        const FONT_SIZE = 8;
+        const CELL_SIZE = 16;
+
+        function getCharX(charCode) {
+            return charCode * FONT_SIZE;
         }
+
+        let ctx = this.scene;
+        ctx.imageSmoothingEnabled= false;
+        let tiles = new Image();
+        tiles.addEventListener('load', function () {
+            console.log(tiles, ctx);
+            map.forEach((a, y) => {
+                let z = "";
+                a.forEach((b, x) => {
+                    z += b;
+                    switch (b) {
+                        case '*':
+                            ctx.drawImage(tiles, getCharX(42), 0, FONT_SIZE, FONT_SIZE,
+                                x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+                            break;
+                        case '<':
+                            ctx.drawImage(tiles, getCharX(60), 0, FONT_SIZE, FONT_SIZE,
+                                x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+                            break;
+                        case '.':
+                            ctx.drawImage(tiles, getCharX(46), 0, FONT_SIZE, FONT_SIZE,
+                                x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+                            break;
+                        case '>':
+                            ctx.drawImage(tiles, getCharX(62), 0, FONT_SIZE, FONT_SIZE,
+                                x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+                            break;
+                    }
+                });
+                console.log(z);
+            });
+        }, false);
+
+        tiles.src = "assets/tileset.png";
 
         this.updateRMenu();
         this.updateDMenu();
@@ -102,9 +227,7 @@ class EMain{    //Engine
         this.scene.fillText(this.playerStruct.name, 815, 35);
         this.scene.fillText(this.playerStruct.HPcurrent + '/' + this.playerStruct.HPmax ,820,70);
         this.scene.fillText(this.playerStruct.MPcurrent + '/' + this.playerStruct.MPmax ,820,100);
-        //this.scene.fillText("MP:15/17",820,100);
         this.scene.font  = "12px manaspc";
-        let arr=["pidor","chlen vo rtu","kabluk v zjope", "yura pidor" , "voya mamka"];
         for (let i = 0; i < this.playerStruct.baffs.length; ++i) {
             this.scene.fillText(this.playerStruct.baffs[i], 820, 120 + (+20 * +i));
         }
@@ -131,20 +254,12 @@ class EMain{    //Engine
     }
 
 }
-let menu = new MainTexture("testpng.png",60,60);
+
+
+let menu = new MainTexture("assets/menu0.png",60,60);
 let main = new EMain(menu);
 
-var garr = [];
-for (let i=0; i <30; ++i) {
-    let temparr = [];
-    for(let j=0; j <50; ++j){
-        let temp = new SObject("testpng.png",j,i);
-        temparr.push(temp);
-    }
-    garr.push(temparr);
-}
-
-main.updateMapPoints(garr);
+main.updateMapPoints(getMap());
 
 main.pushMessage("ti umer raz");
 main.pushMessage("ti umer dwa");
