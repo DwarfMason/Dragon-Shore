@@ -9,11 +9,6 @@ let settings = null; //TODO
 let gameOver = null;//new GameOverState();
 let charCreation = null;
 
-function getAsset(fileName) {
-    const ASSETS_PATH = "assets/";
-    return ASSETS_PATH + fileName;
-}
-
 class Scene {
     constructor(canvas) {               // разве scene != canvas ?
         //Юра, и зачем ты это пишешь если не используем
@@ -98,14 +93,9 @@ class MenuState extends State {
     constructor() {
         super();
         this.menuPos = 0;
-        this.menuImgs = [];
+        this.menuImgs = menuImgs;
         this.menuStates = [game, leaderboards, settings, credits];
-        for (let i = 0; i < 4; ++i) {
-            let imgPath = getAsset(`menu${i}.png`);
-            let image = new Image();
-            image.src = imgPath;
-            this.menuImgs.push(image);
-        }
+
     }
     keyHandler(scene, event) {
         switch(event.keyCode) {
