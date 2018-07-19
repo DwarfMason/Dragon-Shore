@@ -15,7 +15,7 @@ function getAsset(fileName) {
 
 class Scene {
     constructor(canvas) {               // разве scene != canvas ?
-        //this.canvas = canvas;         //Юра, и зачем ты это пишешь если не используем
+        //Юра, и зачем ты это пишешь если не используем
         this.ctx = canvas.getContext("2d");
         this.state = null;
         this.eventList = {}
@@ -172,11 +172,10 @@ class RMenu{                                                            //right 
 }
 
 class GameState extends State {
-    constructor(ctx, rMenu, dialog = 0) {
+    constructor(rMenu, dialog = 0) {
         super();
         this.offsetX = 0;
         this.offsetY = 0;
-        this.ctx = ctx;
         this.messages = this.messages = ["","","","","","","","",""];
         this.map = dungeonGeneration.generateCave();
         this.rMenu = rMenu;
@@ -197,62 +196,62 @@ class GameState extends State {
         this.messages[1] = this.messages[0];
 
         this.messages[0] = text;
-        this.update();
         //alert(this.messages);
     }
-    drowRMenu(){
-        this.ctx.fillStyle = "black";
-        this.ctx.fillRect(0, 0, 1000, 650);
-        this.ctx.fillStyle = 'white';
-        this.ctx.fillRect(805,5,190,475);
-        this.ctx.fillStyle = "black";
-        this.ctx.fillRect(807,7,186,471);
+    //must update
+    drowRMenu(context){
+        context.fillStyle = "black";
+        context.fillRect(0, 0, 1000, 650);
+        context.fillStyle = 'white';
+        context.fillRect(805,5,190,475);
+        context.fillStyle = "black";
+        context.fillRect(807,7,186,471);
 
-        this.ctx.fillStyle = "white";
-        this.ctx.font  = "24px manaspc";
-        this.ctx.fillText(this.rMenu.name, 815, 35);
-        this.ctx.fillText("HP:" + this.rMenu.HPcurrent + '/' + this.rMenu.HPmax ,820,70);
-        this.ctx.fillText("MP:" + this.rMenu.MPcurrent + '/' + this.rMenu.MPmax ,820,100);
-        this.ctx.font  = "12px manaspc";
-        this.ctx.fillText("-status:", 820, 120);
+        context.fillStyle = "white";
+        context.font  = "24px manaspc";
+        context.fillText(this.rMenu.name, 815, 35);
+        context.fillText("HP:" + this.rMenu.HPcurrent + '/' + this.rMenu.HPmax ,820,70);
+        context.fillText("MP:" + this.rMenu.MPcurrent + '/' + this.rMenu.MPmax ,820,100);
+        context.font  = "12px manaspc";
+        context.fillText("-status:", 820, 120);
         for (let i = 0; i < this.rMenu.baffs.length; ++i) {
-            this.ctx.fillText(this.rMenu.baffs[i], 820, 140 + (+20 * +i));
+            context.fillText(this.rMenu.baffs[i], 820, 140 + (+20 * +i));
         }
 
     }
-    drowDMenu(){
-        this.ctx.fillStyle = 'white';
-        this.ctx.fillRect(5,485,990,160);
-        this.ctx.fillStyle = "black";
-        this.ctx.fillRect(7,487,986,156);
+    drowDMenu(context){
+        context.fillStyle = 'white';
+        context.fillRect(5,485,990,160);
+        context.fillStyle = "black";
+        context.fillRect(7,487,986,156);
 
-        this.ctx.fillStyle = "white";
-        this.ctx.font  = "18px manaspc";
+        context.fillStyle = "white";
+        context.font  = "18px manaspc";
 
-        this.ctx.fillText(this.messages[0],10,505);      //0
-        this.ctx.fillText(this.messages[1],10,525-1);      //1
-        this.ctx.fillText(this.messages[2],10,545-2);      //2
-        this.ctx.fillText(this.messages[3],10,565-3);      //3
-        this.ctx.fillText(this.messages[4],10,585-4);      //4
-        this.ctx.fillText(this.messages[5],10,605-5);      //5
-        this.ctx.fillText(this.messages[6],10,625-5);      //6
-        this.ctx.fillText(this.messages[7],10,645-7);      //7
+        context.fillText(this.messages[0],10,505);      //0
+        context.fillText(this.messages[1],10,525-1);      //1
+        context.fillText(this.messages[2],10,545-2);      //2
+        context.fillText(this.messages[3],10,565-3);      //3
+        context.fillText(this.messages[4],10,585-4);      //4
+        context.fillText(this.messages[5],10,605-5);      //5
+        context.fillText(this.messages[6],10,625-5);      //6
+        context.fillText(this.messages[7],10,645-7);      //7
 
     }
 
-    clearScene() {
+    clearScene(context) {
         //this.ctx.fillStyle = "black";
-        this.ctx.clearRect(0, 0, this.ctx.width, this.ctx.height);
+        context.clearRect(0, 0, context.width, context.height);
     }
 
-    updateMap(){
+    updateMap(context){
         for (let y = 0; y < this.map.length;++y){
             for (let x = 0; x < this.map[y].length;++x) {
 
-                this.ctx.imageSmoothingEnabled= false;
+                context.imageSmoothingEnabled= false;
 
                 let ts = this.map[y][x].tileSet;
-                this.ctx.drawImage(ts.image, ts.getTilePos(this.map[y][x].id), 0, +ts.tileSize, +ts.tileSize,
+                context.drawImage(ts.image, ts.getTilePos(this.map[y][x].id), 0, +ts.tileSize, +ts.tileSize,
                     x * +   this.map[y][x].size, y * +this.map[y][x].size, +this.map[y][x].size, +this.map[y][x].size);
 
             }
@@ -260,22 +259,22 @@ class GameState extends State {
         //alert(this.map);
     }
 
-    update(){
-        this.clearScene();
+    update(context){
+        super.update(context);
+        this.clearScene(context);
 
-        this.drowRMenu();
-        this.drowDMenu();
-        this.updateMap();
+        this.drowRMenu(context);
+        this.drowDMenu(context);
+        this.updateMap(context);
     }
 }
 
 
 credits = new CreditsState();
-game = new GameState(document.getElementById("gameBoard").getContext("2d"), new RMenu(["in pain","blindness","fear"]));
+game = new GameState(new RMenu(["in pain","blindness","fear"]));
 menu = new MenuState();
 
-let canvas = document.getElementById("gameBoard");
-let scene = new Scene(canvas);
+let scene = new Scene(document.getElementById("gameBoard"));
 
 
 
