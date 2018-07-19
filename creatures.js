@@ -9,50 +9,60 @@ function rollDice(diceVal, diceCount) {                     //Тут много 
 }
 
 
-function closeBattle(first, second){
-    console.log(first.name, 'bumped with', second.name,'!');
-    if (first.agility/10 + rollDice(6,2) > 6 + second.agility/10){
+function closeBattle(first, second) {
+    console.log(first.name, 'bumped with', second.name, '!');
+    if (first.agility / 10 + rollDice(6, 2) > 6 + second.agility / 10) {
         let damage = rollDice(first.weapon.diceVal, first.weapon.diceCount) - second.armor.value + first.attack;
-        var crit = (rollDice(20, 1) > 18) && (((first.weapon.diceVal - 1) *first.weapon.diceCount) <= damage);
-        crit? damage += damage: damage;
-        damage > 0? (()=>{second.hp -= damage;
-                console.log(first.name, 'attacked', second.name, 'with his', first.weapon.name,'for',
-                    damage, 'damage!', crit? 'crit!':' ');})():
-            (()=>{damage = 0; console.log(first.name, 'didn`t even scratch', second.name,'!')})();
+        var crit = (rollDice(20, 1) > 18) && (((first.weapon.diceVal - 1) * first.weapon.diceCount) <= damage);
+        crit ? damage += damage : damage;
+        damage > 0 ? (() => {
+                second.hp -= damage;
+                game.pushMessage(
+                    `${first.name} attacked ${second.name} with his ${first.weapon.name} for ` +
+                    `${damage} damage! ${(crit ? 'crit!' : ' ')}`);
+            })() :
+            (() => {
+                damage = 0;
+                game.pushMessage(`${first.name} did not even scratch ${second.name}!`)
+            })();
         if (second.hp <= 0) {
-            console.log(second.name, 'is dead!');
+            game.pushMessage(`${second.name} is dead!`);
             first.gold += second.gold;
             second = null; //Это удалить побежденный обьект;
             return;
         }
-    }else
-    {
-        console.log(first.name, 'missed', second.name,'!');
+    } else {
+        console.log(first.name, 'missed', second.name, '!');
     }
-    if (second.agility/10 + rollDice(6,2) > 6 + first.agility/10){
+    if (second.agility / 10 + rollDice(6, 2) > 6 + first.agility / 10) {
         let damage = rollDice(second.weapon.diceVal, second.weapon.diceCount) - first.armor.value + second.attack;
-        var crit = (rollDice(20, 1) > 18) && (((second.weapon.diceVal - 1) *second.weapon.diceCount) <= damage);
-        crit? damage += damage: damage;
-        damage > 0? (()=>{first.hp -= damage;
-                console.log(second.name, 'attacked', first.name, 'with his', second.weapon.name,'for',
-                    damage, 'damage!', crit? 'crit!':' ');})():
-            (()=>{damage = 0; console.log(second.name, 'didn`t hurt', first.name,'!')})();
+        var crit = (rollDice(20, 1) > 18) && (((second.weapon.diceVal - 1) * second.weapon.diceCount) <= damage);
+        crit ? damage += damage : damage;
+        damage > 0 ? (() => {
+                first.hp -= damage;
+                game.pushMessage(
+                    `${second.name} attacked ${first.name} with his ${second.weapon.name} for ` +
+                    `${damage} damage! ${(crit ? 'crit!' : ' ')}`);
+            })() :
+            (() => {
+                damage = 0;
+                game.pushMessage(`${second.name} did not hurt ${first.name}!`)
+            })();
         if (first.hp <= 0) {
-            console.log(first.name, 'is dead!');
+            game.pushMessage(`${first.name} is dead!`);
             second.gold += first.gold;
             first = null;
             return;
         }
-    }else
-    {
-        console.log(second.name, 'missed', first.name,'!');
+    } else {
+        game.pushMessage(`${second.name} missed ${first.name}!`);
     }
 }
 
 
-class Creature extends SceneObject{
+class Creature extends SceneObject {
     constructor(id) {
-        super(id,0,0);
+        super(id, 0, 0);
         this.race = 0;
         this.hp = 0;
         this.mp = 0;
@@ -84,8 +94,8 @@ class Player extends Creature {
         switch (race) {
             case 'human':
                 this.strength = rollDice(6, 3);
-                this.agility = rollDice(6, 3)+1;
-                this.endurance = rollDice(6, 3)+1;
+                this.agility = rollDice(6, 3) + 1;
+                this.endurance = rollDice(6, 3) + 1;
                 this.intelligence = rollDice(6, 3);
                 this.maxExp = 100;
                 break;
@@ -119,8 +129,8 @@ class Player extends Creature {
     }
 }
 
-class Orc extends Creature{
-    constructor (startX, startY){
+class Orc extends Creature {
+    constructor(startX, startY) {
         super(79);
         this.name = "Green orc";
         this.strength = rollDice(6, 3) + 2;
@@ -131,7 +141,7 @@ class Orc extends Creature{
         this.y = startY;
         this.hp = Math.floor(this.endurance / 10) + 4;
         this.initiative = this.agility / 10 + 8;
-        this.gold = Math.floor(Math.random()*15) - 3;
+        this.gold = Math.floor(Math.random() * 15) - 3;
     }
 }
 
