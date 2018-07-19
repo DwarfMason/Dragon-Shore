@@ -217,34 +217,60 @@ class CharCreationState extends State {
 
 
 class controller{
-    constructor(player,map){
+    constructor(player, map, objects){
         this.player = player;
         this.map = map;
+        this.objectsMap =objects;
+    }
+
+    checkCollision(){
+        let die = 0;
+        for (let i = 1;i < this.objectsMap.length; ++i) {
+            if((this.player.x === this.objectsMap[i].x) && (this.player.y === this.objectsMap[i].y)){
+
+                mainHero.initiative >= this.objectsMap[i].initiative? die = closeBattle(this.player, this.objectsMap[i]): die = closeBattle(this.objectsMap[i], this.player);
+                return 1;
+            }
+        }
+        return 0;
+
     }
 
     moveR(){
         if(this.map[this.player.y ][this.player.x + +1].isMovable){
             this.player.x++;
+            if(this.checkCollision()){
+                this.player.x--;
+            }
         }
 
     }
     moveL(){
         if(this.map[this.player.y][this.player.x - +1].isMovable){
             this.player.x--;
+            if(this.checkCollision()){
+                this.player.x++;
+            }
         }
 
     }
     moveD(){
         if(this.map[this.player.y + +1][this.player.x].isMovable){
             this.player.y++;
+            if(this.checkCollision()){
+                this.player.y--;
+            }
         }
 
     }
     moveU(){
         if(this.map[this.player.y - +1][this.player.x].isMovable){
             this.player.y--;
-        }
 
+            if(this.checkCollision()){
+                this.player.y++;
+            }
+        }
     }
 }
 
@@ -269,7 +295,7 @@ class GameState extends State {
 
         this.objectsMap[0].x = cave[1];
         this.objectsMap[0].y = cave[2];
-        this.controller = new controller(this.objectsMap[0],this.map);
+        this.controller = new controller(this.objectsMap[0],this.map,this.objectsMap);
         this.pushMessage("game started");
     }
 

@@ -122,6 +122,7 @@ class Player extends Creature {
 class Orc extends Creature{
     constructor (startX, startY){
         super(79);
+        this.name = "Green orc";
         this.strength = rollDice(6, 3) + 2;
         this.agility = rollDice(6, 3) - 4;
         this.endurance = rollDice(6, 3) + 1;
@@ -136,7 +137,3 @@ class Orc extends Creature{
 
 let mainHero = null;
 
-//var orc = new Player('orc', 10, 10, 'green orc');
-//var mainHero = new Player('human', 10, 10, 'hero');
-
-//mainHero.initiative >= orc.initiative? closeBattle(mainHero, orc): closeBattle(orc, mainHero);
