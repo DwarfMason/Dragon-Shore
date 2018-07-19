@@ -8,6 +8,7 @@ let leaderboards = null; //TODO
 let settings = null; //TODO
 let gameOver = null;//new GameOverState();
 let charCreation = null;
+let dungeonDifficulty = 0;
 
 class Scene {
     constructor(canvas) {               // разве scene != canvas ?
@@ -260,7 +261,8 @@ class GameState extends State {
         this.ctx = null;
     }
     startGame(){
-        let cave = dungeonGeneration.generateCave();
+        dungeonDifficulty++;
+        let cave = dungeonGeneration.generateCave(dungeonDifficulty);
         this.map = cave[0];
         this.objectsMap = dungeonGeneration.generateObjects();
 //        this.rMenu = this.objectsMap[0].rMenu;
@@ -394,4 +396,6 @@ class GameState extends State {
         }
     }
 }
+
+
 

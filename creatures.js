@@ -21,7 +21,8 @@ function closeBattle(first, second){
             (()=>{damage = 0; console.log(first.name, 'didn`t even scratch', second.name,'!')})();
         if (second.hp <= 0) {
             console.log(second.name, 'is dead!');
-            second = null;
+            first.gold += second.gold;
+            second = null; //Это удалить побежденный обьект;
             return;
         }
     }else
@@ -38,6 +39,7 @@ function closeBattle(first, second){
             (()=>{damage = 0; console.log(second.name, 'didn`t hurt', first.name,'!')})();
         if (first.hp <= 0) {
             console.log(first.name, 'is dead!');
+            second.gold += first.gold;
             first = null;
             return;
         }
@@ -72,6 +74,7 @@ class Creature extends SceneObject{
         this.items = [this.weapon, this.armor];
         this.level = 0;
         this.name = 'none';
+        this.gold = 0;
     }
 }
 
@@ -113,6 +116,21 @@ class Player extends Creature {
         this.level = 1;
         this.name = name;
         this.baffs = [];
+    }
+}
+
+class Orc extends Creature{
+    constructor (startX, startY){
+        super(79);
+        this.strength = rollDice(6, 3) + 2;
+        this.agility = rollDice(6, 3) - 4;
+        this.endurance = rollDice(6, 3) + 1;
+        this.attack = Math.floor(this.strength / 10);
+        this.x = startX;
+        this.y = startY;
+        this.hp = Math.floor(this.endurance / 10) + 4;
+        this.initiative = this.agility / 10 + 8;
+        this.gold = Math.floor(Math.random()*15) - 3;
     }
 }
 
