@@ -10,11 +10,11 @@ let gameOver = null;//new GameOverState();
 let charCreation = null;
 
 class Scene {
-    constructor(canvas) {               // разве scene != canvas ?
-        //Юра, и зачем ты это пишешь если не используем
+    constructor(canvas) {
         this.ctx = canvas.getContext("2d");
         this.state = null;
         this.eventList = {}
+        this.ctx.imageSmoothingEnabled = false;
     }
     setState(state) {
         //remove old handlers
@@ -340,22 +340,21 @@ class GameState extends State {
         context.clearRect(0, 0, context.width, context.height);
     }
 
+    drawTexture(context, texture, x, y) {
+        let ts = texture.tileSet;
+        context.drawImage(ts.image, ts.getTilePos(texture.id), 0, +ts.tileSize, +ts.tileSize,
+            x * +   texture.size, y * +texture.size, +texture.size, +texture.size);
+    }
+
     updateMap(context){
         for (let y = 0; y < this.map.length;++y){
             for (let x = 0; x < this.map[y].length;++x) {
-
-                context.imageSmoothingEnabled= false;
-
-                let ts = this.map[y][x].tileSet;
-                context.drawImage(ts.image, ts.getTilePos(this.map[y][x].id), 0, +ts.tileSize, +ts.tileSize,
-                    x * +   this.map[y][x].size, y * +this.map[y][x].size, +this.map[y][x].size, +this.map[y][x].size);
+                this.drawTexture(context, this.map[y][x], x, y);
 
             }
         }
         for (let i = 0; i< this.objectsMap.length;++i){
-            let ts = this.objectsMap[i].tileSet;
-            context.drawImage(ts.image, ts.getTilePos(this.objectsMap[i].id), 0, +ts.tileSize, +ts.tileSize,
-                this.objectsMap[i].x * +this.objectsMap[i].size, this.objectsMap[i].y * +this.objectsMap[i].size, +this.objectsMap[i].size, +this.objectsMap[i].size);
+            this.drawTexture(context, this.objectsMap[i], this.objectsMap[i].x, this.objectsMap[i].y);
         }
         //alert(this.map);
     }
