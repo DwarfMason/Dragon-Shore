@@ -1,5 +1,7 @@
 dungeonGeneration = (()=>{
-    function generateCave() {
+    let objects = [];
+    function generateCave(dungeonDifficulty) {
+        objects = [mainHero];
         let dungeonHeight = 30;
         let dungeonWidth = 50;
 
@@ -82,11 +84,27 @@ dungeonGeneration = (()=>{
         }
 
         map[exitY][exitX] = end;
+
+        function addEnemy(count){
+            let enemyCount = 0;
+            while (enemyCount < count){
+                let tryX = Math.floor(Math.random() * (dungeonWidth - 2))+1;
+                let tryY = Math.floor(Math.random() * (dungeonHeight - 2))+1;
+                if (map[tryY][tryX] === floor){
+                    objects.push(new Orc(tryX,tryY));
+                    enemyCount++;
+                    console.log(objects);
+                }
+            }
+        }
+        addEnemy(Math.floor((1 + dungeonDifficulty * Math.random()) * Math.floor(Math.random()* 4) + 1));
         return [map,startX,startY];
     }
+
+
     function generateObjects() {
         //first object is personage
-        return [mainHero];
+        return objects;
     }
     return {
         generateCave: generateCave,
