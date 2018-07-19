@@ -7,6 +7,7 @@ let credits = null;
 let leaderboards = null; //TODO
 let settings = null; //TODO
 let gameOver = null;//new GameOverState();
+let charCreation = null;
 
 function getAsset(fileName) {
     const ASSETS_PATH = "assets/";
@@ -119,8 +120,9 @@ class MenuState extends State {
 
                     switch (this.menuPos){
                         case 0:
-                            scene.setState(game);
-                            game.pushMessage("game started");
+                            scene.setState(charCreation);
+                            // scene.setState(game);
+                            // game.startGame();
                             break;
                         case 1:
                             alert("Not yet implemented!");
@@ -160,16 +162,68 @@ class MenuState extends State {
     }
 }
 
-class RMenu{                                                            //right menu
-    constructor(baffsList ,name = mainHero.name, HPmax = mainHero.maxHP, HPcurrent = mainHero.hp, MPmax = mainHero.maxMP, MPcurrent = mainHero.mp){
-        this.name = name;
-        this.HPmax = HPmax;
-        this.HPcurrent = HPcurrent;
-        this.MPmax = MPmax;
-        this.MPcurrent = MPcurrent;
-        this.baffs = baffsList;             //array
+class CharCreationState extends State {
+    constructor() {
+        super();
+        this.isCreated = false;
+    }
+    keyHandler(scene, event) {
+        switch (event.keyCode) {
+            case 72: //h
+                mainHero = new Player('human', 10, 10, 'brave hero');
+                this.isCreated = true;
+                break;
+            case 79: //o
+                mainHero = new Player('orc', 10, 10, 'badass orc');
+                this.isCreated = true;
+                break;
+            case 77: //m
+                mainHero = new Player('magic wombat', 10, 10, 'little cuty');
+                this.isCreated = true;
+                break;
+            case 13: //Enter
+                if (this.isCreated) {
+                    scene.setState(game);
+                    game.startGame();
+                }
+        }
+        scene.update();
+    }
+
+    get events() {
+        return {
+            keyup: this.keyHandler,
+        }
+    }
+
+    update(context) {
+        context.clearRect(0, 0, 960, 600);
+        context.fillStyle = "white";
+        context.font = "48px manaspc";
+        context.textAlign = "center";
+        context.fillText("Choose your race:", 470, 40);
+        context.font = "24px manaspc";
+        context.fillText("Press the following button to choose your hero", 470, 580);
+        context.fillText("Press Enter to play", 470, 600);
+
+        context.textAlign = "left";
+        context.font = "24px manaspc";
+
+        context.fillText("h - human", 10, 100);
+        context.fillText("o - orc", 10, 130);
+        context.fillText("m - magic wombat", 10, 160);
+        super.update(context);
+        if (this.isCreated) {
+            context.font = "16px manaspc";
+            context.fillText(`Your character: ${mainHero.name}`, 650, 100);
+            context.fillText(`Strength: ${mainHero.strength}`, 650,130);
+            context.fillText(`Agility: ${mainHero.agility}`, 650,160);
+            context.fillText(`Initiative: ${mainHero.initiative} `, 650,190);
+            context.fillText(`Endurance: ${mainHero.endurance}`, 650,220);
+        }
     }
 }
+
 
 class controller{
     constructor(player,map){
@@ -204,20 +258,29 @@ class controller{
 }
 
 class GameState extends State {
-    constructor(rMenu, dialog = 0) {
+    constructor(dialog = 0) {
         super();
         this.offsetX = 0;
         this.offsetY = 0;
         this.messages = this.messages = ["","","","","","","","",""];
-        this.map = dungeonGeneration.generateCave();
-        this.objectsMap = dungeonGeneration.generateObjects();
-        this.rMenu = rMenu;
-        this.controller = new controller(this.objectsMap[0],this.map);
+        this.map = [[]];
+        this.objectsMap = [];
+//        this.rMenu = null;
+        this.controller = null;
         this.ctx = null;
     }
-    setPlayerStatstoRMenu(rMenu){
-        this.rMenu = rMenu;
+    startGame(){
+        let cave = dungeonGeneration.generateCave();
+        this.map = cave[0];
+        this.objectsMap = dungeonGeneration.generateObjects();
+//        this.rMenu = this.objectsMap[0].rMenu;
+
+        this.objectsMap[0].x = cave[1];
+        this.objectsMap[0].y = cave[2];
+        this.controller = new controller(this.objectsMap[0],this.map);
+        this.pushMessage("game started");
     }
+
     SetNewMap(){
         this.map = dungeonGeneration.generateCave();
         this.objectsMap = dungeonGeneration.generateObjects();
@@ -248,14 +311,18 @@ class GameState extends State {
 
         context.fillStyle = "white";
         context.font  = "24px manaspc";
-        context.fillText(this.rMenu.name, 815, 35);
-        context.fillText("HP:" + this.rMenu.HPcurrent + '/' + this.rMenu.HPmax ,820,70);
-        context.fillText("MP:" + this.rMenu.MPcurrent + '/' + this.rMenu.MPmax ,820,100);
-        context.font  = "12px manaspc";
-        context.fillText("-status:", 820, 120);
-        for (let i = 0; i < this.rMenu.baffs.length; ++i) {
-            context.fillText(this.rMenu.baffs[i], 820, 140 + (+20 * +i));
+        if(this.objectsMap[0] !== undefined){
+            context.fillText(this.objectsMap[0].name, 815, 35);
+            context.fillText("HP:" + this.objectsMap[0].hp + '/' + this.objectsMap[0].maxHP ,820,70);
+            context.fillText("MP:" + this.objectsMap[0].mp + '/' + this.objectsMap[0].maxMP ,820,100);
+            context.font  = "12px manaspc";
+
+                context.fillText("-status:", 820, 120);
+            for (let i = 0; i < this.objectsMap[0].baffs.length; ++i) {
+                context.fillText(this.objectsMap[0].baffs[i], 820, 140 + (+20 * +i));
+            }
         }
+
 
     }
     drowDMenu(context){
@@ -317,7 +384,6 @@ class GameState extends State {
         switch(event.keyCode) {
             case 38: //arrow up
                 this.controller.moveU();
-
                 break;
             case 40: //arrow down
                 this.controller.moveD();
@@ -331,6 +397,7 @@ class GameState extends State {
         }
         this.update(this.ctx);
     }
+
     get events() {
         return {
             keyup: this.keyHandler,

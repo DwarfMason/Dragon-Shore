@@ -12,17 +12,17 @@
 </head>
 <body>
 <canvas id="gameBoard" width="1000" height="650" style="background: black"></canvas>
-<script src="creatures.js"></script>
 <script src="gameObjects.js"></script>
+<script src="creatures.js"></script>
 <script src="dungeonGeneration.js"></script>
 <script src="engine.js"></script>
 <script>
     window.onload = function() {
 
         credits = new CreditsState();
-        game = new GameState(new RMenu(["in pain","blindness","fear"]));
+        game = new GameState();
         menu = new MenuState();
-
+        charCreation = new CharCreationState();
         let scene = new Scene(document.getElementById("gameBoard"));
 
 

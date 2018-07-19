@@ -82,11 +82,11 @@ dungeonGeneration = (()=>{
         }
 
         map[exitY][exitX] = end;
-        return map;
+        return [map,startX,startY];
     }
     function generateObjects() {
         //first object is personage
-        return [new TestMob(5,5)];
+        return [mainHero];
     }
     return {
         generateCave: generateCave,

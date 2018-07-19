@@ -1,71 +1,44 @@
 //TODO Унесите кубики в основной модуль, мне они нужны для многого.
 
-function rollD4(diceCount) {                     //Тут много функций на одно и то же, но так вызывать удобнее
+function rollDice(diceVal, diceCount) {                     //Тут много функций на одно и то же, но так вызывать удобнее
     let total = 0;
     for (let i = 0; i < diceCount; i++) {
-        total += Math.floor(Math.random() * 4) + 1;
+        total += Math.floor(Math.random() * diceVal) + 1;
     }
     return total;
 }
 
-function rollD6(diceCount) {
-    let total = 0;
-    for (let i = 0; i < diceCount; i++) {
-        total += Math.floor(Math.random() * 6) + 1;
-    }
-    return total;
-}
-
-function rollD8(diceCount) {
-    let total = 0;
-    for (let i = 0; i < diceCount; i++) {
-        total += Math.floor(Math.random() * 8) + 1;
-    }
-    return total;
-}
-
-function rollD12(diceCount) {
-    let total = 0;
-    for (let i = 0; i < diceCount; i++) {
-        total += Math.floor(Math.random() * 12) + 1;
-    }
-    return total;
-}
-
-function rollD100(diceCount) {
-    let total = 0;
-    for (let i = 0; i < diceCount; i++) {
-        total += Math.floor(Math.random() * 100) + 1;
-    }
-    return total;
-}
 
 function closeBattle(first, second){
     console.log(first.name, 'bumped with', second.name,'!');
-    if (first.agility/10 + rollD6(2) > 6 + second.agility/10){
-        let damage = Math.floor(Math.random()*6) + rollD4(1) - first.weapon.value + second.armor.value - 3;
+    if (first.agility/10 + rollDice(6,2) > 6 + second.agility/10){
+        let damage = rollDice(first.weapon.diceVal, first.weapon.diceCount) - second.armor.value + first.attack;
+        var crit = (rollDice(20, 1) > 18) && (((first.weapon.diceVal - 1) *first.weapon.diceCount) <= damage);
+        crit? damage += damage: damage;
         damage > 0? (()=>{second.hp -= damage;
                 console.log(first.name, 'attacked', second.name, 'with his', first.weapon.name,'for',
-                    damage, 'damage!');})():
+                    damage, 'damage!', crit? 'crit!':' ');})():
             (()=>{damage = 0; console.log(first.name, 'didn`t even scratch', second.name,'!')})();
         if (second.hp <= 0) {
             console.log(second.name, 'is dead!');
-            second = false;
+            second = null;
             return;
         }
     }else
     {
         console.log(first.name, 'missed', second.name,'!');
     }
-    if (second.agility/10 + rollD6(2) > 6 + first.agility/10){
-        let damage = Math.floor(Math.random()*7) + rollD4(1) - second.weapon.value + first.armor.value - 3;
+    if (second.agility/10 + rollDice(6,2) > 6 + first.agility/10){
+        let damage = rollDice(second.weapon.diceVal, second.weapon.diceCount) - first.armor.value + second.attack;
+        var crit = (rollDice(20, 1) > 18) && (((second.weapon.diceVal - 1) *second.weapon.diceCount) <= damage);
+        crit? damage += damage: damage;
         damage > 0? (()=>{first.hp -= damage;
                 console.log(second.name, 'attacked', first.name, 'with his', second.weapon.name,'for',
-                    damage, 'damage!');})():
+                    damage, 'damage!', crit? 'crit!':' ');})():
             (()=>{damage = 0; console.log(second.name, 'didn`t hurt', first.name,'!')})();
         if (first.hp <= 0) {
             console.log(first.name, 'is dead!');
-            first = false;
+            first = null;
             return;
         }
     }else
@@ -75,10 +48,9 @@ function closeBattle(first, second){
 }
 
 
-class Creature {
-    constructor() {
-        this.posX = 0;
-        this.posY = 0;
+class Creature extends SceneObject{
+    constructor(id) {
+        super(id,0,0);
         this.race = 0;
         this.hp = 0;
         this.mp = 0;
@@ -86,12 +58,14 @@ class Creature {
         this.armor = {
             name: "Homemade poor clothes",
             type: "light",
-            value: 1,
+            value: 2,
         };
         this.weapon = {
             name: "rusty dagger",
             type: "one hand",
-            value: 1,
+            value: 0,
+            diceVal: 4,
+            diceCount: 1,
         };
         this.agility = 0;
         this.initiative = 0;
@@ -103,45 +77,48 @@ class Creature {
 
 class Player extends Creature {
     constructor(race, startX, startY, name) {
-        super();
+        super(2);
         switch (race) {
             case 'human':
-                this.strength = rollD6(3);
-                this.agility = rollD6(3);
-                this.endurance = rollD6(3);
-                this.intelligence = rollD6(3);
+                this.strength = rollDice(6, 3);
+                this.agility = rollDice(6, 3)+1;
+                this.endurance = rollDice(6, 3)+1;
+                this.intelligence = rollDice(6, 3);
                 this.maxExp = 100;
                 break;
             case 'orc':
-                this.strength = rollD6(3) + 5;
-                this.agility = rollD6(3) - 2;
-                this.endurance = rollD6(3) + 2;
-                this.intelligence = rollD6(3) - 3;
+                this.strength = rollDice(6, 3) + 5;
+                this.agility = rollDice(6, 3) - 4;
+                this.endurance = rollDice(6, 3) + 1;
+                this.intelligence = rollDice(6, 3) - 3;
                 this.maxExp = 200;
                 break;
             case 'magic wombat':
-                this.strength = rollD6(3) - 5;
-                this.agility = rollD6(3) + 2;
-                this.endurance = rollD6(3) - 2;
-                this.intelligence = rollD6(3) + 5;
+                this.strength = rollDice(6, 3) - 2;
+                this.agility = rollDice(6, 3) + 2;
+                this.endurance = rollDice(6, 3) - 2;
+                this.intelligence = rollDice(6, 3) + 4;
                 this.maxExp = 150;
                 break;
         }
         this.race = race;
-        this.posX = startX;
-        this.posY = startY;
+        this.x = startX;
+        this.y = startY;
         this.hp = Math.floor(this.endurance / 10) + 4;
         this.mp = Math.floor(this.intelligence / 10) + 1;
         this.maxHP = this.hp;
         this.maxMP = this.mp;
-        this.attack = this.strength / 10;
+        this.attack = Math.floor(this.strength / 10);
         this.initiative = this.agility / 10 + 8;
         this.level = 1;
         this.name = name;
+        this.baffs = [];
     }
 }
 
+let mainHero = null;
+
 //var orc = new Player('orc', 10, 10, 'green orc');
-var mainHero = new Player('human', 10, 10, 'hero');
+//var mainHero = new Player('human', 10, 10, 'hero');
 
 //mainHero.initiative >= orc.initiative? closeBattle(mainHero, orc): closeBattle(orc, mainHero);
