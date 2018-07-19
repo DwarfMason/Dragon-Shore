@@ -161,13 +161,45 @@ class MenuState extends State {
 }
 
 class RMenu{                                                            //right menu
-    constructor(baffsList){
-        this.name = mainHero.name;
-        this.HPmax = mainHero.maxHP;
-        this.HPcurrent = mainHero.hp;
-        this.MPmax = mainHero.maxMP;
-        this.MPcurrent = mainHero.mp;
+    constructor(baffsList ,name = mainHero.name, HPmax = mainHero.maxHP, HPcurrent = mainHero.hp, MPmax = mainHero.maxMP, MPcurrent = mainHero.mp){
+        this.name = name;
+        this.HPmax = HPmax;
+        this.HPcurrent = HPcurrent;
+        this.MPmax = MPmax;
+        this.MPcurrent = MPcurrent;
         this.baffs = baffsList;             //array
+    }
+}
+
+class controller{
+    constructor(player,map){
+        this.player = player;
+        this.map = map;
+    }
+
+    moveR(){
+        if(this.map[this.player.y ][this.player.x + +1].isMovable){
+            this.player.x++;
+        }
+
+    }
+    moveL(){
+        if(this.map[this.player.y][this.player.x - +1].isMovable){
+            this.player.x--;
+        }
+
+    }
+    moveD(){
+        if(this.map[this.player.y + +1][this.player.x].isMovable){
+            this.player.y++;
+        }
+
+    }
+    moveU(){
+        if(this.map[this.player.y - +1][this.player.x].isMovable){
+            this.player.y--;
+        }
+
     }
 }
 
@@ -178,13 +210,17 @@ class GameState extends State {
         this.offsetY = 0;
         this.messages = this.messages = ["","","","","","","","",""];
         this.map = dungeonGeneration.generateCave();
+        this.objectsMap = dungeonGeneration.generateObjects();
         this.rMenu = rMenu;
+        this.controller = new controller(this.objectsMap[0],this.map);
+        this.ctx = null;
     }
     setPlayerStatstoRMenu(rMenu){
         this.rMenu = rMenu;
     }
     SetNewMap(){
         this.map = dungeonGeneration.generateCave();
+        this.objectsMap = dungeonGeneration.generateObjects();
     }
     pushMessage(text){
         this.messages[7] = this.messages[6];
@@ -196,9 +232,12 @@ class GameState extends State {
         this.messages[1] = this.messages[0];
 
         this.messages[0] = text;
+        if(this.ctx !== null){this.update(this.ctx);}
+
         //alert(this.messages);
     }
-    //must update
+
+
     drowRMenu(context){
         context.fillStyle = "black";
         context.fillRect(0, 0, 1000, 650);
@@ -256,10 +295,16 @@ class GameState extends State {
 
             }
         }
+        for (let i = 0; i< this.objectsMap.length;++i){
+            let ts = this.objectsMap[i].tileSet;
+            context.drawImage(ts.image, ts.getTilePos(this.objectsMap[i].id), 0, +ts.tileSize, +ts.tileSize,
+                this.objectsMap[i].x * +this.objectsMap[i].size, this.objectsMap[i].y * +this.objectsMap[i].size, +this.objectsMap[i].size, +this.objectsMap[i].size);
+        }
         //alert(this.map);
     }
 
     update(context){
+        this.ctx = context;
         super.update(context);
         this.clearScene(context);
 
@@ -267,16 +312,29 @@ class GameState extends State {
         this.drowDMenu(context);
         this.updateMap(context);
     }
+
+    keyHandler(scene, event) {
+        switch(event.keyCode) {
+            case 38: //arrow up
+                this.controller.moveU();
+
+                break;
+            case 40: //arrow down
+                this.controller.moveD();
+                break;
+            case 37://arrow left
+                this.controller.moveL();
+                break;
+            case 39://arrow r
+                this.controller.moveR();
+                break;
+        }
+        this.update(this.ctx);
+    }
+    get events() {
+        return {
+            keyup: this.keyHandler,
+        }
+    }
 }
 
-
-credits = new CreditsState();
-game = new GameState(new RMenu(["in pain","blindness","fear"]));
-menu = new MenuState();
-
-let scene = new Scene(document.getElementById("gameBoard"));
-
-
-
-scene.setState(menu);
-scene.update();

@@ -16,6 +16,21 @@
 <script src="gameObjects.js"></script>
 <script src="dungeonGeneration.js"></script>
 <script src="engine.js"></script>
+<script>
+    window.onload = function() {
 
+        credits = new CreditsState();
+        game = new GameState(new RMenu(["in pain","blindness","fear"]));
+        menu = new MenuState();
+
+        let scene = new Scene(document.getElementById("gameBoard"));
+
+
+
+        scene.setState(menu);
+        scene.update();
+    }
+
+</script>
 </body>
 </html>

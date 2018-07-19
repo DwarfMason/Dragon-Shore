@@ -20,40 +20,51 @@ class Texture {
         this.size = textureSize;
     }
 }
+/*  terrain */
 class Terrain extends Texture{
     constructor(tileId){
         super(tileId);
+        this.isMovable = 0;
     }
 }
 class Wall extends  Terrain {
     constructor() {
         super(42);      //*
+        this.isMovable = 0;
     }
 }
 class Floor extends  Terrain {
     constructor() {
         super(46);      //.
+        this.isMovable = 1;
     }
 }
 class StartPoint extends  Terrain {
     constructor() {
         super(60);      //<
+        this.isMovable = 1;
     }
 }
 class EndPoint extends  Terrain {
     constructor() {
         super(62);      //>
+        this.isMovable = 1;
     }
 }
+/* end terrain */
+/* Objects */
 
-
-class SceneObject {
-    constructor(texture, x, y) {
-        this.texture = texture;
+class SceneObject extends Texture{
+    constructor(x, y) {
+        super(2);
         this.x = x;
         this.y = y;
     }
-    draw(context) {
-        this.texture.draw(this.x, this.y, context);
+}
+
+class TestMob extends SceneObject{
+    constructor(x,y){
+        super(x,y);
     }
 }
+/*end Objects */
