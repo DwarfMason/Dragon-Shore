@@ -93,7 +93,6 @@ class CreditsState extends State {
 class GameOver extends State{
     constructor(){
         super();
-
     }
     keyHandler(scene, event) {
         switch(event.keyCode) {
@@ -111,7 +110,7 @@ class GameOver extends State{
         }
     }
     update(context){
-        context.drawImage(getRandomIMG(gameOverImg), 0, 0);
+        context.drawImage(getRandomIMG(), 0, 0);
 
         context.fillStyle = "white";
         context.font  = "24px manaspc";
@@ -286,7 +285,7 @@ class GameState extends State {
         this.offsetY = player.y - this.centerY;
         this.checkOffsetBorders();
 
-        this.pushMessage("game started");
+        this.pushMessage("(game started){blue}");
     }
 
     checkOffsetBorders() {
@@ -393,8 +392,9 @@ class GameState extends State {
 
             context.fillText("inventory:", 820, 150);
             context.fillText(`HP potions: ${mainHero.hpPotions}`, 820, 170);
-            context.fillText(`Armor: ${mainHero.armor.name}`, 820, 190);
-            context.fillText(`Weapon: ${mainHero.weapon.name}`, 820, 210);
+            context.fillText(`MP potions: ${mainHero.mpPotions}`, 820, 190);
+            context.fillText(`Armor: ${mainHero.armor.name}`, 820, 210);
+            context.fillText(`Weapon: ${mainHero.weapon.name}`, 820, 230);
 
             for (let i = 0; i < this.objectsMap[0].baffs.length; ++i) {
                 context.fillText(this.objectsMap[0].baffs[i], 820, 170 + (+20 * +i));
@@ -403,6 +403,33 @@ class GameState extends State {
 
 
     }
+    drawMessage(str, x, y, context){
+        // input str = (/* text string */){/* color */}
+        let re0 = new RegExp("\\({1}[^\\)]+\\){1}","g");
+        //for getting array of such as ["(text1)","(text2)"]
+        let re1 = new RegExp("\\{{1}[^\\}]+\\}{1}","g");
+        //for getting array of such as ["{color1}","{color2}"]
+        let match0 = str.match(re0);
+        //array off ["(text1)","(text2)"]
+        let match1 = str.match(re1);
+        //array off ["{color1}","{color2}"]
+        let len = 0;
+
+        let re2 = new RegExp("[^\\(\\)]+","g");
+        //for getting text from ["(text1)"] to "text1"
+        let re3 = new RegExp("[^\\{\\}]+","g");
+        //for getting text from ["{text1}"] to "text1"
+
+        if(!match0 || !match1)return;
+        for(let i = 0;i < match0 == null ? 0 : Math.min(match0.length,match1.length);++i){
+            if(!match1[i] || !match0[i]) return;
+            context.fillStyle = match1[i].match(re3)[0];
+            let text = match0[i].match(re2)[0];
+            context.fillText(text,x + +len ,y);
+            len = len + +context.measureText(text).width;
+        }
+    }
+
     drawDMenu(context){
         context.fillStyle = 'white';
         context.fillRect(5,485,990,160);
@@ -411,15 +438,15 @@ class GameState extends State {
 
         context.fillStyle = "white";
         context.font  = "18px manaspc";
+        this.drawMessage(this.messages[0],10,505,context);      //0
 
-        context.fillText(this.messages[0],10,505);      //0
-        context.fillText(this.messages[1],10,525-1);      //1
-        context.fillText(this.messages[2],10,545-2);      //2
-        context.fillText(this.messages[3],10,565-3);      //3
-        context.fillText(this.messages[4],10,585-4);      //4
-        context.fillText(this.messages[5],10,605-5);      //5
-        context.fillText(this.messages[6],10,625-5);      //6
-        context.fillText(this.messages[7],10,645-7);      //7
+        this.drawMessage(this.messages[1],10,525-1,context);      //1
+        this.drawMessage(this.messages[2],10,545-2,context);      //2
+        this.drawMessage(this.messages[3],10,565-3,context);      //3
+        this.drawMessage(this.messages[4],10,585-4,context);      //4
+        this.drawMessage(this.messages[5],10,605-5,context);      //5
+        this.drawMessage(this.messages[6],10,625-5,context);      //6
+        this.drawMessage(this.messages[7],10,645-7,context);      //7
 
     }
 

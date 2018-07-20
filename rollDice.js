@@ -9,7 +9,7 @@ function rollDice(diceVal, diceCount) {                     //Тут много 
 
 
 function closeBattle(first, second) {
-    console.log(first.name, 'bumped with', second.name, '!');
+    game.pushMessage(`(${first.name}){${first.color}}( bumped with ){white}(${second.name}){${second.color}}( !){white}`);
     if (first.agility / 10 + rollDice(6, 2) > 6 + second.agility / 10) {
         let damage = rollDice(first.weapon.diceVal, first.weapon.diceCount) - second.armor.value + first.attack;
         var crit = (rollDice(20, 1) > 18) && (((first.weapon.diceVal - 1) * first.weapon.diceCount) <= damage);
@@ -17,22 +17,25 @@ function closeBattle(first, second) {
         damage > 0 ? (() => {
                 second.hp -= damage;
                 game.pushMessage(
-                    `${first.name} attacked ${second.name} with his ${first.weapon.name} for ` +
-                    `${damage} damage! ${(crit ? 'crit!' : ' ')}`);
+                    `(${first.name} ){${first.color}}(attacked ){white}(${second.name} )` +
+                    `{${second.color}}(with his ${first.weapon.name} for ` +
+                    `${damage} damage! )${(crit ? '(crit!){red}' : ' ')}`);
             })() :
             (() => {
                 damage = 0;
-                game.pushMessage(`${first.name} did not even scratch ${second.name}!`)
+                game.pushMessage(`(${first.name} ){${first.color}}` +
+                                `(did not even scratch ){white}` +
+                                `(${second.name}){${second.color}}(!){white}`)
             })();
         if (second.hp <= 0) {
-            game.pushMessage(`${second.name} is dead!`);
+            game.pushMessage(`(${second.name}){${second.color}}( is dead!){red}`);
             first.gold += second.gold;
-            game.pushMessage(`You gained ${second.gold} gold!`);
-            second.isDead = 1; //Это удалить побежденный обьект;
+            game.pushMessage(`(You gained ){white}(${second.gold}){#ffd700}( gold!){white}`);
+            second.isDead = 1;
             return;
         }
     } else {
-        console.log(first.name, 'missed', second.name, '!');
+        game.pushMessage(`(${first.name}){${first.color}}( missed ){green}(${second.name}){${second.color}}( !){green}`);
     }
     if (second.agility / 10 + rollDice(6, 2) > 6 + first.agility / 10) {
         let damage = rollDice(second.weapon.diceVal, second.weapon.diceCount) - first.armor.value + second.attack;
@@ -41,21 +44,24 @@ function closeBattle(first, second) {
         damage > 0 ? (() => {
                 first.hp -= damage;
                 game.pushMessage(
-                    `${second.name} attacked ${first.name} with his ${second.weapon.name} for ` +
-                    `${damage} damage! ${(crit ? 'crit!' : ' ')}`);
+                    `(${second.name}){${second.color}}( attacked ){white}` +
+                    `(${first.name}){${first.color}}( with his ${second.weapon.name} for ){white}` +
+                    `(${damage} damage! ){white}${(crit ? '(crit!){red}' : ' ')}`);
             })() :
             (() => {
                 damage = 0;
-                game.pushMessage(`${second.name} did not hurt ${first.name}!`)
+                game.pushMessage(`(${second.name}){${second.color}}` +
+                                 `( did not hurt ){white}` +
+                                 `(${first.name}){${first.color}}(!){white}`)
             })();
         if (first.hp <= 0) {
-            game.pushMessage(`${first.name} is dead!`);
+            game.pushMessage(`(${first.name} ){${first.color}}(is dead!){red}`);
             second.gold += first.gold;
-            game.pushMessage(`You gained ${first.gold} gold!`);
+            game.pushMessage(`(You gained ){white}(${first.gold}){#ffd700}( gold!){white}`);
             first.isDead = 1;
             return;
         }
     } else {
-        game.pushMessage(`${second.name} missed ${first.name}!`);
+        game.pushMessage(`(${second.name}){${second.color}}( missed ){green}(${first.name}){${first.color}}( !){green}`);
     }
 }

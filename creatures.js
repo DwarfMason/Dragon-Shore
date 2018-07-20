@@ -26,6 +26,7 @@ class Creature extends SceneObject {
         this.name = 'none';
         this.gold = 0;
         this.isDead = 0;
+        this.color = "white";
     }
 }
 
@@ -70,6 +71,7 @@ class Player extends Creature {
         this.fogRad = 2;
         this.hpPotions = 3;
         this.mpPotions = 3;
+        this.color = "yellow";
     }
 }
 
@@ -86,6 +88,7 @@ class Orc extends Creature {
         this.hp = Math.floor(this.endurance / 10) + 4;
         this.initiative = this.agility / 10 + 8;
         this.gold = Math.floor(Math.random() * 15) + 3;
+        this.color = "green";
     }
 }
 
