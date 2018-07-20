@@ -14,7 +14,7 @@ class Scene {
     constructor(canvas) {
         this.ctx = canvas.getContext("2d");
         this.state = null;
-        this.eventList = {}
+        this.eventList = {};
         this.ctx.imageSmoothingEnabled = false;
     }
     setState(state) {
@@ -62,7 +62,7 @@ class CreditsState extends State {
         super();
     }
     keyHandler(scene, event) {
-        scene.setState(menu );
+        scene.setState(menu);
         scene.update();
     }
     get events() {
@@ -95,8 +95,6 @@ class MenuState extends State {
         super();
         this.menuPos = 0;
         this.menuImgs = menuImgs;
-        this.menuStates = [game, leaderboards, settings, credits];
-
     }
     keyHandler(scene, event) {
         switch(event.keyCode) {
@@ -107,29 +105,25 @@ class MenuState extends State {
                 this.menuPos++;
                 break;
             case 13:
-                if (this.menuStates[this.menuPos] !== null) {
-
-                    switch (this.menuPos){
-                        case 0:
-                            scene.setState(charCreation);
-                            // scene.setState(game);
-                            // game.startGame();
-                            break;
-                        case 1:
-                            alert("Not yet implemented!");
-                            break;
-                        case 2:
-                            alert("Not yet implemented!");
-                            break;
-                        case 3:
-                            scene.setState(credits);
-                            break;
-                    }
-                } else {
-                    alert("Not yet implemented!");
+                switch (this.menuPos){
+                    case 0:
+                        scene.setState(charCreation);
+                        // scene.setState(game);
+                        // game.startGame();
+                        break;
+                    case 1:
+                        alert("Not yet implemented!");
+                        break;
+                    case 2:
+                        alert("Not yet implemented!");
+                        break;
+                    case 3:
+                        scene.setState(credits);
+                        break;
+                    default:
+                        alert("Not yet implemented!");
+                        break;
                 }
-                break;
-
         }
         scene.update();
     }
@@ -237,7 +231,7 @@ class controller{
     }
 
     moveR(){
-        if(this.map[this.player.y ][this.player.x + +1].isMovable){
+        if(this.map[this.player.y][this.player.x + 1].isMovable){
             this.player.x++;
             if(this.checkCollision()){
                 this.player.x--;
@@ -246,7 +240,7 @@ class controller{
 
     }
     moveL(){
-        if(this.map[this.player.y][this.player.x - +1].isMovable){
+        if(this.map[this.player.y][this.player.x - 1].isMovable){
             this.player.x--;
             if(this.checkCollision()){
                 this.player.x++;
@@ -255,7 +249,7 @@ class controller{
 
     }
     moveD(){
-        if(this.map[this.player.y + +1][this.player.x].isMovable){
+        if(this.map[this.player.y + 1][this.player.x].isMovable){
             this.player.y++;
             if(this.checkCollision()){
                 this.player.y--;
@@ -264,7 +258,7 @@ class controller{
 
     }
     moveU(){
-        if(this.map[this.player.y - +1][this.player.x].isMovable){
+        if(this.map[this.player.y - 1][this.player.x].isMovable){
             this.player.y--;
 
             if(this.checkCollision()){
@@ -299,7 +293,7 @@ class GameState extends State {
         this.pushMessage("game started");
     }
 
-    SetNewMap(){
+    setNewMap(){
         this.map = dungeonGeneration.generateCave();
         this.objectsMap = dungeonGeneration.generateObjects();
     }
@@ -319,7 +313,7 @@ class GameState extends State {
     }
 
 
-    drowRMenu(context){
+    drawRMenu(context){
         context.fillStyle = "black";
         context.fillRect(0, 0, 1000, 650);
         context.fillStyle = 'white';
@@ -343,7 +337,7 @@ class GameState extends State {
 
 
     }
-    drowDMenu(context){
+    drawDMenu(context){
         context.fillStyle = 'white';
         context.fillRect(5,485,990,160);
         context.fillStyle = "black";
@@ -392,8 +386,8 @@ class GameState extends State {
         super.update(context);
         this.clearScene(context);
 
-        this.drowRMenu(context);
-        this.drowDMenu(context);
+        this.drawRMenu(context);
+        this.drawDMenu(context);
         this.updateMap(context);
     }
 
