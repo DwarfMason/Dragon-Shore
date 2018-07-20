@@ -60,4 +60,30 @@ class controller{
             }
         }
     }
+
+    drinkHP(){
+        if (mainHero.hpPotions != 0 && mainHero.hp != mainHero.maxHP) {
+            if (rollDice(20,1) < 3){
+                game.pushMessage('You accidentally spilled your potion');
+            }else {
+                mainHero.hp += 3;
+                mainHero.hp = Math.min(mainHero.hp, mainHero.maxHP);
+                game.pushMessage('You drink health potion');
+            }
+            mainHero.hpPotions--;
+        }
+    }
+    drinkMP(){
+        if (mainHero.mpPotions != 0 && mainHero.mp != mainHero.maxMP) {
+            if (rollDice(20,1) < 3){
+                game.pushMessage('You accidentally spilled your potion');
+            }else {
+                mainHero.mp += 3;
+                mainHero.mp = Math.min(mainHero.mp, mainHero.maxMP);
+                game.pushMessage('You drink mana potion');
+            }
+            mainHero.hpPotions--;
+        }
+    }
 }
+

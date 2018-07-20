@@ -100,7 +100,7 @@ dungeonGeneration = (()=>{
                 }
             }
         }
-        addEnemy(Math.floor((1 + dungeonDifficulty * Math.random()) * Math.floor(Math.random()* 4) + 1));
+        addEnemy(Math.floor(depth * (1 + dungeonDifficulty * Math.random()) * Math.floor(Math.random()* 5) + 1));
         return [map,startX,startY];
     }
 

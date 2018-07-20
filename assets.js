@@ -12,6 +12,11 @@ for (let i = 0; i < 4; ++i) {
 }
 
 let gameOverImg = new Image();
-gameOverImg.src = getAsset(`you_died${Math.floor(Math.random() * 3)}.png`);
+gameOverImg.src = getAsset(`you_died${Math.floor(Math.random() * 4)}.png`);
+
+function getRandomIMG(image){
+    image.src = getAsset(`you_died${Math.floor(Math.random() * 4)}.png`);
+    return image;
+}
 
 

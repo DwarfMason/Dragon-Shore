@@ -111,7 +111,7 @@ class GameOver extends State{
         }
     }
     update(context){
-        context.drawImage(gameOverImg, 0, 0);
+        context.drawImage(getRandomIMG(gameOverImg), 0, 0);
 
         context.fillStyle = "white";
         context.font  = "24px manaspc";
@@ -391,7 +391,11 @@ class GameState extends State {
             context.fillText(`Gold:${this.objectsMap[0].gold}`,820,130);
             context.font  = "12px manaspc";
 
-                context.fillText("-status:", 820, 150);
+            context.fillText("inventory:", 820, 150);
+            context.fillText(`HP potions: ${mainHero.hpPotions}`, 820, 170);
+            context.fillText(`Armor: ${mainHero.armor.name}`, 820, 190);
+            context.fillText(`Weapon: ${mainHero.weapon.name}`, 820, 210);
+
             for (let i = 0; i < this.objectsMap[0].baffs.length; ++i) {
                 context.fillText(this.objectsMap[0].baffs[i], 820, 170 + (+20 * +i));
             }
@@ -477,6 +481,10 @@ class GameState extends State {
             case 39://arrow r
                 this.controller.moveR(scene);
                 break;
+            case 72://h - health
+                this.controller.drinkHP();
+            case 77://m - mana
+                this.controller.drinkMP();
         }
         this.calcOffset();
         scene.update();

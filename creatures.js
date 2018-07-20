@@ -8,7 +8,7 @@ class Creature extends SceneObject {
         this.mp = 0;
         this.attack = 0;
         this.armor = {
-            name: "Homemade poor clothes",
+            name: "Poor clothes",
             type: "light",
             value: 2,
         };
@@ -67,7 +67,9 @@ class Player extends Creature {
         this.level = 1;
         this.name = name;
         this.baffs = [];
-        this.forRad = 2;
+        this.fogRad = 2;
+        this.hpPotions = 3;
+        this.mpPotions = 3;
     }
 }
 
