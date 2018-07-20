@@ -19,7 +19,7 @@ function closeBattle(first, second) {
                 game.pushMessage(
                     `(${first.name} ){${first.color}}(attacked ){white}(${second.name} )` +
                     `{${second.color}}(with his ${first.weapon.name} for ` +
-                    `${damage} damage! )${(crit ? '(crit!){red}' : ' ')}`);
+                    `${damage} damage! ){white}${(crit ? '(crit!){red}' : ' ')}`);
             })() :
             (() => {
                 damage = 0;

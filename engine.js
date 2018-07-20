@@ -188,6 +188,7 @@ class CharCreationState extends State {
     constructor() {
         super();
         this.isCreated = false;
+        this.nameType = false;
     }
     keyHandler(scene, event) {
         switch (event.keyCode) {
@@ -285,9 +286,30 @@ class GameState extends State {
         this.offsetY = player.y - this.centerY;
         this.checkOffsetBorders();
 
-        this.pushMessage("(game started){blue}");
+        this.pushMessage(`(Welcome to the ){white}(${depth} depth!){red}`);
     }
 
+    newLevel(){
+        depth++;
+        let cave = dungeonGeneration.generateCave(depth);
+        this.map = cave[0];
+        this.objectsMap = dungeonGeneration.generateObjects();
+//        this.rMenu = this.objectsMap[0].rMenu;
+        //this.messages = ["","","","","","","","",""];
+        this.objectsMap[0].x = cave[1];
+        this.objectsMap[0].y = cave[2];
+        this.controller = new controller(this.objectsMap[0],this.map,this.objectsMap);
+
+        //calculate offset
+        //TODO testing
+        let player = this.objectsMap[0];
+
+        this.offsetX = player.x - this.centerX;
+        this.offsetY = player.y - this.centerY;
+        this.checkOffsetBorders();
+
+        this.pushMessage(`(Welcome to the ){white}(${depth} depth!){red}`);
+    }
     checkOffsetBorders() {
         //checking borders
         let mapW = this.map[0].length;
@@ -510,8 +532,12 @@ class GameState extends State {
                 break;
             case 72://h - health
                 this.controller.drinkHP();
+                break;
             case 77://m - mana
                 this.controller.drinkMP();
+                break;
+            case 190://>
+                this.controller.enter();
         }
         this.calcOffset();
         scene.update();

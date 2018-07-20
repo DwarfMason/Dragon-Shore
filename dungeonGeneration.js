@@ -1,17 +1,17 @@
+let start = new StartPoint();
+let end = new EndPoint();
+let wall = new Wall();
+let floor = new Floor();
+
 dungeonGeneration = (()=>{
     let objects = [];
     function generateCave(dungeonDifficulty) {
         objects = [mainHero];
-        let dungeonHeight = Math.floor((1+Math.random())*30*
-            Math.max(Math.floor(depth/(Math.floor(Math.random()*(depth - 1))+1))), 1);
-        let dungeonWidth =Math.floor((1+Math.random())*50*
-            Math.max(Math.floor(depth/(Math.floor(Math.random()*(depth - 1))+1))), 1);
+        let dungeonHeight = Math.floor((1+Math.random())*30);
+        let dungeonWidth =Math.floor((1+Math.random())*50);
         console.log(dungeonHeight, dungeonWidth);
 
-        let start = new StartPoint();
-        let end = new EndPoint();
-        let wall = new Wall();
-        let floor = new Floor();
+
 
 
         let map = new Array(dungeonHeight);

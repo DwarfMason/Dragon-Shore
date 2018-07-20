@@ -23,7 +23,11 @@ class controller{
         }
         return 0;
     }
-
+    enter(){
+        if(this.map[this.player.y][this.player.x] == end){
+            game.newLevel();
+        }
+    }
     moveR(scene){
         if(this.map[this.player.y][this.player.x + 1].isMovable){
             this.player.x++;
