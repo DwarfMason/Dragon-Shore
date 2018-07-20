@@ -67,6 +67,7 @@ class Player extends Creature {
         this.level = 1;
         this.name = name;
         this.baffs = [];
+        this.forRad = 2;
     }
 }
 
