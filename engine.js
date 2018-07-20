@@ -90,11 +90,35 @@ class CreditsState extends State {
     }
 }
 
+class GameOver extends State{
+    constructor(){
+        super();
+
+    }
+    keyHandler(scene, event) {
+        switch(event.keyCode) {
+
+            case 13:
+                scene.setState(menu);
+                menu.dropMenuPos();
+        }
+        scene.update();
+    }
+    get events() {
+        return {
+            keyup: this.keyHandler,
+        }
+    }
+}
+
 class MenuState extends State {
     constructor() {
         super();
         this.menuPos = 0;
         this.menuImgs = menuImgs;
+    }
+    dropMenuPos(){
+        this.menuPos=0;
     }
     keyHandler(scene, event) {
         switch(event.keyCode) {
@@ -217,7 +241,7 @@ class controller{
         this.objectsMap = objects;
     }
 
-    checkCollision(){
+    checkCollision(scene){
         for (let i = 1;i < this.objectsMap.length; ++i) {
             if((this.player.x === this.objectsMap[i].x) && (this.player.y === this.objectsMap[i].y)){
                 if(!this.objectsMap[i].isDead){
@@ -225,46 +249,48 @@ class controller{
                         closeBattle(this.player, this.objectsMap[i]);
                     else
                         closeBattle(this.objectsMap[i], this.player);
+                    if(this.player.isDead){
+                        scene.setState(gameOver);
+                    }
                     return 1;
                 }
             }
         }
         return 0;
-
     }
 
-    moveR(){
+    moveR(scene){
         if(this.map[this.player.y][this.player.x + 1].isMovable){
             this.player.x++;
-            if(this.checkCollision()){
+            if(this.checkCollision(scene)){
                 this.player.x--;
             }
         }
 
     }
-    moveL(){
+    moveL(scene){
         if(this.map[this.player.y][this.player.x - 1].isMovable){
             this.player.x--;
-            if(this.checkCollision()){
+            if(this.checkCollision(scene)){
                 this.player.x++;
             }
         }
 
     }
-    moveD(){
+    moveD(scene){
         if(this.map[this.player.y + 1][this.player.x].isMovable){
             this.player.y++;
-            if(this.checkCollision()){
+            if(this.checkCollision(scene)){
                 this.player.y--;
             }
         }
 
     }
-    moveU(){
+    moveU(scene){
         if(this.map[this.player.y - 1][this.player.x].isMovable){
             this.player.y--;
 
-            if(this.checkCollision()){
+            if(this.checkCollision(scene)){
                 this.player.y++;
             }
         }
@@ -399,16 +425,16 @@ class GameState extends State {
     keyHandler(scene, event) {
         switch(event.keyCode) {
             case 38: //arrow up
-                this.controller.moveU();
+                this.controller.moveU(scene);
                 break;
             case 40: //arrow down
-                this.controller.moveD();
+                this.controller.moveD(scene);
                 break;
             case 37://arrow left
-                this.controller.moveL();
+                this.controller.moveL(scene);
                 break;
             case 39://arrow r
-                this.controller.moveR();
+                this.controller.moveR(scene);
                 break;
         }
         scene.update();

@@ -26,9 +26,8 @@
         game = new GameState();
         menu = new MenuState();
         charCreation = new CharCreationState();
+        gameOver =  new GameOver();
         let scene = new Scene(document.getElementById("gameBoard"));
-
-
 
         scene.setState(menu);
         scene.update();
