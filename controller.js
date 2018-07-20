@@ -15,6 +15,7 @@ class controller{
                         closeBattle(this.objectsMap[i], this.player);
                     if(this.player.isDead){
                         scene.setState(gameOver);
+                        scene.update();
                     }
                     return 1;
                 }

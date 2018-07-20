@@ -8,7 +8,7 @@ let leaderboards = null; //TODO
 let settings = null; //TODO
 let gameOver = null;//new GameOverState();
 let charCreation = null;
-let dungeonDifficulty = 0;
+let depth;
 
 class Scene {
     constructor(canvas) {
@@ -101,6 +101,7 @@ class GameOver extends State{
             case 13:
                 scene.setState(menu);
                 menu.dropMenuPos();
+
         }
         scene.update();
     }
@@ -108,6 +109,20 @@ class GameOver extends State{
         return {
             keyup: this.keyHandler,
         }
+    }
+    update(context){
+        context.drawImage(gameOverImg, 0, 0);
+
+        context.fillStyle = "white";
+        context.font  = "24px manaspc";
+
+        context.fillText(`Name: ${mainHero.name}`, 20, 150);
+        context.fillText(`Race: ${mainHero.race}`, 20, 180);
+        context.fillText(`Depth: ${depth}`, 20, 210);
+        context.fillText(`Weapon: ${mainHero.weapon.name}`, 20, 240);
+        context.fillText(`Armor: ${mainHero.armor.name}`, 20, 270);
+        context.fillText("Press Enter to exit...", 100, 600);
+        super.update(context);
     }
 }
 
@@ -192,6 +207,7 @@ class CharCreationState extends State {
                 break;
             case 13: //Enter
                 if (this.isCreated) {
+                    this.isCreated = false;
                     scene.setState(game);
                     game.startGame();
                 }
@@ -239,20 +255,20 @@ class GameState extends State {
         super();
         this.offsetX = 0;
         this.offsetY = 0;
-        this.messages = this.messages = ["","","","","","","","",""];
         this.map = [[]];
         this.objectsMap = [];
+        this.messages = ["","","","","","","","",""];
 //        this.rMenu = null;
         this.controller = null;
         this.ctx = null;
     }
     startGame(){
-        dungeonDifficulty++;
-        let cave = dungeonGeneration.generateCave(dungeonDifficulty);
+        depth = 1;
+        let cave = dungeonGeneration.generateCave(depth);
         this.map = cave[0];
         this.objectsMap = dungeonGeneration.generateObjects();
 //        this.rMenu = this.objectsMap[0].rMenu;
-
+        this.messages = ["","","","","","","","",""];
         this.objectsMap[0].x = cave[1];
         this.objectsMap[0].y = cave[2];
         this.controller = new controller(this.objectsMap[0],this.map,this.objectsMap);

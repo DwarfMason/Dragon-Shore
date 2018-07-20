@@ -82,7 +82,7 @@ class Orc extends Creature {
         this.y = startY;
         this.hp = Math.floor(this.endurance / 10) + 4;
         this.initiative = this.agility / 10 + 8;
-        this.gold = Math.floor(Math.random() * 15) - 3;
+        this.gold = Math.floor(Math.random() * 15) + 3;
     }
 }
 
