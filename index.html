@@ -19,8 +19,10 @@
 <div id="font-hack" style="font-family: manaspc; visibility: hidden;">.</div>
 <script src="assets.js"></script>
 <script src="gameObjects.js"></script>
+<script src="rollDice.js"></script>
 <script src="creatures.js"></script>
 <script src="dungeonGeneration.js"></script>
+<script src="controller.js"></script>
 <script src="engine.js"></script>
 <script>
     window.onload = function() {
@@ -35,6 +37,7 @@
         game = new GameState();
         menu = new MenuState();
         charCreation = new CharCreationState();
+        gameOver =  new GameOver();
         let scene = new Scene(document.getElementById("gameBoard"));
 
         document.getElementById("font-hack").remove();

@@ -11,3 +11,7 @@ for (let i = 0; i < 4; ++i) {
     menuImgs.push(image);
 }
 
+let gameOverImg = new Image();
+gameOverImg.src = getAsset(`you_died${Math.floor(Math.random() * 3)}.png`);
+
+

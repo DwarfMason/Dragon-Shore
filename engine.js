@@ -8,7 +8,7 @@ let leaderboards = null; //TODO
 let settings = null; //TODO
 let gameOver = null;//new GameOverState();
 let charCreation = null;
-let dungeonDifficulty = 0;
+let depth;
 
 class Scene {
     constructor(canvas) {
@@ -90,11 +90,50 @@ class CreditsState extends State {
     }
 }
 
+class GameOver extends State{
+    constructor(){
+        super();
+
+    }
+    keyHandler(scene, event) {
+        switch(event.keyCode) {
+
+            case 13:
+                scene.setState(menu);
+                menu.dropMenuPos();
+
+        }
+        scene.update();
+    }
+    get events() {
+        return {
+            keyup: this.keyHandler,
+        }
+    }
+    update(context){
+        context.drawImage(gameOverImg, 0, 0);
+
+        context.fillStyle = "white";
+        context.font  = "24px manaspc";
+
+        context.fillText(`Name: ${mainHero.name}`, 20, 150);
+        context.fillText(`Race: ${mainHero.race}`, 20, 180);
+        context.fillText(`Depth: ${depth}`, 20, 210);
+        context.fillText(`Weapon: ${mainHero.weapon.name}`, 20, 240);
+        context.fillText(`Armor: ${mainHero.armor.name}`, 20, 270);
+        context.fillText("Press Enter to exit...", 100, 600);
+        super.update(context);
+    }
+}
+
 class MenuState extends State {
     constructor() {
         super();
         this.menuPos = 0;
         this.menuImgs = menuImgs;
+    }
+    dropMenuPos(){
+        this.menuPos=0;
     }
     keyHandler(scene, event) {
         switch(event.keyCode) {
@@ -167,6 +206,7 @@ class CharCreationState extends State {
                 break;
             case 13: //Enter
                 if (this.isCreated) {
+                    this.isCreated = false;
                     scene.setState(game);
                     game.startGame();
                 }
@@ -209,74 +249,14 @@ class CharCreationState extends State {
 }
 
 
-class controller{
-    constructor(player, map, objects){
-        this.player = player;
-        this.map = map;
-        this.objectsMap = objects;
-    }
-
-    checkCollision(){
-        let die = 0;
-        for (let i = 1;i < this.objectsMap.length; ++i) {
-            if((this.player.x === this.objectsMap[i].x) && (this.player.y === this.objectsMap[i].y)){
-                if (mainHero.initiative >= this.objectsMap[i].initiative)
-                    die = closeBattle(this.player, this.objectsMap[i]);
-                else
-                    die = closeBattle(this.objectsMap[i], this.player);
-                return 1;
-            }
-        }
-        return 0;
-
-    }
-
-    moveR(){
-        if(this.map[this.player.y][this.player.x + 1].isMovable){
-            this.player.x++;
-            if(this.checkCollision()){
-                this.player.x--;
-            }
-        }
-
-    }
-    moveL(){
-        if(this.map[this.player.y][this.player.x - 1].isMovable){
-            this.player.x--;
-            if(this.checkCollision()){
-                this.player.x++;
-            }
-        }
-
-    }
-    moveD(){
-        if(this.map[this.player.y + 1][this.player.x].isMovable){
-            this.player.y++;
-            if(this.checkCollision()){
-                this.player.y--;
-            }
-        }
-
-    }
-    moveU(){
-        if(this.map[this.player.y - 1][this.player.x].isMovable){
-            this.player.y--;
-
-            if(this.checkCollision()){
-                this.player.y++;
-            }
-        }
-    }
-}
-
 class GameState extends State {
     constructor(dialog = 0) {
         super();
         this.offsetX = 0;
         this.offsetY = 0;
-        this.messages = this.messages = ["","","","","","","","",""];
         this.map = [[]];
         this.objectsMap = [];
+        this.messages = ["","","","","","","","",""];
 //        this.rMenu = null;
         this.controller = null;
         this.ctx = null;
@@ -288,12 +268,12 @@ class GameState extends State {
         this.centerRectW = 17;
     }
     startGame(){
-        dungeonDifficulty++;
-        let cave = dungeonGeneration.generateCave(dungeonDifficulty);
+        depth = 1;
+        let cave = dungeonGeneration.generateCave(depth);
         this.map = cave[0];
         this.objectsMap = dungeonGeneration.generateObjects();
 //        this.rMenu = this.objectsMap[0].rMenu;
-
+        this.messages = ["","","","","","","","",""];
         this.objectsMap[0].x = cave[1];
         this.objectsMap[0].y = cave[2];
         this.controller = new controller(this.objectsMap[0],this.map,this.objectsMap);
@@ -408,11 +388,12 @@ class GameState extends State {
             context.fillText(this.objectsMap[0].name, 815, 35);
             context.fillText("HP:" + this.objectsMap[0].hp + '/' + this.objectsMap[0].maxHP ,820,70);
             context.fillText("MP:" + this.objectsMap[0].mp + '/' + this.objectsMap[0].maxMP ,820,100);
+            context.fillText(`Gold:${this.objectsMap[0].gold}`,820,130);
             context.font  = "12px manaspc";
 
-                context.fillText("-status:", 820, 120);
+                context.fillText("-status:", 820, 150);
             for (let i = 0; i < this.objectsMap[0].baffs.length; ++i) {
-                context.fillText(this.objectsMap[0].baffs[i], 820, 140 + (+20 * +i));
+                context.fillText(this.objectsMap[0].baffs[i], 820, 170 + (+20 * +i));
             }
         }
 
@@ -463,8 +444,9 @@ class GameState extends State {
         for (let i = 0; i < this.objectsMap.length;++i){
             if (this.objectsMap[i].x >= startX && this.objectsMap[i].x <= endX) {
                 if (this.objectsMap[i].y >= startY && this.objectsMap[i].y <= endY) {
-                    this.drawTexture(context, this.objectsMap[i],
-                        this.objectsMap[i].x-startX, this.objectsMap[i].y-startY);
+                    if(!this.objectsMap[i].isDead)
+                        this.drawTexture(context, this.objectsMap[i],
+                            this.objectsMap[i].x-startX, this.objectsMap[i].y-startY);
                 }
             }
         }
@@ -484,16 +466,16 @@ class GameState extends State {
     keyHandler(scene, event) {
         switch(event.keyCode) {
             case 38: //arrow up
-                this.controller.moveU();
+                this.controller.moveU(scene);
                 break;
             case 40: //arrow down
-                this.controller.moveD();
+                this.controller.moveD(scene);
                 break;
             case 37://arrow left
-                this.controller.moveL();
+                this.controller.moveL(scene);
                 break;
             case 39://arrow r
-                this.controller.moveR();
+                this.controller.moveR(scene);
                 break;
         }
         this.calcOffset();
