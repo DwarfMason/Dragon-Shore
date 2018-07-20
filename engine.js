@@ -214,15 +214,17 @@ class controller{
     constructor(player, map, objects){
         this.player = player;
         this.map = map;
-        this.objectsMap =objects;
+        this.objectsMap = objects;
     }
 
     checkCollision(){
         let die = 0;
         for (let i = 1;i < this.objectsMap.length; ++i) {
             if((this.player.x === this.objectsMap[i].x) && (this.player.y === this.objectsMap[i].y)){
-
-                mainHero.initiative >= this.objectsMap[i].initiative? die = closeBattle(this.player, this.objectsMap[i]): die = closeBattle(this.objectsMap[i], this.player);
+                if (mainHero.initiative >= this.objectsMap[i].initiative)
+                    die = closeBattle(this.player, this.objectsMap[i]);
+                else
+                    die = closeBattle(this.objectsMap[i], this.player);
                 return 1;
             }
         }
@@ -406,7 +408,7 @@ class GameState extends State {
                 this.controller.moveR();
                 break;
         }
-        this.update(this.ctx);
+        scene.update();
     }
 
     get events() {
