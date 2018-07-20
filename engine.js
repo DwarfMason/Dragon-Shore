@@ -136,12 +136,11 @@ class MenuState extends State {
         context.fillStyle = "black";
         context.fillRect(0, 0, 1000, 650);
 
-        console.log("menuPos", this.menuPos);
         if (this.menuPos < 0)
             this.menuPos = 3;
         if (this.menuPos > 3)
             this.menuPos = 0;
-        console.log("menuPos", this.menuPos);
+
         context.drawImage(this.menuImgs[this.menuPos], 0, 0);
         super.update(context);
     }
@@ -281,6 +280,12 @@ class GameState extends State {
 //        this.rMenu = null;
         this.controller = null;
         this.ctx = null;
+        this.fieldHeight = 30;
+        this.fieldWidth  = 50;
+        this.centerY = (this.fieldHeight/2)>>0;
+        this.centerX = (this.fieldWidth/2)>>0;
+        this.centerRectH = 11;
+        this.centerRectW = 17;
     }
     startGame(){
         dungeonDifficulty++;
@@ -292,7 +297,81 @@ class GameState extends State {
         this.objectsMap[0].x = cave[1];
         this.objectsMap[0].y = cave[2];
         this.controller = new controller(this.objectsMap[0],this.map,this.objectsMap);
+
+        //calculate offset
+        //TODO testing
+        let player = this.objectsMap[0];
+
+        this.offsetX = player.x - this.centerX;
+        this.offsetY = player.y - this.centerY;
+        this.checkOffsetBorders();
+
         this.pushMessage("game started");
+    }
+
+    checkOffsetBorders() {
+        //checking borders
+        let mapW = this.map[0].length;
+        let mapH = this.map.length;
+
+        if (this.offsetX + this.fieldWidth-1 >= mapW) {
+            this.offsetX = mapW - this.fieldWidth - 2;
+        }
+        if (this.offsetX < 0) {
+            this.offsetX = 0;
+        }
+
+        if (this.offsetY + this.fieldHeight-1 >= mapH) {
+            this.offsetY = mapH - this.fieldHeight - 2;
+        }
+        if (this.offsetY < 0) {
+            this.offsetY = 0;
+        }
+    }
+
+    calcOffset() {
+        if (!this.objectsMap) {
+            alert("Something wrong happened, please reload the page");
+            return;
+        }
+        let player = this.objectsMap[0];
+        if (!player) {
+            // TODO game over?
+        }
+        // Calculating map offsets
+        /*
+        If the player is near to a map border, then no scrolling of course
+        If the player is in "center rectangle", then offset won't change
+        If the player is out of "center rectangle", then change offset
+        */
+
+        let centerRectX = this.offsetX + ((this.fieldWidth - this.centerRectW) / 2) >> 0;
+        let centerRectY = this.offsetY + ((this.fieldHeight - this.centerRectH) / 2) >> 0;
+        let mapW = this.map[0].length;
+        let mapH = this.map.length;
+
+        if (player.x < centerRectX) {
+            if (this.offsetX > 0) {
+                this.offsetX--;
+            }
+        }
+        if (player.x >= centerRectX + this.centerRectW) {
+            if (this.offsetX + this.fieldWidth < mapW) {
+                this.offsetX++;
+            }
+        }
+
+        if (player.y < centerRectY) {
+            if (this.offsetY > 0) {
+                this.offsetY--;
+            }
+        }
+        if (player.y >= centerRectY + this.centerRectH) {
+            if (this.offsetY + this.fieldHeight < mapH) {
+                this.offsetY++;
+            }
+        }
+        this.checkOffsetBorders();
     }
 
     setNewMap(){
@@ -370,15 +449,24 @@ class GameState extends State {
             x * +   texture.size, y * +texture.size, +texture.size, +texture.size);
     }
 
-    updateMap(context){
-        for (let y = 0; y < this.map.length;++y){
-            for (let x = 0; x < this.map[y].length;++x) {
-                this.drawTexture(context, this.map[y][x], x, y);
+    updateMap(context) {
+        let startY = this.offsetY;
+        let endY = startY + this.fieldHeight - 1;
+        let startX = this.offsetX;
+        let endX = startX + this.fieldWidth - 1;
 
+        for (let y = startY; y <= endY; ++y){
+            for (let x = startX; x <= endX; ++x) {
+                this.drawTexture(context, this.map[y][x], x - startX, y - startY);
             }
         }
-        for (let i = 0; i< this.objectsMap.length;++i){
-            this.drawTexture(context, this.objectsMap[i], this.objectsMap[i].x, this.objectsMap[i].y);
+        for (let i = 0; i < this.objectsMap.length;++i){
+            if (this.objectsMap[i].x >= startX && this.objectsMap[i].x <= endX) {
+                if (this.objectsMap[i].y >= startY && this.objectsMap[i].y <= endY) {
+                    this.drawTexture(context, this.objectsMap[i],
+                        this.objectsMap[i].x-startX, this.objectsMap[i].y-startY);
+                }
+            }
         }
         //alert(this.map);
     }
@@ -408,6 +496,7 @@ class GameState extends State {
                 this.controller.moveR();
                 break;
         }
+        this.calcOffset();
         scene.update();
     }
 

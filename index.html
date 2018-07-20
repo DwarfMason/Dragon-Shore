@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <title>Dragon Shore</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
         @font-face {
             font-family: manaspc; /* Гарнитура шрифта */
             src: url(assets/manaspc.ttf); /* Путь к файлу со шрифтом */
@@ -12,7 +16,7 @@
 </head>
 <body>
 <canvas id="gameBoard" width="1000" height="650" style="background: black"></canvas>
-<div style="font-family: manaspc; visibility: hidden;">.</div>
+<div id="font-hack" style="font-family: manaspc; visibility: hidden;">.</div>
 <script src="assets.js"></script>
 <script src="gameObjects.js"></script>
 <script src="creatures.js"></script>
@@ -20,6 +24,12 @@
 <script src="engine.js"></script>
 <script>
     window.onload = function() {
+        window.addEventListener("keydown", function(e) {
+            // space and arrow keys
+            if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
+                e.preventDefault();
+            }
+        }, false);
 
         credits = new CreditsState();
         game = new GameState();
@@ -27,8 +37,7 @@
         charCreation = new CharCreationState();
         let scene = new Scene(document.getElementById("gameBoard"));
 
-
-
+        document.getElementById("font-hack").remove();
         scene.setState(menu);
         scene.update();
     }
