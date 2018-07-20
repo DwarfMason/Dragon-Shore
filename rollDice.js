@@ -27,6 +27,7 @@ function closeBattle(first, second) {
         if (second.hp <= 0) {
             game.pushMessage(`${second.name} is dead!`);
             first.gold += second.gold;
+            game.pushMessage(`You gained ${second.gold} gold!`);
             second.isDead = 1; //Это удалить побежденный обьект;
             return;
         }
@@ -50,6 +51,7 @@ function closeBattle(first, second) {
         if (first.hp <= 0) {
             game.pushMessage(`${first.name} is dead!`);
             second.gold += first.gold;
+            game.pushMessage(`You gained ${first.gold} gold!`);
             first.isDead = 1;
             return;
         }
