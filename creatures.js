@@ -28,7 +28,7 @@ function closeBattle(first, second) {
         if (second.hp <= 0) {
             game.pushMessage(`${second.name} is dead!`);
             first.gold += second.gold;
-            second = null; //Это удалить побежденный обьект;
+            second.isDead = 1; //Это удалить побежденный обьект;
             return;
         }
     } else {
@@ -51,7 +51,7 @@ function closeBattle(first, second) {
         if (first.hp <= 0) {
             game.pushMessage(`${first.name} is dead!`);
             second.gold += first.gold;
-            first = null;
+            first.isDead = 1;
             return;
         }
     } else {
@@ -85,6 +85,7 @@ class Creature extends SceneObject {
         this.level = 0;
         this.name = 'none';
         this.gold = 0;
+        this.isDead = 0;
     }
 }
 

@@ -218,14 +218,15 @@ class controller{
     }
 
     checkCollision(){
-        let die = 0;
         for (let i = 1;i < this.objectsMap.length; ++i) {
             if((this.player.x === this.objectsMap[i].x) && (this.player.y === this.objectsMap[i].y)){
-                if (mainHero.initiative >= this.objectsMap[i].initiative)
-                    die = closeBattle(this.player, this.objectsMap[i]);
-                else
-                    die = closeBattle(this.objectsMap[i], this.player);
-                return 1;
+                if(!this.objectsMap[i].isDead){
+                    if (mainHero.initiative >= this.objectsMap[i].initiative)
+                        closeBattle(this.player, this.objectsMap[i]);
+                    else
+                        closeBattle(this.objectsMap[i], this.player);
+                    return 1;
+                }
             }
         }
         return 0;
@@ -378,6 +379,7 @@ class GameState extends State {
             }
         }
         for (let i = 0; i< this.objectsMap.length;++i){
+            if(!this.objectsMap[i].isDead)
             this.drawTexture(context, this.objectsMap[i], this.objectsMap[i].x, this.objectsMap[i].y);
         }
         //alert(this.map);
