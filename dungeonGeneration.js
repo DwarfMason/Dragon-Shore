@@ -1,5 +1,3 @@
-let start = new StartPoint();
-let end = new EndPoint();
 let wall = new Wall();
 let floor = new Floor();
 let dungeonHeight = 30;
@@ -32,7 +30,7 @@ dungeonGeneration = (()=>{
         let maxFloorTiles = dungeonHeight*dungeonWidth / 10;
         let floorTilesCount = 0;
 
-        map[startY][startX] = start;
+        map[startY][startX] = new StartPoint();
 
 
         for (let i = 0; i < 4; i++) {
@@ -88,7 +86,7 @@ dungeonGeneration = (()=>{
             }
         }
 
-        map[exitY][exitX] = end;
+        map[exitY][exitX] = new EndPoint();
 
         function addEnemy(count){
             let enemyCount = 0;

@@ -24,7 +24,7 @@ class Controller{
         return 0;
     }
     enter(){
-        if(this.map[this.player.y][this.player.x] == end){
+        if(this.map[this.player.y][this.player.x] instanceof EndPoint){
             game.newLevel();
         }
     }

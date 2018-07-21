@@ -53,6 +53,7 @@ class EndPoint extends  Terrain {
     constructor() {
         super(62);      //>
         this.isMovable = 1;
+        this.seen = true;
     }
 }
 /* end terrain */
