@@ -267,49 +267,34 @@ class GameState extends State {
         this.centerRectH = 11;
         this.centerRectW = 17;
     }
-    startGame(){
-        depth = 1;
+
+    clearGame(){
         let cave = dungeonGeneration.generateCave(depth);
         this.map = cave[0];
         this.objectsMap = dungeonGeneration.generateObjects();
-//        this.rMenu = this.objectsMap[0].rMenu;
-        this.messages = ["","","","","","","","",""];
         this.objectsMap[0].x = cave[1];
         this.objectsMap[0].y = cave[2];
         this.controller = new controller(this.objectsMap[0],this.map,this.objectsMap);
-
-        //calculate offset
-        //TODO testing
         let player = this.objectsMap[0];
-
         this.offsetX = player.x - this.centerX;
         this.offsetY = player.y - this.centerY;
         this.checkOffsetBorders();
+    }
 
+    startGame(){
+        depth = 1;
+        this.clearGame();
+        this.messages = ["","","","","","","","",""];
         this.pushMessage(`(Welcome to the ){white}(${depth} depth!){red}`);
     }
 
     newLevel(){
         depth++;
-        let cave = dungeonGeneration.generateCave(depth);
-        this.map = cave[0];
-        this.objectsMap = dungeonGeneration.generateObjects();
-//        this.rMenu = this.objectsMap[0].rMenu;
-        //this.messages = ["","","","","","","","",""];
-        this.objectsMap[0].x = cave[1];
-        this.objectsMap[0].y = cave[2];
-        this.controller = new controller(this.objectsMap[0],this.map,this.objectsMap);
-
-        //calculate offset
-        //TODO testing
-        let player = this.objectsMap[0];
-
-        this.offsetX = player.x - this.centerX;
-        this.offsetY = player.y - this.centerY;
+        this.clearGame();
         this.checkOffsetBorders();
-
         this.pushMessage(`(Welcome to the ){white}(${depth} depth!){red}`);
     }
+
     checkOffsetBorders() {
         //checking borders
         let mapW = this.map[0].length;
