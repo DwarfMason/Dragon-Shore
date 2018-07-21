@@ -116,8 +116,42 @@ class Orc extends Mob {
         }
         return [lastx,lasty];
     }
+}
 
-
+class Kobold extends Mob {
+    constructor(startX, startY) {
+        super(75);
+        this.name = "little kobold";
+        this.strength = rollDice(6, 3) - 1;
+        this.agility = rollDice(6, 3) + 2;
+        this.endurance = rollDice(6, 3) - 5;
+        this.attack = Math.floor(this.strength / 10);
+        this.x = startX;
+        this.y = startY;
+        this.hp = Math.floor(this.endurance / 10) + 4;
+        this.initiative = this.agility / 10 + 8;
+        this.gold = Math.floor(Math.random() * 10) + 3;
+        this.color = "violet";
+        this.up = 1;
+    }
+    move(map){
+        let lastx = this.x;
+        let lasty = this.y;
+        if(this.up == 1){
+            if (!map[this.y-1][this.x].isMovable) {
+                this.up = 0;
+            }else{
+                this.y--;
+            }
+        }else{
+            if (!map[this.y+1][this.x].isMovable) {
+                this.up = 1;
+            }else{
+                this.y++;
+            }
+        }
+        return [lastx,lasty];
+    }
 }
 
 let mainHero = null;
