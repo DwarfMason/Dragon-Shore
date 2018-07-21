@@ -90,7 +90,7 @@ class CreditsState extends State {
     }
 }
 
-class GameOver extends State{
+class GameOver extends State {
     constructor(){
         super();
     }
@@ -279,6 +279,7 @@ class GameState extends State {
         this.offsetX = player.x - this.centerX;
         this.offsetY = player.y - this.centerY;
         this.checkOffsetBorders();
+        this.calcVisited();
     }
 
     startGame(){
@@ -300,15 +301,15 @@ class GameState extends State {
         let mapW = this.map[0].length;
         let mapH = this.map.length;
 
-        if (this.offsetX + this.fieldWidth-1 >= mapW) {
-            this.offsetX = mapW - this.fieldWidth - 2;
+        if (this.offsetX + this.fieldWidth > mapW) {
+            this.offsetX = mapW - this.fieldWidth;
         }
         if (this.offsetX < 0) {
             this.offsetX = 0;
         }
 
-        if (this.offsetY + this.fieldHeight-1 >= mapH) {
-            this.offsetY = mapH - this.fieldHeight - 2;
+        if (this.offsetY + this.fieldHeight > mapH) {
+            this.offsetY = mapH - this.fieldHeight;
         }
         if (this.offsetY < 0) {
             this.offsetY = 0;
@@ -358,6 +359,30 @@ class GameState extends State {
             }
         }
         this.checkOffsetBorders();
+    }
+
+    calcVisited() {
+        let mapW = this.map[0].length;
+        let mapH = this.map.length;
+        let player = this.objectsMap[0];
+        let startX = Math.max(0, player.x - player.fogRad);
+        let startY = Math.max(0, player.y - player.fogRad);
+        let endX = Math.min(mapW-1, player.x + player.fogRad);
+        let endY = Math.min(mapH-1, player.y + player.fogRad);
+
+
+        for (let y = startY; y <= endY; ++y) {
+            for (let x = startX; x <= endX; ++x) {
+                if (Math.sqrt((x-player.x)**2 + (y-player.y)**2) <= player.fogRad)
+                    this.map[y][x].seen = true;
+            }
+        }
+    }
+
+    isVisibleForPlayer(x, y) {
+        let player = this.objectsMap[0];
+
+        return Math.sqrt((x-player.x)**2 + (y-player.y)**2) <= player.fogRad;
     }
 
     setNewMap(){
@@ -462,10 +487,18 @@ class GameState extends State {
         context.clearRect(0, 0, context.width, context.height);
     }
 
-    drawTexture(context, texture, x, y) {
+    drawTexture(context, texture, x, y, visible) {
         let ts = texture.tileSet;
-        context.drawImage(ts.image, ts.getTilePos(texture.id), 0, +ts.tileSize, +ts.tileSize,
-            x * +   texture.size, y * +texture.size, +texture.size, +texture.size);
+        if (visible) {
+            context.drawImage(ts.image, ts.getTilePos(texture.id), 0, +ts.tileSize, +ts.tileSize,
+                x * +texture.size, y * +texture.size, +texture.size, +texture.size);
+        } else if (texture.seen) {
+            context.drawImage(ts.imageVisited, ts.getTilePos(texture.id), 0, +ts.tileSize, +ts.tileSize,
+                x * +texture.size, y * +texture.size, +texture.size, +texture.size);
+        } else {
+            context.drawImage(ts.image, 0, 0, +ts.tileSize, +ts.tileSize,
+                x * +texture.size, y * +texture.size, +texture.size, +texture.size);
+        }
     }
 
     updateMap(context) {
@@ -476,15 +509,17 @@ class GameState extends State {
 
         for (let y = startY; y <= endY; ++y){
             for (let x = startX; x <= endX; ++x) {
-                this.drawTexture(context, this.map[y][x], x - startX, y - startY);
+                this.drawTexture(context, this.map[y][x], x - startX, y - startY, this.isVisibleForPlayer(x, y));
             }
         }
         for (let i = 0; i < this.objectsMap.length;++i){
-            if (this.objectsMap[i].x >= startX && this.objectsMap[i].x <= endX) {
-                if (this.objectsMap[i].y >= startY && this.objectsMap[i].y <= endY) {
-                    if(!this.objectsMap[i].isDead)
-                        this.drawTexture(context, this.objectsMap[i],
-                            this.objectsMap[i].x-startX, this.objectsMap[i].y-startY);
+            let objX = this.objectsMap[i].x;
+            let objY = this.objectsMap[i].y;
+
+            if (objX >= startX && objX <= endX) {
+                if (objY >= startY && objY <= endY) {
+                    if(!this.objectsMap[i].isDead && this.isVisibleForPlayer(objX, objY))
+                        this.drawTexture(context, this.objectsMap[i], objX-startX, objY-startY, true);
                 }
             }
         }
@@ -525,6 +560,7 @@ class GameState extends State {
                 this.controller.enter();
         }
         this.calcOffset();
+        this.calcVisited();
         scene.update();
     }
 

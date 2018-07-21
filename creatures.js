@@ -27,6 +27,7 @@ class Creature extends SceneObject {
         this.gold = 0;
         this.isDead = 0;
         this.color = "white";
+        this.fogRad = 5;
     }
 }
 
@@ -68,7 +69,6 @@ class Player extends Creature {
         this.level = 1;
         this.name = name;
         this.baffs = [];
-        this.fogRad = 2;
         this.hpPotions = 3;
         this.mpPotions = 3;
         this.color = "yellow";

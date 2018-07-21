@@ -1,10 +1,13 @@
 
 class TileSet {
-    constructor(tilesetPath = "assets/tileset.png", tileSize = 8) {
-        this.path = tilesetPath;
+    constructor(tilesetName = "tileset", tileSize = 8) {
+        this.path = getAsset(`${tilesetName}.png`);
+        this.pathVisited = getAsset(`${tilesetName}_visited.png`);
         this.tileSize = tileSize;
         this.image = new Image();
         this.image.src = this.path;
+        this.imageVisited = new Image();
+        this.imageVisited.src = this.pathVisited;
     }
     getTilePos(tileId) {
         return tileId*this.tileSize;
@@ -25,6 +28,7 @@ class Terrain extends Texture{
     constructor(tileId){
         super(tileId);
         this.isMovable = 0;
+        this.seen = false;
     }
 }
 class Wall extends  Terrain {

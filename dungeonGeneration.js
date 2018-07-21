@@ -1,7 +1,5 @@
 let start = new StartPoint();
 let end = new EndPoint();
-let wall = new Wall();
-let floor = new Floor();
 
 dungeonGeneration = (()=>{
     let objects = [];
@@ -21,7 +19,7 @@ dungeonGeneration = (()=>{
 
         for (let i = 0; i < dungeonHeight; i++)
             for (let j = 0; j < dungeonWidth; j++)
-                map[i][j] = wall;
+                map[i][j] = new Wall();
 
         let startX = Math.floor(Math.random() * (dungeonWidth-2))+1;
         let startY = Math.floor(Math.random() * (dungeonHeight-2))+1;
@@ -45,8 +43,8 @@ dungeonGeneration = (()=>{
                     case 0:
                         if (currentX - 2 >= 0) {
                             currentX--;
-                            if (map[currentY][currentX] != floor && map[currentY][currentX] != start) {
-                                map[currentY][currentX] = floor;
+                            if (!(map[currentY][currentX] instanceof Floor) && !(map[currentY][currentX] instanceof StartPoint)) {
+                                map[currentY][currentX] = new Floor();
                                 floorTilesCount++;
                             }
                         }
@@ -54,8 +52,8 @@ dungeonGeneration = (()=>{
                     case 1:
                         if (currentX + 2 < dungeonWidth) {
                             currentX++;
-                            if (map[currentY][currentX] != floor && map[currentY][currentX] != start) {
-                                map[currentY][currentX] = floor;
+                            if (!(map[currentY][currentX] instanceof Floor) && !(map[currentY][currentX] instanceof StartPoint)) {
+                                map[currentY][currentX] = new Floor();
                                 floorTilesCount++;
                             }
                         }
@@ -63,8 +61,8 @@ dungeonGeneration = (()=>{
                     case 2:
                         if (currentY - 2 >= 0) {
                             currentY--;
-                            if (map[currentY][currentX] != floor && map[currentY][currentX] != start) {
-                                map[currentY][currentX] = floor;
+                            if (!(map[currentY][currentX] instanceof Floor) && !(map[currentY][currentX] instanceof StartPoint)) {
+                                map[currentY][currentX] = new Floor();
                                 floorTilesCount++;
                             }
                         }
@@ -72,8 +70,8 @@ dungeonGeneration = (()=>{
                     case 3:
                         if (currentY + 2 < dungeonHeight) {
                             currentY++;
-                            if (map[currentY][currentX] != floor && map[currentY][currentX] != start) {
-                                map[currentY][currentX] = floor;
+                            if (!(map[currentY][currentX] instanceof Floor) && !(map[currentY][currentX] instanceof StartPoint)) {
+                                map[currentY][currentX] = new Floor();
                                 floorTilesCount++;
                             }
                         }
@@ -93,7 +91,7 @@ dungeonGeneration = (()=>{
             while (enemyCount < count){
                 let tryX = Math.floor(Math.random() * (dungeonWidth - 2))+1;
                 let tryY = Math.floor(Math.random() * (dungeonHeight - 2))+1;
-                if (map[tryY][tryX] === floor){
+                if (map[tryY][tryX] instanceof Floor){
                     objects.push(new Orc(tryX,tryY));
                     enemyCount++;
                     console.log(objects);
