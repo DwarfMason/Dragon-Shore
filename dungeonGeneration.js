@@ -96,12 +96,12 @@ dungeonGeneration = (()=>{
                 let tryX = Math.floor(Math.random() * (dungeonWidth - 2))+1;
                 let tryY = Math.floor(Math.random() * (dungeonHeight - 2))+1;
                 if (map[tryY][tryX] instanceof Floor){
-                    let mobNum = Math.floor(Math.random()*2+1);
+                    let mobNum = Math.floor(Math.random()*2);
                     switch (mobNum){
                         case 0: objects.push(new Orc(tryX,tryY));
-                            break;
+								break;
                         case 1: objects.push(new Kobold(tryX, tryY));
-                            break;
+								break;
                     }
                     enemyCount++;
                     console.log(objects);
