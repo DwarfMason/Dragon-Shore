@@ -1,12 +1,16 @@
 let start = new StartPoint();
 let end = new EndPoint();
+let wall = new Wall();
+let floor = new Floor();
+let dungeonHeight = 30;
+let dungeonWidth = 50;
 
 dungeonGeneration = (()=>{
     let objects = [];
     function generateCave(dungeonDifficulty) {
         objects = [mainHero];
-        let dungeonHeight = Math.floor((1+Math.random())*30);
-        let dungeonWidth =Math.floor((1+Math.random())*50);
+        dungeonHeight = Math.floor((1+Math.random())*dungeonHeight);
+        dungeonWidth = Math.floor((1+Math.random())*dungeonWidth);
         console.log(dungeonHeight, dungeonWidth);
 
 
@@ -92,7 +96,13 @@ dungeonGeneration = (()=>{
                 let tryX = Math.floor(Math.random() * (dungeonWidth - 2))+1;
                 let tryY = Math.floor(Math.random() * (dungeonHeight - 2))+1;
                 if (map[tryY][tryX] instanceof Floor){
-                    objects.push(new Orc(tryX,tryY));
+                    let mobNum = Math.floor(Math.random()*2+1);
+                    switch (mobNum){
+                        case 0: objects.push(new Orc(tryX,tryY));
+                            break;
+                        case 1: objects.push(new Kobold(tryX, tryY));
+                            break;
+                    }
                     enemyCount++;
                     console.log(objects);
                 }

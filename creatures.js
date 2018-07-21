@@ -74,8 +74,15 @@ class Player extends Creature {
         this.color = "yellow";
     }
 }
-
-class Orc extends Creature {
+class Mob extends Creature{
+    constructor(id){
+        super(id);
+    }
+    move(map){
+        return [0,0];
+    }
+}
+class Orc extends Mob {
     constructor(startX, startY) {
         super(79);
         this.name = "Green orc";
@@ -89,6 +96,61 @@ class Orc extends Creature {
         this.initiative = this.agility / 10 + 8;
         this.gold = Math.floor(Math.random() * 15) + 3;
         this.color = "green";
+        this.left = 1;
+    }
+    move(map){
+        let lastx = this.x;
+        let lasty = this.y;
+        if(this.left == 1){
+            if (!map[this.y][this.x-1].isMovable) {
+                this.left = 0;
+            }else{
+                this.x--;
+            }
+        }else{
+            if (!map[this.y][this.x+1].isMovable) {
+                this.left = 1;
+            }else{
+                this.x++;
+            }
+        }
+        return [lastx,lasty];
+    }
+}
+
+class Kobold extends Mob {
+    constructor(startX, startY) {
+        super(75);
+        this.name = "little kobold";
+        this.strength = rollDice(6, 3) - 1;
+        this.agility = rollDice(6, 3) + 2;
+        this.endurance = rollDice(6, 3) - 5;
+        this.attack = Math.floor(this.strength / 10);
+        this.x = startX;
+        this.y = startY;
+        this.hp = Math.floor(this.endurance / 10) + 4;
+        this.initiative = this.agility / 10 + 8;
+        this.gold = Math.floor(Math.random() * 10) + 3;
+        this.color = "violet";
+        this.up = 1;
+    }
+    move(map){
+        let lastx = this.x;
+        let lasty = this.y;
+        if(this.up == 1){
+            if (!map[this.y-1][this.x].isMovable) {
+                this.up = 0;
+            }else{
+                this.y--;
+            }
+        }else{
+            if (!map[this.y+1][this.x].isMovable) {
+                this.up = 1;
+            }else{
+                this.y++;
+            }
+        }
+        return [lastx,lasty];
     }
 }
 

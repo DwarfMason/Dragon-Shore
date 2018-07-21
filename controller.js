@@ -1,4 +1,4 @@
-class controller{
+class Controller{
     constructor(player, map, objects){
         this.player = player;
         this.map = map;
@@ -91,3 +91,39 @@ class controller{
     }
 }
 
+
+
+class MobController{
+    constructor(map,objectsMap){
+        this.map = map;
+        this.objectsMap = objectsMap;
+    }
+    move(scene){
+        for (let i = 1;i < this.objectsMap.length;++i){
+            let lastPos = this.objectsMap[i].move(this.map);
+            if(this.checkPlayerCollision(scene)){
+                this.objectsMap[i].x = lastPos[0];
+                this.objectsMap[i].y = lastPos[1];
+            }
+
+        }
+    }
+    checkPlayerCollision(scene){
+        for (let i = 1;i < this.objectsMap.length; ++i) {
+            if((this.objectsMap[0].x === this.objectsMap[i].x) && (this.objectsMap[0].y === this.objectsMap[i].y)){
+                if(!this.objectsMap[i].isDead){
+                    if (mainHero.initiative >= this.objectsMap[i].initiative)
+                        closeBattle(this.objectsMap[0], this.objectsMap[i]);
+                    else
+                        closeBattle(this.objectsMap[i], this.objectsMap[0]);
+                    if(this.objectsMap[0].isDead){
+                        scene.setState(gameOver);
+                        scene.update();
+                    }
+                    return 1;
+                }
+            }
+        }
+        return 0;
+    }
+}
