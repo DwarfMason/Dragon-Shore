@@ -22,7 +22,6 @@ class Creature extends SceneObject {
         this.agility = 0;
         this.initiative = 0;
         this.items = [this.weapon, this.armor];
-        this.level = 0;
         this.name = 'none';
         this.gold = 0;
         this.isDead = 0;
@@ -37,25 +36,30 @@ class Player extends Creature {
         switch (race) {
             case 'human':
                 this.strength = rollDice(6, 3);
-                this.agility = rollDice(6, 3) + 1;
-                this.endurance = rollDice(6, 3) + 1;
+                this.agility = rollDice(6, 3) + 2;
+                this.endurance = rollDice(6, 3) + 2;
                 this.intelligence = rollDice(6, 3);
-                this.maxExp = 100;
                 break;
             case 'orc':
                 this.strength = rollDice(6, 3) + 5;
                 this.agility = rollDice(6, 3) - 4;
-                this.endurance = rollDice(6, 3) + 1;
+                this.endurance = rollDice(6, 3) + 3;
                 this.intelligence = rollDice(6, 3) - 3;
-                this.maxExp = 200;
                 break;
             case 'magic wombat':
-                this.strength = rollDice(6, 3) - 2;
-                this.agility = rollDice(6, 3) + 2;
-                this.endurance = rollDice(6, 3) - 2;
-                this.intelligence = rollDice(6, 3) + 4;
-                this.maxExp = 150;
+                this.strength = rollDice(6, 3) - 5;
+                this.agility = rollDice(6, 3) + 5;
+                this.endurance = rollDice(6, 3) - 5;
+                this.intelligence = rollDice(6, 3) + 10;
                 break;
+            case 'Wood elf':
+                this.strength = rollDice(6, 3) + 3;
+                this.agility = rollDice(6, 3) + 10;
+                this.endurance = rollDice(6, 3) - 6;
+                this.intelligence = rollDice(6, 3);
+                break;
+
+
         }
         this.race = race;
         this.x = startX;
@@ -66,7 +70,6 @@ class Player extends Creature {
         this.maxMP = this.mp;
         this.attack = Math.floor(this.strength / 10);
         this.initiative = this.agility / 10 + 8;
-        this.level = 1;
         this.name = name;
         this.baffs = [];
         this.hpPotions = 3;
@@ -122,8 +125,8 @@ class Kobold extends Mob {
     constructor(startX, startY) {
         super(75);
         this.name = "little kobold";
-        this.strength = rollDice(6, 3) - 1;
-        this.agility = rollDice(6, 3) + 2;
+        this.strength = rollDice(6, 3) - 5;
+        this.agility = rollDice(6, 3) + +5;
         this.endurance = rollDice(6, 3) - 5;
         this.attack = Math.floor(this.strength / 10);
         this.x = startX;

@@ -1,14 +1,12 @@
 let wall = new Wall();
 let floor = new Floor();
-let dungeonHeight = 30;
-let dungeonWidth = 50;
 
 dungeonGeneration = (()=>{
     let objects = [];
     function generateCave(dungeonDifficulty) {
         objects = [mainHero];
-        dungeonHeight = Math.floor((1+Math.random())*dungeonHeight);
-        dungeonWidth = Math.floor((1+Math.random())*dungeonWidth);
+        let dungeonHeight = Math.floor((1+Math.random())*30);
+        let dungeonWidth = Math.floor((1+Math.random())*50);
         console.log(dungeonHeight, dungeonWidth);
 
 
@@ -106,7 +104,7 @@ dungeonGeneration = (()=>{
                 }
             }
         }
-        addEnemy(Math.floor(depth * (1 + dungeonDifficulty * Math.random()) * Math.floor(Math.random()* 5) + 1));
+        addEnemy(Math.floor(depth * (3 + dungeonDifficulty * Math.random()) * Math.floor(Math.random()* 5) + 1));
         return [map,startX,startY];
     }
 

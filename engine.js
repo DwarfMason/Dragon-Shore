@@ -204,6 +204,11 @@ class CharCreationState extends State {
                 mainHero = new Player('magic wombat', 10, 10, 'little cuty');
                 this.isCreated = true;
                 break;
+            case 69: //e
+                mainHero = new Player('Wood elf', 10, 10, 'Eldrain');
+                this.isCreated = true;
+                break;
+
             case 13: //Enter
                 if (this.isCreated) {
                     this.isCreated = false;
@@ -235,7 +240,8 @@ class CharCreationState extends State {
 
         context.fillText("h - human", 10, 100);
         context.fillText("o - orc", 10, 130);
-        context.fillText("m - magic wombat", 10, 160);
+        context.fillText("e - wood elf", 10, 160);
+        context.fillText("m - magic wombat", 10, 190);
         super.update(context);
         if (this.isCreated) {
             context.font = "16px manaspc";
