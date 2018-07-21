@@ -259,6 +259,7 @@ class GameState extends State {
         this.messages = ["","","","","","","","",""];
 //        this.rMenu = null;
         this.controller = null;
+        this.mobController = null;
         this.ctx = null;
         this.fieldHeight = 30;
         this.fieldWidth  = 50;
@@ -274,7 +275,8 @@ class GameState extends State {
         this.objectsMap = dungeonGeneration.generateObjects();
         this.objectsMap[0].x = cave[1];
         this.objectsMap[0].y = cave[2];
-        this.controller = new controller(this.objectsMap[0],this.map,this.objectsMap);
+        this.controller = new Controller(this.objectsMap[0],this.map,this.objectsMap);
+        this.mobController = new MobController(this.map,this.objectsMap);
         let player = this.objectsMap[0];
         this.offsetX = player.x - this.centerX;
         this.offsetY = player.y - this.centerY;
@@ -505,26 +507,33 @@ class GameState extends State {
         switch(event.keyCode) {
             case 38: //arrow up
                 this.controller.moveU(scene);
+                this.mobController.move(scene);
                 break;
             case 40: //arrow down
                 this.controller.moveD(scene);
+                this.mobController.move(scene);
                 break;
             case 37://arrow left
                 this.controller.moveL(scene);
+                this.mobController.move(scene);
                 break;
             case 39://arrow r
                 this.controller.moveR(scene);
+                this.mobController.move(scene);
                 break;
             case 72://h - health
                 this.controller.drinkHP();
+                this.mobController.move(scene);
                 break;
             case 77://m - mana
                 this.controller.drinkMP();
+                this.mobController.move(scene);
                 break;
             case 190://>
                 this.controller.enter();
         }
         this.calcOffset();
+
         scene.update();
     }
 
