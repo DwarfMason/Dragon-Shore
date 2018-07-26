@@ -1,5 +1,5 @@
 
-function rollDice(diceVal, diceCount) {                     //Тут много функций на одно и то же, но так вызывать удобнее
+function rollDice(diceVal, diceCount) {
     let total = 0;
     for (let i = 0; i < diceCount; i++) {
         total += Math.floor(Math.random() * diceVal) + 1;
