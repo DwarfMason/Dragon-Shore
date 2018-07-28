@@ -24,7 +24,9 @@
             storageBucket: "dragon-shore.appspot.com",
             messagingSenderId: "911758759933"
         };
-        firebase.initializeApp(firebaseConfig);
+        if (firebase) {
+            firebase.initializeApp(firebaseConfig);
+        }
     </script>
 </head>
 <body>
@@ -55,7 +57,8 @@
         let scene = new Scene(document.getElementById("gameBoard"));
 
         document.getElementById("font-hack").remove();
-        scene.setState(menu);
+        //scene.setState(menu);
+        scene.setState(new SignInState(menu));
         scene.update();
     }
 

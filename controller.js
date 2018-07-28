@@ -15,6 +15,10 @@ class Controller{
                         closeBattle(this.objectsMap[i], this.player);
                     if(this.player.isDead){
                         scene.setState(gameOver);
+                        // Post score if user is authorized
+                        postScore(depth).then(value => {
+                            console.warn("Score posted:", value);
+                        });
                         scene.update();
                     }
                     return 1;
@@ -118,6 +122,10 @@ class MobController{
                         closeBattle(this.objectsMap[i], this.objectsMap[0]);
                     if(this.objectsMap[0].isDead){
                         scene.setState(gameOver);
+                        // Post score if user is authorized
+                        postScore(depth).then(value => {
+                            console.warn("Score posted:", value);
+                        });
                         scene.update();
                     }
                     return 1;
