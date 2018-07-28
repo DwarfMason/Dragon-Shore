@@ -1,5 +1,4 @@
-//TODO: вынести Scene, SceneObject и State в отдельный файл
-//TODO: всё, что связано с текстурами и тайлами -- тоже
+//TODO: сделать экран с результатами
 
 let game = null;//new GameState();
 let menu = null;
