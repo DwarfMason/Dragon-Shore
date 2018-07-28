@@ -30,6 +30,22 @@ async function login(email, password) {
     return success;
 }
 
+async function registrate(email, password, nickname=null) {
+    if (!isOnline()) {
+        return false;
+    }
+    let success = true;
+    await firebase.auth().createUserWithEmailAndPassword(email, password).then((userCreds)=>{
+        userCreds.user.updateProfile({
+            displayName: nickname
+        });
+    }).catch(error => {
+        console.error("Registration failed", error);
+        success = error.code;
+    });
+    return success;
+}
+
 async function postScore(depth) {
     if (!isOnline()) {
         return false;
@@ -70,7 +86,7 @@ firebase.auth().onAuthStateChanged(function(user) {
         };
         if (!user.displayName) {
             user.updateProfile({
-                displayName: "A wild MISSINGNO"
+                displayName: "MISSINGNO"
             }).then(()=>{
                 dbUser.displayName = user.displayName;
             });

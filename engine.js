@@ -350,6 +350,117 @@ class SignInState extends State {
     }
 }
 
+class SignUpState extends State {
+    constructor(callbackState, error = null) {
+        super();
+        this.callbackState = callbackState;
+        this.fieldFocus = 0;
+        this.fields = [{
+            name: "Email",
+            val: "",
+        },{
+            name: "Password",
+            val: "",
+            hideChars: true,
+        },{
+            name: "Nickname",
+            val: "MISSINGNO",
+        }];
+        this.error = error;
+    }
+    get events() {
+        return {
+            keyup: this.keyHandler,
+            keypress: this.typeHandler,
+        }
+    }
+    typeHandler(scene, event) {
+        if (event.key !== "Enter")
+            this.fields[this.fieldFocus].val += event.key;
+        scene.update();
+    }
+    keyHandler(scene, event) {
+        switch(event.keyCode) {
+            case 27: //escape
+                scene.setState(this.callbackState);
+                break;
+            case 8: //backspace
+                this.fields[this.fieldFocus].val =
+                    this.fields[this.fieldFocus].val.substr(0, this.fields[this.fieldFocus].val.length-1);
+                break;
+            case 38: //arrow up
+                this.fieldFocus--;
+                break;
+            case 40: //arrow down
+                this.fieldFocus++;
+                break;
+            case 13:
+                function authCallback(result) {
+                    if (result === true) {
+                        scene.setState(this.callbackState);
+                    } else {
+                        let errorMsg = "An error has occurred. Try again.";
+                        switch (result){
+                            case "auth/email-already-in-use":
+                                errorMsg = "This email is already in use.";
+                                break;
+                            case "auth/weak-password":
+                                errorMsg = "Your password is too weak.";
+                                break;
+                        }
+                        scene.setState(new SignInState(this.callbackState, errorMsg));
+                    }
+                    scene.update();
+                }
+                let email = this.fields[0].val;
+                let pass = this.fields[1].val;
+                let nickname = this.fields[2].val;
+                scene.setState(new LoadingState(registrate, this, [email, pass, nickname], authCallback));
+        }
+        scene.update();
+    }
+    update(context) {
+        if (this.fieldFocus < 0)
+            this.fieldFocus = 0;
+        if (this.fieldFocus >= this.fields.length)
+            this.fieldFocus = this.fields.length-1;
+
+        context.clearRect(0, 0, 1000, 650);
+        context.fillStyle = "white";
+        context.font = "48px manaspc";
+        context.textAlign = "center";
+        context.fillText("Sign up:", 470, 40);
+        context.font = "24px manaspc";
+        if (this.error) {
+            context.fillStyle = "red";
+            context.fillText(this.error, 470, 540);
+            context.fillStyle = "white";
+
+        }
+        context.fillText("Press arrows to switch between fields", 470, 580);
+        context.fillText("Press Enter to sign up", 470, 600);
+
+        context.strokeStyle = "white";
+        context.lineWidth = 2;
+        context.textAlign = "left";
+        for (let i = 0; i < this.fields.length; ++i) {
+            context.fillText(this.fields[i].name, 202, 130+(i*2)*25, 598);
+            context.beginPath();
+            context.rect(200, 130+(i*2)*25+3, 600, 24);
+            context.stroke();
+            let fieldText = this.fields[i].val;
+            if (this.fields[i].hideChars) {
+                fieldText = "*".repeat(this.fields[i].val.length);
+            }
+            if (this.fieldFocus === i) {
+                fieldText += '_';
+            }
+            context.fillText(fieldText, 202, 130+(i*2+1)*25-2, 598);
+        }
+        super.update(context);
+    }
+}
+
 class LoadingState extends State {
     constructor(promise, promiseCtx, promiseArgs, callback) {
         super();
