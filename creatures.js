@@ -47,7 +47,7 @@ class Player extends Creature {
                 this.intelligence = Math.min(rollDice(6, 3) - 3, 3);
                 break;
             case 'magic wombat':
-                this.strength = rollDice(6, 3) - 5;
+                this.strength = Math.min(rollDice(6, 3) - 5);
                 this.agility = rollDice(6, 3) + 5;
                 this.endurance = Math.min(rollDice(6, 3) - 5, 3);
                 this.intelligence = rollDice(6, 3) + 10;
@@ -87,15 +87,15 @@ class Orc extends Mob {
     constructor(startX, startY) {
         super(79);
         this.name = "Green orc";
-        this.strength = rollDice(6, 3) + 2;
-        this.agility = rollDice(6, 3) - 4;
-        this.endurance = rollDice(6, 3) + 1;
+        this.strength = rollDice(6, 3) + 2 + depth;
+        this.agility = rollDice(6, 3) - 4 + depth;
+        this.endurance = rollDice(6, 3) + 1 + depth;
         this.attack = Math.floor(this.strength / 10);
         this.x = startX;
         this.y = startY;
         this.hp = Math.floor(this.endurance / 10) + 4;
         this.initiative = this.agility / 10 + 8;
-        this.gold = Math.floor(Math.random() * 15) + 3;
+        this.gold = Math.floor(Math.random() * 15 + depth) + 3;
         this.color = "green";
         this.left = 1;
     }
@@ -123,15 +123,15 @@ class Kobold extends Mob {
     constructor(startX, startY) {
         super(75);
         this.name = "little kobold";
-        this.strength = rollDice(6, 3) - 5;
-        this.agility = rollDice(6, 3) + 5;
-        this.endurance = rollDice(6, 3) - 5;
+        this.strength = rollDice(6, 3) - 5 + depth;
+        this.agility = rollDice(6, 3) + 5 + depth;
+        this.endurance = rollDice(6, 3) - 5 + depth;
         this.attack = Math.floor(this.strength / 10);
         this.x = startX;
         this.y = startY;
         this.hp = Math.floor(this.endurance / 10) + 4;
         this.initiative = this.agility / 10 + 8;
-        this.gold = Math.floor(Math.random() * 10) + 3;
+        this.gold = Math.floor(Math.random() * 10 + depth) + 3;
         this.color = "violet";
         this.up = 1;
     }
@@ -159,9 +159,9 @@ class Dragon extends Mob {
     constructor(startX, startY) {
         super(68);
         this.name = "Red dragon";
-        this.strength = rollDice(6, 3) + 30;
-        this.agility = rollDice(6, 3) - 10;
-        this.endurance = rollDice(6, 3) + 5;
+        this.strength = rollDice(6, 3) + 30 + depth;
+        this.agility = rollDice(6, 3) - 10 + depth;
+        this.endurance = rollDice(6, 3) + 5 + depth;
         this.attack = Math.floor(this.strength / 10);
         this.x = startX;
         this.y = startY;
@@ -169,7 +169,6 @@ class Dragon extends Mob {
         this.initiative = this.agility / 10 + 5;
         this.gold = Math.floor(Math.random() * 100) + 3;
         this.color = "Red";
-        this.up = 1;
     }
     move(map){
         let lastx = this.x;

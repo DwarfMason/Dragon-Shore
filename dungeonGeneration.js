@@ -111,8 +111,6 @@ dungeonGeneration = (()=>{
             }
         }
         addEnemy(Math.floor(depth * (3 + dungeonDifficulty * Math.random()) * Math.floor(Math.random()* 5) + 1));
-        objects.push(new Dragon(exitX, exitY));
-        console.log(objects);
         return [map,startX,startY];
     }
 
