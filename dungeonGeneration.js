@@ -86,18 +86,24 @@ dungeonGeneration = (()=>{
 
         map[exitY][exitX] = new EndPoint();
 
+        function inRange(a, _start, end_) {
+            return a > _start && a < end_;
+        }
+
         function addEnemy(count){
             let enemyCount = 0;
             while (enemyCount < count){
                 let tryX = Math.floor(Math.random() * (dungeonWidth - 2))+1;
                 let tryY = Math.floor(Math.random() * (dungeonHeight - 2))+1;
                 if (map[tryY][tryX] instanceof Floor){
-                    let mobNum = Math.floor(Math.random()*2);
-                    switch (mobNum){
-                        case 0: objects.push(new Orc(tryX,tryY));
+                    let mobNum = rollDice(100,1);
+                    switch (true){
+                        case inRange(mobNum, -1, 48): objects.push(new Orc(tryX,tryY));
 								break;
-                        case 1: objects.push(new Kobold(tryX, tryY));
+                        case inRange(mobNum, 47, 96): objects.push(new Kobold(tryX, tryY));
 								break;
+                        case inRange(mobNum, 95, 101): objects.push(new Dragon(tryX, tryY));
+                                break;
                     }
                     enemyCount++;
                     console.log(objects);
@@ -105,6 +111,8 @@ dungeonGeneration = (()=>{
             }
         }
         addEnemy(Math.floor(depth * (3 + dungeonDifficulty * Math.random()) * Math.floor(Math.random()* 5) + 1));
+        objects.push(new Dragon(exitX, exitY));
+        console.log(objects);
         return [map,startX,startY];
     }
 

@@ -42,24 +42,22 @@ class Player extends Creature {
                 break;
             case 'orc':
                 this.strength = rollDice(6, 3) + 5;
-                this.agility = rollDice(6, 3) - 4;
+                this.agility = Math.min(rollDice(6, 3) - 4, 3);
                 this.endurance = rollDice(6, 3) + 3;
-                this.intelligence = rollDice(6, 3) - 3;
+                this.intelligence = Math.min(rollDice(6, 3) - 3, 3);
                 break;
             case 'magic wombat':
                 this.strength = rollDice(6, 3) - 5;
                 this.agility = rollDice(6, 3) + 5;
-                this.endurance = rollDice(6, 3) - 5;
+                this.endurance = Math.min(rollDice(6, 3) - 5, 3);
                 this.intelligence = rollDice(6, 3) + 10;
                 break;
             case 'Wood elf':
                 this.strength = rollDice(6, 3) + 3;
                 this.agility = rollDice(6, 3) + 10;
-                this.endurance = rollDice(6, 3) - 6;
+                this.endurance = Math.min(rollDice(6, 3) - 6, 3);
                 this.intelligence = rollDice(6, 3);
                 break;
-
-
         }
         this.race = race;
         this.x = startX;
@@ -126,7 +124,7 @@ class Kobold extends Mob {
         super(75);
         this.name = "little kobold";
         this.strength = rollDice(6, 3) - 5;
-        this.agility = rollDice(6, 3) + +5;
+        this.agility = rollDice(6, 3) + 5;
         this.endurance = rollDice(6, 3) - 5;
         this.attack = Math.floor(this.strength / 10);
         this.x = startX;
@@ -152,6 +150,55 @@ class Kobold extends Mob {
             }else{
                 this.y++;
             }
+        }
+        return [lastx,lasty];
+    }
+}
+
+class Dragon extends Mob {
+    constructor(startX, startY) {
+        super(68);
+        this.name = "Red dragon";
+        this.strength = rollDice(6, 3) + 30;
+        this.agility = rollDice(6, 3) - 10;
+        this.endurance = rollDice(6, 3) + 5;
+        this.attack = Math.floor(this.strength / 10);
+        this.x = startX;
+        this.y = startY;
+        this.hp = Math.floor(this.endurance / 10) + 4;
+        this.initiative = this.agility / 10 + 5;
+        this.gold = Math.floor(Math.random() * 100) + 3;
+        this.color = "Red";
+        this.up = 1;
+    }
+    move(map){
+        let lastx = this.x;
+        let lasty = this.y;
+        let dir = Math.floor(Math.random()*4);
+        switch (dir){
+            case 0: if(map[this.y-1][this.x].isMovable){
+                        this.y--;
+                        break;}
+                    else
+                        dir++;
+
+            case 1: if(map[this.y+1][this.x].isMovable){
+                this.y++;
+                break;}
+            else
+                dir++;
+
+            case 2: if(map[this.y][this.x-1].isMovable){
+                this.x--;
+                break;}
+            else
+                dir++;
+
+            case 3: if(map[this.y][this.x+1].isMovable){
+                this.x++;
+                break;}
+            else
+                dir++;
         }
         return [lastx,lasty];
     }
