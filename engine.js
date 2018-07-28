@@ -273,7 +273,7 @@ class SignInState extends State {
         }
     }
     typeHandler(scene, event) {
-        if (event.key !== "Enter")
+        if (event.key !== "Enter" && event.key !== "Backspace")
             this.fields[this.fieldFocus].val += event.key;
         scene.update();
     }
@@ -374,7 +374,7 @@ class SignUpState extends State {
         }
     }
     typeHandler(scene, event) {
-        if (event.key !== "Enter")
+        if (event.key !== "Enter" && event.key !== "Backspace")
             this.fields[this.fieldFocus].val += event.key;
         scene.update();
     }
