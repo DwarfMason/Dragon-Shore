@@ -67,6 +67,7 @@ async function postScore(depth) {
         if (querySnapshot.empty) {
             db.collection("leaderboards").add({
                 uid: dbUser.uid,
+                nickname: dbUser.displayName,
                 depth: depth,
             }).catch(error => {
                 console.error("Writing to DB failed", error);
@@ -85,6 +86,27 @@ async function postScore(depth) {
         success = false;
     });
     return success;
+}
+
+async function getScores(scoresPerPage = 5) {
+    if (!isOnline()) {
+        return false;
+    }
+    let result = [];
+    let queryHandler = querySnapshot => {
+        if (!querySnapshot.empty) {
+            querySnapshot.forEach(doc => {
+                result.push(doc.data());
+            });
+        }
+    };
+    await db.collection("leaderboards").limit(scoresPerPage).orderBy("depth", "desc").get()
+        .then(queryHandler)
+        .catch(error => {
+            console.error("Accessing DB failed", error);
+            result = false;
+    });
+    return result;
 }
 
 firebase.auth().onAuthStateChanged(function(user) {

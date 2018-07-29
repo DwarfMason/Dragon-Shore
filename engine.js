@@ -148,7 +148,7 @@ class MenuState extends State {
                         break;
                     case 1:
                         //leaderboards
-                        alert("Coming soon!");
+                        scene.setState(new LeaderboardsState(menu));
                         break;
                     case 2:
                         alert("Not yet implemented!");
@@ -271,6 +271,65 @@ class CharCreationState extends State {
             context.fillText(`Initiative: ${mainHero.initiative} `, 650,190);
             context.fillText(`Endurance: ${mainHero.endurance}`, 650,220);
         }
+    }
+}
+
+class LeaderboardsState extends State {
+    constructor(callbackState) {
+        super();
+        this.callbackState = callbackState;
+        this.scoresPerPage = 10;
+    }
+    get events() {
+        return {
+            keyup: this.keyHandler,
+        }
+    }
+    keyHandler(scene, event) {
+        switch(event.keyCode) {
+            case 27: //escape
+                scene.setState(this.callbackState);
+                break;
+        }
+        scene.update();
+    }
+    update(context) {
+        context.clearRect(0, 0, 1000, 650);
+        context.fillStyle = "white";
+        context.font = "48px manaspc";
+        context.textAlign = "center";
+        context.fillText("Leaderboards:", 500, 40);
+        context.fillText("Please wait...", 500, 325);
+        context.font = "24px manaspc";
+        context.fillText("Press Esc to go back", 500, 600);
+
+        getScores(this.scoresPerPage).then(scores => {
+            if (scores.length) {
+                context.clearRect(0, 100, 1000, 400);
+                context.font = "24px manaspc";
+                for (let i = 0; i < scores.length; ++i) {
+                    let score = scores[i];
+                    if (dbUser) {
+                        if (score.uid === dbUser.uid) {
+                            context.fillStyle = "yellow";
+                        }
+                    }
+                    context.textAlign = "left";
+                    context.fillText(`#${i+1}: ${score.nickname}`, 50, 90+i*25, 450);
+                    context.textAlign = "right";
+                    context.fillText(`${score.depth}`, 950, 90+i*25, 450);
+                    context.fillStyle = "white";
+                }
+                context.textAlign = "left";
+            } else {
+                context.font = "48px manaspc";
+                context.textAlign = "center";
+                context.fillText("No leaders yet. Be first!", 500, 325);
+                context.font = "24px manaspc";
+            }
+        });
+        super.update(context);
+
     }
 }
 
@@ -892,6 +951,3 @@ class GameState extends State {
         }
     }
 }
-
-
-
