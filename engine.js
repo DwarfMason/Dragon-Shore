@@ -70,7 +70,7 @@ class CreditsState extends State {
         }
     }
     update(context){
-        context.clearRect(0, 0, 960, 600);
+        context.clearRect(0, 0, 1000, 650);
         context.fillStyle = "white";
         context.font = "48px manaspc";
         context.textAlign = "center";
@@ -147,13 +147,30 @@ class MenuState extends State {
                         // game.startGame();
                         break;
                     case 1:
-                        alert("Not yet implemented!");
+                        //leaderboards
+                        alert("Coming soon!");
                         break;
                     case 2:
                         alert("Not yet implemented!");
                         break;
                     case 3:
                         scene.setState(credits);
+                        break;
+                    case 4:
+                        // sign in
+                        scene.setState(new SignInState(menu));
+                        break;
+                    case 5:
+                        // sign out
+                        let signOutCallback = function(result) {
+                            if (result) {
+                                scene.setState(menu);
+                            } else {
+                                scene.setState(new OfflineState(menu));
+                            }
+                            scene.update();
+                        };
+                        scene.setState(new LoadingState(logout, this, [], signOutCallback));
                         break;
                     default:
                         alert("Not yet implemented!");
@@ -172,11 +189,17 @@ class MenuState extends State {
         context.fillRect(0, 0, 1000, 650);
 
         if (this.menuPos < 0)
-            this.menuPos = 3;
-        if (this.menuPos > 3)
+            this.menuPos = 5;
+        if (this.menuPos > 5)
             this.menuPos = 0;
 
         context.drawImage(this.menuImgs[this.menuPos], 0, 0);
+        if (dbUser) {
+            context.font = "16px manaspc";
+            context.textAlign = "right";
+            context.fillStyle = "white";
+            context.fillText(`Welcome, ${dbUser.displayName}`, 995, 21);
+        }
         super.update(context);
     }
 }
@@ -223,7 +246,7 @@ class CharCreationState extends State {
     }
 
     update(context) {
-        context.clearRect(0, 0, 960, 600);
+        context.clearRect(0, 0, 1000, 650);
         context.fillStyle = "white";
         context.font = "48px manaspc";
         context.textAlign = "center";
@@ -257,12 +280,20 @@ class SignInState extends State {
         this.callbackState = callbackState;
         this.fieldFocus = 0;
         this.fields = [{
+            type: "text",
             name: "Email",
             val: "",
         },{
+            type: "text",
             name: "Password",
             val: "",
             hideChars: true,
+        },{
+            type: "button",
+            name: "Sign-up",
+            click: scene => {
+                scene.setState(new SignUpState(this.callbackState));
+            }
         }];
         this.error = error;
     }
@@ -273,8 +304,10 @@ class SignInState extends State {
         }
     }
     typeHandler(scene, event) {
-        if (event.key !== "Enter" && event.key !== "Backspace")
-            this.fields[this.fieldFocus].val += event.key;
+        if (this.fields[this.fieldFocus].type === "text") {
+            if (event.key !== "Enter" && event.key !== "Backspace")
+                this.fields[this.fieldFocus].val += event.key;
+        }
         scene.update();
     }
     keyHandler(scene, event) {
@@ -283,8 +316,10 @@ class SignInState extends State {
                 scene.setState(this.callbackState);
                 break;
             case 8: //backspace
-                this.fields[this.fieldFocus].val =
-                    this.fields[this.fieldFocus].val.substr(0, this.fields[this.fieldFocus].val.length-1);
+                if (this.fields[this.fieldFocus].type === "text") {
+                    this.fields[this.fieldFocus].val =
+                        this.fields[this.fieldFocus].val.substr(0, this.fields[this.fieldFocus].val.length - 1);
+                }
                 break;
             case 38: //arrow up
                 this.fieldFocus--;
@@ -292,15 +327,20 @@ class SignInState extends State {
             case 40: //arrow down
                 this.fieldFocus++;
                 break;
+            case 32: //space, useful for buttons
+                if (this.fields[this.fieldFocus].type === "button") {
+                    this.fields[this.fieldFocus].click(scene);
+                }
+                break;
             case 13:
-                function authCallback(result) {
+                let authCallback = (result) => {
                     if (result) {
                         scene.setState(this.callbackState);
                     } else {
                         scene.setState(new SignInState(this.callbackState, "An error has occurred. Try again."));
                     }
                     scene.update();
-                }
+                };
                 let email = this.fields[0].val;
                 let pass = this.fields[1].val;
                 scene.setState(new LoadingState(login, this, [email, pass], authCallback));
@@ -325,25 +365,39 @@ class SignInState extends State {
             context.fillStyle = "white";
 
         }
-        context.fillText("Press arrows to switch between login and password", 470, 580);
+        context.fillText("Press arrows to switch between login and password", 470, 560);
+        context.fillText("Press Space while focused on button to click", 470, 580);
         context.fillText("Press Enter to sign in", 470, 600);
 
         context.strokeStyle = "white";
         context.lineWidth = 2;
         context.textAlign = "left";
         for (let i = 0; i < this.fields.length; ++i) {
-            context.fillText(this.fields[i].name, 202, 130+(i*2)*25, 598);
-            context.beginPath();
-            context.rect(200, 130+(i*2)*25+3, 600, 24);
-            context.stroke();
-            let fieldText = this.fields[i].val;
-            if (this.fields[i].hideChars) {
-                fieldText = "*".repeat(this.fields[i].val.length);
+            switch (this.fields[i].type) {
+                case "text":
+                    context.fillText(this.fields[i].name, 202, 130+(i*2)*25, 598);
+                    context.beginPath();
+                    context.rect(200, 130+(i*2)*25+3, 600, 24);
+                    context.stroke();
+                    let fieldText = this.fields[i].val;
+                    if (this.fields[i].hideChars) {
+                        fieldText = "*".repeat(this.fields[i].val.length);
+                    }
+                    if (this.fieldFocus === i) {
+                        fieldText += '_';
+                    }
+                    context.fillText(fieldText, 202, 130+(i*2+1)*25-2, 598);
+                    break;
+                case "button":
+                    if (this.fieldFocus === i) {
+                        context.fillStyle = "yellow";
+                    }
+                    context.textAlign = "center";
+                    context.fillText(this.fields[i].name, 500, 132+(i*2)*25, 598);
+                    context.textAlign = "left";
+                    context.fillStyle = "white";
+                    break;
             }
-            if (this.fieldFocus === i) {
-                fieldText += '_';
-            }
-            context.fillText(fieldText, 202, 130+(i*2+1)*25-2, 598);
         }
         super.update(context);
     }
@@ -355,15 +409,18 @@ class SignUpState extends State {
         this.callbackState = callbackState;
         this.fieldFocus = 0;
         this.fields = [{
+            type: "text",
             name: "Email",
             val: "",
         },{
+            type: "text",
             name: "Password",
             val: "",
             hideChars: true,
         },{
+            type: "text",
             name: "Nickname",
-            val: "MISSINGNO",
+            val: defaultNickname,
         }];
         this.error = error;
     }
@@ -394,7 +451,7 @@ class SignUpState extends State {
                 this.fieldFocus++;
                 break;
             case 13:
-                function authCallback(result) {
+                let authCallback = function(result) {
                     if (result === true) {
                         scene.setState(this.callbackState);
                     } else {

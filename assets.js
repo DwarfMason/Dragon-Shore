@@ -4,7 +4,7 @@ function getAsset(fileName) {
 }
 
 let menuImgs = [];
-for (let i = 0; i < 4; ++i) {
+for (let i = 0; i < 6; ++i) {
     let imgPath = getAsset(`menu${i}.png`);
     let image = new Image();
     image.src = imgPath;

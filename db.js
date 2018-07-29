@@ -1,4 +1,5 @@
 let dbUser = null;
+const defaultNickname = "MISSINGNO";
 let db = null;
 
 if (firebase) {
@@ -28,6 +29,14 @@ async function login(email, password) {
         success = false;
     });
     return success;
+}
+
+async function logout() {
+    if (!isOnline()) {
+        return false;
+    }
+    await firebase.auth().signOut();
+    return true;
 }
 
 async function registrate(email, password, nickname=null) {
@@ -86,7 +95,7 @@ firebase.auth().onAuthStateChanged(function(user) {
         };
         if (!user.displayName) {
             user.updateProfile({
-                displayName: "MISSINGNO"
+                displayName: defaultNickname
             }).then(()=>{
                 dbUser.displayName = user.displayName;
             });
