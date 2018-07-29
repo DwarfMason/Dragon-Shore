@@ -213,19 +213,19 @@ class CharCreationState extends State {
     keyHandler(scene, event) {
         switch (event.keyCode) {
             case 72: //h
-                mainHero = new Player('human', 10, 10, 'brave hero');
+                mainHero = new Player('human', 10, 10, dbUser.displayName);
                 this.isCreated = true;
                 break;
             case 79: //o
-                mainHero = new Player('orc', 10, 10, 'badass orc');
+                mainHero = new Player('orc', 10, 10, dbUser.displayName);
                 this.isCreated = true;
                 break;
             case 77: //m
-                mainHero = new Player('magic wombat', 10, 10, 'little cuty');
+                mainHero = new Player('magic wombat', 10, 10, dbUser.displayName);
                 this.isCreated = true;
                 break;
             case 69: //e
-                mainHero = new Player('Wood elf', 10, 10, 'Eldrain');
+                mainHero = new Player('Wood elf', 10, 10, dbUser.displayName);
                 this.isCreated = true;
                 break;
 
