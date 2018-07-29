@@ -44,14 +44,17 @@ async function registrate(email, password, nickname=null) {
         return false;
     }
     let success = true;
-    await firebase.auth().createUserWithEmailAndPassword(email, password).then((userCreds)=>{
-        userCreds.user.updateProfile({
-            displayName: nickname
-        });
-    }).catch(error => {
+    await firebase.auth().createUserWithEmailAndPassword(email, password).catch(error => {
         console.error("Registration failed", error);
         success = error.code;
     });
+    if (firebase.auth().currentUser) {
+        await firebase.auth().currentUser.updateProfile({
+            displayName: nickname
+        }).then(()=>{
+            dbUser.displayName = nickname;
+        });
+    }
     return success;
 }
 
@@ -93,13 +96,6 @@ firebase.auth().onAuthStateChanged(function(user) {
             uid: user.uid,
             photoURL: user.photoURL,
         };
-        if (!user.displayName) {
-            user.updateProfile({
-                displayName: defaultNickname
-            }).then(()=>{
-                dbUser.displayName = user.displayName;
-            });
-        }
     } else {
         // User is signed out.
         dbUser = null;
