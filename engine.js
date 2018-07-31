@@ -181,7 +181,7 @@ class DescriptionState extends State {
         context.fillText("Items description", 470, 40);
         context.font = "36px manaspc";
         context.fillText("Press given keys to get description", 470, 580);
-        context.fillText("Press Esc to exit", 470, 625);
+        context.fillText("Press Enter to exit", 470, 625);
 
         context.textAlign = "left";
         context.font = "24px manaspc";
@@ -1017,12 +1017,16 @@ class GameState extends State {
             context.fillText("Inventory:", 820, 170);
 
             context.textAlign = "left";
-            context.fillText(`HP potions: ${mainHero.hpPotions}`, 820, 200);
-            context.fillText(`MP potions: ${mainHero.mpPotions}`, 820, 230);
-            context.fillText(`Armor:`, 820, 260);
-            context.fillText(`${mainHero.armor.name}`, 820, 280);
-            context.fillText(`Weapon:`, 820, 310);
-            context.fillText(`${mainHero.weapon.name}`, 820, 330);
+
+            game.drawMessage(`(HP ){green} (potions: ${mainHero.hpPotions}){white}`, 820, 200, context);
+            game.drawMessage(`(MP){blue} ( potions: ${mainHero.mpPotions}){white}`, 820, 220, context);
+
+            game.drawMessage(`(Armor:){#FFB459}`, 820, 300, context);
+            context.fillStyle = "white";
+            context.fillText(`${mainHero.armor.name}`, 820, 320);
+            game.drawMessage(`(Weapon:){#FFB459}`, 820, 380, context);
+            context.fillStyle = "white";
+            context.fillText(`${mainHero.weapon.name}`, 820, 400);
 
             for (let i = 0; i < this.objectsMap[0].baffs.length; ++i) {
                 context.fillText(this.objectsMap[0].baffs[i], 820, 170 + (+20 * +i));
