@@ -132,7 +132,7 @@ class HelpState extends State {
 
         context.fillText("Key bindings:", 10, 65);
 
-        context.fillText("Arrows stays for movement", 10, 100);
+        context.fillText("Arrows stay for movement", 10, 100);
         context.fillText("h - use health potion", 10, 130);
         context.fillText("m - mana potion", 10, 160);
         context.fillText("'space' - use magic", 10, 190);

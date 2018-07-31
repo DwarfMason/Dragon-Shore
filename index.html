@@ -8,9 +8,29 @@
             margin: 0;
             padding: 0;
         }
+        body {
+            background: black url("bg_darker.png") repeat;
+        }
+        .canvas-container {
+            text-align: center;
+            margin-top: 5px;
+        }
         @font-face {
             font-family: manaspc; /* Гарнитура шрифта */
             src: url(assets/manaspc.ttf); /* Путь к файлу со шрифтом */
+        }
+        .ds-text {
+            font-family: manaspc;
+            color: white;
+            margin: 10px auto 50px;
+            width: 90%;
+        }
+        .ds-text h2 {
+            text-align: center;
+            padding-bottom: 5px;
+        }
+        .ds-text p {
+            text-align: justify;
         }
     </style>
     <script src="https://www.gstatic.com/firebasejs/5.3.0/firebase.js"></script>
@@ -30,7 +50,38 @@
     </script>
 </head>
 <body>
-<canvas id="gameBoard" width="1000" height="650" style="background: black"></canvas>
+<div class="canvas-container">
+    <canvas id="gameBoard" width="1000" height="650" style="background: black"></canvas>
+</div>
+<div class="ds-text">
+    <h2>Dragon Shore</h2>
+    <h3>Description</h3>
+    <p>Dragon Shore is a retro styled roguelike game written on vanilla JavaScript in less than 2 weeks.</p>
+    <p>Our game is the new vision of roguelikes inspired by Dwarf Fortress.</p>
+    <p>Hardcore procedure-generated dungeons with well-balanced game mechanics will give you an unforgettable experience,
+        no matter how many dungeons have you passed through.</p>
+    <br>
+    <h3>Help</h3>
+    <h4>Key bindings in-game:</h4>
+        <p>Arrows stay for movement</p>
+        <p>h - use health potion</p>
+        <p>m - mana potion</p>
+        <p>'space' - use magic</p>
+        <p>. or >  - descend (works on ladders >)</p>
+        <p>? - help menu</p>
+        <p>d - description items menu</p>
+        <p>s - call shop</p>
+    <br>
+    <h3>Our team</h3>
+    <p>We are 3 students of Far Eastern Federal University:</p>
+    <ul type="square" style="margin-left: 10pt;">
+        <li>Igor Balashenko (DwarfMason)</li>
+        <li>Yury Kurlykov (t1meshift)</li>
+        <li>Andrey Osadchii (smgks)</li>
+    </ul>
+    <p>Started just to write a simple game for summer practice courses, our team have decided to continue working on
+        this project.</p>
+</div>
 <div id="font-hack" style="font-family: manaspc; visibility: hidden;">.</div>
 <script src="assets.js"></script>
 <script src="db.js"></script>
