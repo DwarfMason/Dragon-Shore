@@ -6,7 +6,9 @@ let credits = null;
 let leaderboards = null; //TODO
 let settings = null; //TODO
 let gameOver = null;//new GameOverState();
-let charCreation = null;
+let charCreation = null; // new CharCreationState()
+let shop = null; //ShopCreationState;
+
 let depth;
 
 class Scene {
@@ -117,6 +119,7 @@ class GameOver extends State{
         context.fillText(`Depth: ${depth}`, 20, 210);
         context.fillText(`Weapon: ${mainHero.weapon.name}`, 20, 240);
         context.fillText(`Armor: ${mainHero.armor.name}`, 20, 270);
+        context.fillText(`Case of death: ${game.messages[game.messages.length - 4]}`, 20, 630); //TODO FIX IT
         context.fillText("Press Enter to exit...", 100, 600);
         super.update(context);
     }
@@ -213,19 +216,19 @@ class CharCreationState extends State {
     keyHandler(scene, event) {
         switch (event.keyCode) {
             case 72: //h
-                mainHero = new Player('human', 10, 10, dbUser.displayName);
+                mainHero = new Player('human', 10, 10, dbUser? dbUser.displayName: 'UNKNOWN');
                 this.isCreated = true;
                 break;
             case 79: //o
-                mainHero = new Player('orc', 10, 10, dbUser.displayName);
+                mainHero = new Player('orc', 10, 10, dbUser? dbUser.displayName: 'UNKNOWN');
                 this.isCreated = true;
                 break;
             case 77: //m
-                mainHero = new Player('magic wombat', 10, 10, dbUser.displayName);
+                mainHero = new Player('magic wombat', 10, 10, dbUser? dbUser.displayName: 'UNKNOWN');
                 this.isCreated = true;
                 break;
             case 69: //e
-                mainHero = new Player('Wood elf', 10, 10, dbUser.displayName);
+                mainHero = new Player('Wood elf', 10, 10, dbUser? dbUser.displayName: 'UNKNOWN');
                 this.isCreated = true;
                 break;
 
@@ -622,6 +625,70 @@ class OfflineState extends State {
     }
 }
 
+class ShopState extends State{
+    constructor(){
+        super();
+    }
+
+    keyHandler(scene, event) {
+        switch (event.keyCode) {
+            // case 87: //w - weapon
+            //     getRandomWeapon();
+            //     break;
+            // case 65: //a - armor
+            //     getRandomArmor();
+            //     break;
+            case 80: //p - potion
+                getRandomPotion();
+                break;
+            case 69: //e - endurance
+                incStat('Endur');
+                break;
+            case 83: //S - strength(speed)
+                incStat('Str');
+                break;
+            case 73: //i - intelligence(speed)
+                incStat('Ag');
+                break;
+            case 70: //f - agility(fast)
+                incStat('Int');
+                break;
+            case 27: //Esc - exit
+                scene.setState(game);
+                break;
+        }
+        scene.update();
+    }
+
+    get events() {
+        return {
+            keyup: this.keyHandler,
+        }
+    }
+
+    update(context){
+        context.clearRect(0, 0, 1000, 650);
+        context.fillStyle = "white";
+        context.font = "48px manaspc";
+        context.textAlign = "center";
+
+        context.fillText("Random shop", 500, 40);
+        context.fillText(`Your Gold: ${mainHero.gold}`, 500, 600);
+
+        context.font = "24px manaspc";
+        context.textAlign = "left";
+
+        context.fillText("W:Random weapon............150", 10, 150);
+        context.fillText("A:Random armor.............200", 10, 190);
+        context.fillText("P:Random potion.............70", 10, 230);
+        context.fillText("S:Strength attr++...........80", 10, 270);
+        context.fillText("F:Agility attr++............80", 10, 310);
+        context.fillText("E:Endurance attr++..........80", 10, 350);
+        context.fillText("I:Intelligence attr++.......80", 10, 390);
+        super.update(context);
+    }
+}
+
 class GameState extends State {
     constructor(dialog = 0) {
         super();
@@ -630,7 +697,6 @@ class GameState extends State {
         this.map = [[]];
         this.objectsMap = [];
         this.messages = ["","","","","","","","",""];
-//        this.rMenu = null;
         this.controller = null;
         this.mobController = null;
         this.ctx = null;
@@ -697,15 +763,6 @@ class GameState extends State {
             return;
         }
         let player = this.objectsMap[0];
-        if (!player) {
-            // TODO game over?
-        }
-        // Calculating map offsets
-        /*
-        If the player is near to a map border, then no scrolling of course
-        If the player is in "center rectangle", then offset won't change
-        If the player is out of "center rectangle", then change offset
-        */
 
         let centerRectX = this.offsetX + ((this.fieldWidth - this.centerRectW) / 2) >> 0;
         let centerRectY = this.offsetY + ((this.fieldHeight - this.centerRectH) / 2) >> 0;
@@ -795,13 +852,16 @@ class GameState extends State {
             context.fillText("HP:" + this.objectsMap[0].hp + '/' + this.objectsMap[0].maxHP ,820,70);
             context.fillText("MP:" + this.objectsMap[0].mp + '/' + this.objectsMap[0].maxMP ,820,100);
             context.fillText(`Gold:${this.objectsMap[0].gold}`,820,130);
-            context.font  = "12px manaspc";
 
-            context.fillText("inventory:", 820, 150);
-            context.fillText(`HP potions: ${mainHero.hpPotions}`, 820, 170);
-            context.fillText(`MP potions: ${mainHero.mpPotions}`, 820, 190);
-            context.fillText(`Armor: ${mainHero.armor.name}`, 820, 210);
-            context.fillText(`Weapon: ${mainHero.weapon.name}`, 820, 230);
+            context.font  = "16px manaspc";
+            context.fillText("Inventory:", 820, 170);
+
+            context.font  = "12px manaspc";
+            context.textAlign = "left";
+            context.fillText(`HP potions: ${mainHero.hpPotions}`, 820, 200);
+            context.fillText(`MP potions: ${mainHero.mpPotions}`, 820, 230);
+            context.fillText(`Armor: ${mainHero.armor.name}`, 820, 260);
+            context.fillText(`Weapon: ${mainHero.weapon.name}`, 820, 290);
 
             for (let i = 0; i < this.objectsMap[0].baffs.length; ++i) {
                 context.fillText(this.objectsMap[0].baffs[i], 820, 170 + (+20 * +i));
@@ -939,6 +999,11 @@ class GameState extends State {
                 break;
             case 190://>
                 this.controller.enter();
+                break;
+            case 83: // s - shop
+                scene.setState(shop);
+                break;
+
         }
         this.calcOffset();
         this.calcVisited();

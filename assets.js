@@ -11,8 +11,6 @@ for (let i = 0; i < 6; ++i) {
     menuImgs.push(image);
 }
 
-let gameOverImg = new Image();
-
 let deathScreenImg = [];
 for (let i = 0; i < 5; ++i) {
     let imgPath = getAsset(`you_died${i}.png`);
@@ -21,10 +19,9 @@ for (let i = 0; i < 5; ++i) {
     deathScreenImg.push(image);
 }
 
-//gameOverImg.src = getAsset(`you_died${Math.floor(Math.random() * 4)}.png`);
-
 function getRandomIMG(){
     return deathScreenImg[Math.floor(Math.random() * 5)];
 }
+
 
 

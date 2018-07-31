@@ -7,10 +7,6 @@ dungeonGeneration = (()=>{
         objects = [mainHero];
         let dungeonHeight = Math.floor((1+Math.random())*30);
         let dungeonWidth = Math.floor((1+Math.random())*50);
-        console.log(dungeonHeight, dungeonWidth);
-
-
-
 
         let map = new Array(dungeonHeight);
         for (let i = 0; i < dungeonHeight; i++) {
@@ -102,15 +98,16 @@ dungeonGeneration = (()=>{
 								break;
                         case inRange(mobNum, 47, 96): objects.push(new Kobold(tryX, tryY));
 								break;
-                        case inRange(mobNum, 95, 101): objects.push(new Dragon(tryX, tryY));
+                        case inRange(mobNum, 95, 101): objects.push(new Minotaur(tryX, tryY));
                                 break;
                     }
                     enemyCount++;
-                    console.log(objects);
+                   //console.log(objects);
                 }
             }
         }
-        addEnemy(Math.floor(depth * (3 + dungeonDifficulty * Math.random()) * Math.floor(Math.random()* 5) + 1));
+        addEnemy(Math.min(Math.floor(depth * (3 + dungeonDifficulty * Math.random()) * Math.floor(Math.random()* 5)
+            + 1)), Math.floor(Math.sqrt(maxFloorTiles/5)));
         return [map,startX,startY];
     }
 

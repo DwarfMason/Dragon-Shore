@@ -7,6 +7,31 @@ function rollDice(diceVal, diceCount) {
     return total;
 }
 
+function getRandomPotion() {
+    if (mainHero.gold >= 70) {
+        let pot = rollDice(2, 1);
+        pot === 1 ? mainHero.hpPotions++ : mainHero.mpPotions++;
+        mainHero.gold -= 70;
+    }
+}
+
+function incStat(a) {
+    if (mainHero.gold >= 80) {
+        switch (a){
+            case 'Str': mainHero.strength++;
+                        break;
+            case 'Ag': mainHero.agility++;
+                            break;
+            case 'Endur': mainHero.endurance++;
+                              break;
+            case 'Int': mainHero.intelligence++;
+                              break;
+        }
+        mainHero.update();
+        mainHero.gold -= 80;
+    }
+}
+
 
 function closeBattle(first, second) {
     game.pushMessage(`(${first.name}){${first.color}}( bumped with ){white}(${second.name}){${second.color}}( !){white}`);
