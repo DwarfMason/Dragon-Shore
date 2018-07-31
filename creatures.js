@@ -96,7 +96,7 @@ class Orc extends Mob {
         this.y = startY;
         this.hp = Math.floor(this.endurance / 10) + 4;
         this.initiative = this.agility / 10 + 8;
-        this.gold = Math.floor(Math.random() * 15 + depth) + 3;
+        this.gold = Math.floor(Math.random() * (17 + depth)) + 3;
         this.weapon = weapons[weaponID];
         this.armor = armor[armorID];
         this.color = "green";
@@ -134,7 +134,7 @@ class Kobold extends Mob {
         this.y = startY;
         this.hp = Math.floor(this.endurance / 10) + 4;
         this.initiative = this.agility / 10 + 8;
-        this.gold = Math.floor(Math.random() * 10 + depth) + 3;
+        this.gold = Math.floor(Math.random() * (13 + depth)) + 3;
         this.weapon = weapons[weaponID];
         this.armor = armor[armorID];
         this.color = "violet";
@@ -172,7 +172,7 @@ class Gargoyle extends Mob {
         this.y = startY;
         this.hp = Math.floor(this.endurance / 10) + 4;
         this.initiative = this.agility / 10 + 8;
-        this.gold = Math.floor(Math.random() * 14 + depth) + 3;
+        this.gold = Math.floor(Math.random() * (20 + depth)) + 3;
         this.weapon = weapons[weaponID];
         this.armor = armor[armorID];
         this.color = "#FFB459";
@@ -212,7 +212,7 @@ class Minotaur extends Mob {
         this.y = startY;
         this.hp = Math.floor(this.endurance / 10) + 4;
         this.initiative = this.agility / 10 + 5;
-        this.gold = Math.floor(Math.random() * 100) + 3;
+        this.gold = Math.floor(Math.random() * 100) + 40;
         this.weapon = weapons[weaponID];
         this.armor = armor[armorID];
         this.color = "brown";

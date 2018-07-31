@@ -8,17 +8,17 @@ function rollDice(diceVal, diceCount) {
 }
 
 function getRandomPotion() {
-    if (mainHero.gold >= 70) {
+    if (mainHero.gold >= 40) {
         let pot = rollDice(2, 1);
         pot === 1 ? mainHero.hpPotions++ : mainHero.mpPotions++;
-        mainHero.gold -= 70;
+        mainHero.gold -= 40;
         return true;
     }
     return false;
 }
 
 function incStat(a) {
-    if (mainHero.gold >= 80) {
+    if (mainHero.gold >= 50) {
         switch (a){
             case 'Str': mainHero.strength++;
                         break;
@@ -30,7 +30,7 @@ function incStat(a) {
                               break;
         }
         mainHero.update();
-        mainHero.gold -= 80;
+        mainHero.gold -= 50;
         return true;
     }
     return false;
@@ -47,10 +47,10 @@ function getRandomWeapon() {
 }
 
 function getRandomArmor() {
-    if (mainHero.gold >= 200) {
+    if (mainHero.gold >= 150) {
         mainHero.armor = armor[Math.floor(Math.random()*armor.length)];
         mainHero.update();
-        mainHero.gold -= 200;
+        mainHero.gold -= 150;
         return true;
     }
     return false;
@@ -78,7 +78,12 @@ function closeBattle(first, second) {
         if (second.hp <= 0) {
             game.pushMessage(`(${second.name}){${second.color}}( is dead!){red}`);
             first.gold += second.gold;
-            game.pushMessage(`(You gained ){white}(${second.gold}){#ffd700}( gold!){white}`);
+            game.pushMessage(`(${second.name} gained ){white}(${second.gold}){#ffd700}( gold!){white}`);
+            let potionRoll = rollDice(20,1);
+            if(potionRoll > 18) {
+                mainHero.hpPotions++;
+                game.pushMessage(`(You have found){white} (a health potion){green}`)
+            }
             second.isDead = 1;
             return;
         }
@@ -105,7 +110,12 @@ function closeBattle(first, second) {
         if (first.hp <= 0) {
             game.pushMessage(`(${first.name} ){${first.color}}(is dead!){red}`);
             second.gold += first.gold;
-            game.pushMessage(`(You gained ){white}(${first.gold}){#ffd700}( gold!){white}`);
+            game.pushMessage(`(${second.name} gained ){white}(${first.gold}){#ffd700}( gold!){white}`);
+            let potionRoll = rollDice(20,1);
+            if(potionRoll > 18) {
+                mainHero.hpPotions++;
+                game.pushMessage(`(You have found){white} (a health potion){green}`)
+            }
             first.isDead = 1;
             return;
         }
