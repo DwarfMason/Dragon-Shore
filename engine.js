@@ -9,6 +9,7 @@ let gameOver = null;//new GameOverState();
 let charCreation = null; // new CharCreationState()
 let shop = null; //ShopCreationState;
 let help = null;
+let description = null;
 
 let depth;
 
@@ -139,6 +140,66 @@ class HelpState extends State {
         context.fillText("? - help menu", 10, 250);
         context.fillText("d - description items menu", 10, 280);
         context.fillText("s - call shop", 10, 310);
+
+        super.update(context);
+    }
+}
+
+class DescriptionState extends State {
+    constructor() {
+        super();
+        this.isWeapon  = false;
+        this.isArmor = false;
+    }
+
+    keyHandler(scene, event) {
+        switch (event.keyCode) {
+            case 13:
+                scene.setState(game);
+                break;
+            case 87: // w
+                this.isWeapon = true;
+                break;
+            case 65: // a
+                this.isArmor = true;
+                break;
+        }
+        scene.update();
+    }
+
+    get events() {
+        return {
+            keyup: this.keyHandler,
+        }
+    }
+
+    update(context) {
+        context.clearRect(0, 0, 1000, 650);
+        context.fillStyle = "white";
+        context.font = "48px manaspc";
+        context.textAlign = "center";
+        context.fillText("Items description", 470, 40);
+        context.font = "36px manaspc";
+        context.fillText("Press given keys to get description", 470, 580);
+        context.fillText("Press Esc to exit", 470, 625);
+
+        context.textAlign = "left";
+        context.font = "24px manaspc";
+
+        context.fillText(`w - ${mainHero.weapon.name} description`, 10, 100);
+        context.fillText(`a - ${mainHero.armor.name} description`, 10, 130);
+
+        if(this.isArmor){
+            context.font = "24px manaspc";
+            context.fillText(`${mainHero.armor.name} - ${mainHero.armor.description}`, 10, 200);
+            this.isArmor = !this.isArmor;
+        }
+
+        if(this.isWeapon){
+            context.font = "24px manaspc";
+            context.fillText(`${mainHero.weapon.name} - ${mainHero.weapon.description}`, 10, 200);
+            this.isWeapon = !this.isWeapon;
+        }
 
         super.update(context);
     }
@@ -1096,7 +1157,11 @@ class GameState extends State {
                 scene.setState(shop);
                 break;
             case 191: // /(?) - help
-                scene.setState(help)
+                scene.setState(help);
+                break;
+            case 68: // d - description
+                scene.setState(description);
+                break;
         }
         this.calcOffset();
         this.calcVisited();
