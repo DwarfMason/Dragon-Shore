@@ -246,7 +246,7 @@ class GameOver extends State {
         context.fillText(`Armor: ${mainHero.armor.name}`, 20, 270);
         context.fillText("Press Enter to exit...", 100, 600);
         context.font = "12px manaspc";
-        context.fillText(`Case of death: ${game.messages[2]}`, 20, 630); //TODO FIX IT
+        game.drawMessage(`Case of death: ${game.messages[2]}`, 20, 630, context);
         super.update(context);
     }
 }
@@ -830,13 +830,13 @@ class ShopState extends State {
         context.font = "24px manaspc";
         context.textAlign = "left";
 
-        context.fillText("W:Random weapon............150", 10, 150);
-        context.fillText("A:Random armor.............150", 10, 190);
-        context.fillText("P:Random potion.............40", 10, 230);
-        context.fillText("S:Strength attr++...........50", 10, 270);
-        context.fillText("F:Agility attr++............50", 10, 310);
-        context.fillText("E:Endurance attr++..........50", 10, 350);
-        context.fillText("I:Intelligence attr++.......50", 10, 390);
+        context.fillText(`W:Random weapon............${weaponCost}`, 10, 150);
+        context.fillText(`A:Random armor.............${armorCost}`, 10, 190);
+        context.fillText(`P:Random potion.............${potionCost}`, 10, 230);
+        context.fillText(`S:Strength attr++...........${statCost}`, 10, 270);
+        context.fillText(`F:Agility attr++............${statCost}`, 10, 310);
+        context.fillText(`E:Endurance attr++..........${statCost}`, 10, 350);
+        context.fillText(`I:Intelligence attr++.......${statCost}`, 10, 390);
         if (this.isBought) {
             context.fillText(`Your buy succesfull!`, 500, 500);
             this.isBought = !this.isBought;

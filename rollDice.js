@@ -1,3 +1,7 @@
+let potionCost = 50;
+let statCost = 50;
+let weaponCost = 150;
+let armorCost = 150;
 
 function rollDice(diceVal, diceCount) {
     let total = 0;
@@ -8,17 +12,18 @@ function rollDice(diceVal, diceCount) {
 }
 
 function getRandomPotion() {
-    if (mainHero.gold >= 40) {
+    if (mainHero.gold >= potionCost) {
         let pot = rollDice(2, 1);
         pot === 1 ? mainHero.hpPotions++ : mainHero.mpPotions++;
-        mainHero.gold -= 40;
+        mainHero.gold -= potionCost;
+        potionCost += Math.floor(0.25*potionCost);
         return true;
     }
     return false;
 }
 
 function incStat(a) {
-    if (mainHero.gold >= 50) {
+    if (mainHero.gold >= statCost) {
         switch (a){
             case 'Str': mainHero.strength++;
                         break;
@@ -30,28 +35,33 @@ function incStat(a) {
                               break;
         }
         mainHero.update();
-        mainHero.gold -= 50;
+        mainHero.gold -= statCost;
+        statCostCost += Math.floor(0.25*statCostnCost);
         return true;
     }
     return false;
 }
 
 function getRandomWeapon() {
-    if (mainHero.gold >= 150) {
+    if (mainHero.gold >= weaponCost) {
         mainHero.weapon = weapons[Math.floor(Math.random()*weapons.length)];
         mainHero.update();
-        mainHero.gold -= 150;
+        mainHero.gold -= weaponCost;
+        weaponCost += Math.floor(0.25*weaponCost);
         return true;
+
     }
     return false;
 }
 
 function getRandomArmor() {
-    if (mainHero.gold >= 150) {
-        mainHero.armor = armor[Math.floor(Math.random()*armor.length)];
+    if (mainHero.gold >= armorCost) {
+        mainHero.weapon = armor[Math.floor(Math.random()*armor.length)];
         mainHero.update();
-        mainHero.gold -= 150;
+        mainHero.gold -= armorCost;
+        armorCost += Math.floor(0.25*armorCost);
         return true;
+
     }
     return false;
 }
@@ -80,7 +90,7 @@ function closeBattle(first, second) {
             first.gold += second.gold;
             game.pushMessage(`(${second.name} gained ){white}(${second.gold}){#ffd700}( gold!){white}`);
             let potionRoll = rollDice(20,1);
-            if(potionRoll > 18) {
+            if(potionRoll > 18 && !mainHero.isDead) {
                 mainHero.hpPotions++;
                 game.pushMessage(`(You have found){white} (a health potion){green}`)
             }
@@ -112,7 +122,7 @@ function closeBattle(first, second) {
             second.gold += first.gold;
             game.pushMessage(`(${second.name} gained ){white}(${first.gold}){#ffd700}( gold!){white}`);
             let potionRoll = rollDice(20,1);
-            if(potionRoll > 18) {
+            if(potionRoll > 18 && !mainHero.isDead) {
                 mainHero.hpPotions++;
                 game.pushMessage(`(You have found){white} (a health potion){green}`)
             }

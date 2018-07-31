@@ -31,6 +31,6 @@ armor[0] = new Armor('Poor clothes', 2, 'It smells like your cat!');
 armor[1] = new Armor('Leather pants', 3, 'Because you did not have money for the shirt');
 armor[2] = new Armor('Leather set', 5, 'Ok, maybe you are not so poor');
 armor[3] = new Armor('Rock plate', 6, 'Haters gonna say - it is heavy');
-armor[4] = new Armor('Code shirt', 7, 'It is quit boring to make this descriptions. I am not even paid');
+armor[4] = new Armor('Code shirt', 7, 'It is quit boring to make this descriptions.');
 armor[5] = new Armor('Steel cuirass', 8, 'I really like it`s sound of ignoring damage!');
 armor[6] = new Armor('Dragon`s armor', 10, 'Greenpeace is in fury!');

@@ -94,7 +94,7 @@ dungeonGeneration = (()=>{
                 let weaponID = Math.floor(Math.random()*Math.min(depth, weapons.length));
                 let armorID = Math.floor(Math.random()*Math.min(depth, armor.length));
                 if (map[tryY][tryX] instanceof Floor){
-                    let mobNum = rollDice(100,1) + Math.min(depth, 100);
+                    let mobNum = Math.min(rollDice(50,1) + depth, 96);
                     switch (true){
                         case inRange(mobNum, -1, 48): objects.push(new Kobold(tryX,tryY, weaponID, armorID));
 								break;
@@ -110,8 +110,9 @@ dungeonGeneration = (()=>{
             }
         }
         addEnemy(Math.min(Math.floor(depth * (3 + dungeonDifficulty * Math.random()) * Math.floor(Math.random()* 5)
-            + 1)), Math.floor(Math.sqrt(maxFloorTiles/5)));
-        console.log(objects);
+            + 1), Math.floor(Math.sqrt(maxFloorTiles))));
+        console.log(objects.length);
+        console.log(maxFloorTiles);
         return [map,startX,startY];
     }
 
