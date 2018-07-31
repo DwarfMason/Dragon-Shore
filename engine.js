@@ -8,6 +8,7 @@ let settings = null; //TODO
 let gameOver = null;//new GameOverState();
 let charCreation = null; // new CharCreationState()
 let shop = null; //ShopCreationState;
+let help = null;
 
 let depth;
 
@@ -18,6 +19,7 @@ class Scene {
         this.eventList = {};
         this.ctx.imageSmoothingEnabled = false;
     }
+
     setState(state) {
         //remove old handlers
         for (let oldEvent in this.eventList) {
@@ -40,20 +42,25 @@ class Scene {
             }
         }
     }
+
     getState() {
         return this.state;
     }
+
     update() {
         this.state.update(this.ctx);
     }
 }
 
 class State {
-    constructor(){}
+    constructor() {
+    }
+
     get events() {
         return {};
     }
-    update(context){
+
+    update(context) {
 
     }
 }
@@ -62,16 +69,19 @@ class CreditsState extends State {
     constructor() {
         super();
     }
+
     keyHandler(scene, event) {
         scene.setState(menu);
         scene.update();
     }
+
     get events() {
         return {
             keyup: this.keyHandler,
         }
     }
-    update(context){
+
+    update(context) {
         context.clearRect(0, 0, 1000, 650);
         context.fillStyle = "white";
         context.font = "48px manaspc";
@@ -91,36 +101,83 @@ class CreditsState extends State {
     }
 }
 
-class GameOver extends State{
-    constructor(){
+class HelpState extends State {
+    constructor() {
         super();
     }
+
     keyHandler(scene, event) {
-        switch(event.keyCode) {
+        scene.setState(game);
+        scene.update();
+    }
+
+    get events() {
+        return {
+            keydown: this.keyHandler,
+        }
+    }
+
+    update(context) {
+        context.clearRect(0, 0, 1000, 650);
+        context.fillStyle = "white";
+        context.font = "48px manaspc";
+        context.textAlign = "center";
+        context.fillText("Help", 470, 40);
+        context.font = "36px manaspc";
+        context.fillText("Press any key to continue...", 470, 580);
+
+        context.textAlign = "left";
+        context.font = "24px manaspc";
+
+        context.fillText("Key bindings:", 10, 65);
+
+        context.fillText("Arrows stays for movement", 10, 100);
+        context.fillText("h - use health potion", 10, 130);
+        context.fillText("m - mana potion", 10, 160);
+        context.fillText("'space' - use magic", 10, 190);
+        context.fillText(". or >  - descend (works on ladders >)", 10, 220);
+        context.fillText("? - help menu", 10, 250);
+        context.fillText("d - description items menu", 10, 280);
+        context.fillText("s - call shop", 10, 310);
+
+        super.update(context);
+    }
+}
+
+class GameOver extends State {
+    constructor() {
+        super();
+    }
+
+    keyHandler(scene, event) {
+        switch (event.keyCode) {
             case 13:
                 scene.setState(menu);
                 menu.dropMenuPos();
         }
         scene.update();
     }
+
     get events() {
         return {
             keyup: this.keyHandler,
         }
     }
-    update(context){
+
+    update(context) {
         context.drawImage(getRandomIMG(), 0, 0);
 
         context.fillStyle = "white";
-        context.font  = "24px manaspc";
+        context.font = "24px manaspc";
 
         context.fillText(`Name: ${mainHero.name}`, 20, 150);
         context.fillText(`Race: ${mainHero.race}`, 20, 180);
         context.fillText(`Depth: ${depth}`, 20, 210);
         context.fillText(`Weapon: ${mainHero.weapon.name}`, 20, 240);
         context.fillText(`Armor: ${mainHero.armor.name}`, 20, 270);
-        context.fillText(`Case of death: ${game.messages[game.messages.length - 4]}`, 20, 630); //TODO FIX IT
         context.fillText("Press Enter to exit...", 100, 600);
+        context.font = "12px manaspc";
+        context.fillText(`Case of death: ${game.messages[2]}`, 20, 630); //TODO FIX IT
         super.update(context);
     }
 }
@@ -131,11 +188,13 @@ class MenuState extends State {
         this.menuPos = 0;
         this.menuImgs = menuImgs;
     }
-    dropMenuPos(){
-        this.menuPos=0;
+
+    dropMenuPos() {
+        this.menuPos = 0;
     }
+
     keyHandler(scene, event) {
-        switch(event.keyCode) {
+        switch (event.keyCode) {
             case 38: //arrow up
                 this.menuPos--;
                 break;
@@ -143,7 +202,7 @@ class MenuState extends State {
                 this.menuPos++;
                 break;
             case 13:
-                switch (this.menuPos){
+                switch (this.menuPos) {
                     case 0:
                         scene.setState(charCreation);
                         // scene.setState(game);
@@ -165,7 +224,7 @@ class MenuState extends State {
                         break;
                     case 5:
                         // sign out
-                        let signOutCallback = function(result) {
+                        let signOutCallback = function (result) {
                             if (result) {
                                 scene.setState(menu);
                             } else {
@@ -182,12 +241,14 @@ class MenuState extends State {
         }
         scene.update();
     }
+
     get events() {
         return {
             keyup: this.keyHandler,
         }
     }
-    update(context){
+
+    update(context) {
         context.fillStyle = "black";
         context.fillRect(0, 0, 1000, 650);
 
@@ -213,22 +274,27 @@ class CharCreationState extends State {
         this.isCreated = false;
         this.nameType = false;
     }
+
     keyHandler(scene, event) {
         switch (event.keyCode) {
             case 72: //h
-                mainHero = new Player('human', 10, 10, dbUser? dbUser.displayName: 'UNKNOWN');
+                mainHero = new Player('Human', 10, 10, dbUser ? dbUser.displayName : 'UNKNOWN');
                 this.isCreated = true;
                 break;
             case 79: //o
-                mainHero = new Player('orc', 10, 10, dbUser? dbUser.displayName: 'UNKNOWN');
+                mainHero = new Player('Orc', 10, 10, dbUser ? dbUser.displayName : 'UNKNOWN');
                 this.isCreated = true;
                 break;
             case 77: //m
-                mainHero = new Player('magic wombat', 10, 10, dbUser? dbUser.displayName: 'UNKNOWN');
+                mainHero = new Player('Magic wombat', 10, 10, dbUser ? dbUser.displayName : 'UNKNOWN');
                 this.isCreated = true;
                 break;
             case 69: //e
-                mainHero = new Player('Wood elf', 10, 10, dbUser? dbUser.displayName: 'UNKNOWN');
+                mainHero = new Player('Wood elf', 10, 10, dbUser ? dbUser.displayName : 'UNKNOWN');
+                this.isCreated = true;
+                break;
+            case 68: //d
+                mainHero = new Player('Dwarf', 10, 10, dbUser ? dbUser.displayName : 'UNKNOWN');
                 this.isCreated = true;
                 break;
 
@@ -261,18 +327,19 @@ class CharCreationState extends State {
         context.textAlign = "left";
         context.font = "24px manaspc";
 
-        context.fillText("h - human", 10, 100);
-        context.fillText("o - orc", 10, 130);
-        context.fillText("e - wood elf", 10, 160);
-        context.fillText("m - magic wombat", 10, 190);
+        context.fillText("h - Human", 10, 100);
+        context.fillText("o - Orc", 10, 130);
+        context.fillText("e - Wood elf", 10, 160);
+        context.fillText("m - Magic wombat", 10, 190);
+        context.fillText("d - Dwarf", 10, 220);
         super.update(context);
         if (this.isCreated) {
             context.font = "16px manaspc";
             context.fillText(`Your character: ${mainHero.name}`, 650, 100);
-            context.fillText(`Strength: ${mainHero.strength}`, 650,130);
-            context.fillText(`Agility: ${mainHero.agility}`, 650,160);
-            context.fillText(`Initiative: ${mainHero.initiative} `, 650,190);
-            context.fillText(`Endurance: ${mainHero.endurance}`, 650,220);
+            context.fillText(`Strength: ${mainHero.strength}`, 650, 130);
+            context.fillText(`Agility: ${mainHero.agility}`, 650, 160);
+            context.fillText(`Initiative: ${mainHero.initiative} `, 650, 190);
+            context.fillText(`Endurance: ${mainHero.endurance}`, 650, 220);
         }
     }
 }
@@ -283,19 +350,22 @@ class LeaderboardsState extends State {
         this.callbackState = callbackState;
         this.scoresPerPage = 10;
     }
+
     get events() {
         return {
             keyup: this.keyHandler,
         }
     }
+
     keyHandler(scene, event) {
-        switch(event.keyCode) {
+        switch (event.keyCode) {
             case 27: //escape
                 scene.setState(this.callbackState);
                 break;
         }
         scene.update();
     }
+
     update(context) {
         context.clearRect(0, 0, 1000, 650);
         context.fillStyle = "white";
@@ -318,9 +388,9 @@ class LeaderboardsState extends State {
                         }
                     }
                     context.textAlign = "left";
-                    context.fillText(`#${i+1}: ${score.nickname}`, 50, 90+i*25, 450);
+                    context.fillText(`#${i + 1}: ${score.nickname}`, 50, 90 + i * 25, 450);
                     context.textAlign = "right";
-                    context.fillText(`${score.depth}`, 950, 90+i*25, 450);
+                    context.fillText(`${score.depth}`, 950, 90 + i * 25, 450);
                     context.fillStyle = "white";
                 }
                 context.textAlign = "left";
@@ -345,12 +415,12 @@ class SignInState extends State {
             type: "text",
             name: "Email",
             val: "",
-        },{
+        }, {
             type: "text",
             name: "Password",
             val: "",
             hideChars: true,
-        },{
+        }, {
             type: "button",
             name: "Sign-up",
             click: scene => {
@@ -359,12 +429,14 @@ class SignInState extends State {
         }];
         this.error = error;
     }
+
     get events() {
         return {
             keyup: this.keyHandler,
             keypress: this.typeHandler,
         }
     }
+
     typeHandler(scene, event) {
         if (this.fields[this.fieldFocus].type === "text") {
             if (event.key !== "Enter" && event.key !== "Backspace")
@@ -372,8 +444,9 @@ class SignInState extends State {
         }
         scene.update();
     }
+
     keyHandler(scene, event) {
-        switch(event.keyCode) {
+        switch (event.keyCode) {
             case 27: //escape
                 scene.setState(this.callbackState);
                 break;
@@ -409,11 +482,12 @@ class SignInState extends State {
         }
         scene.update();
     }
+
     update(context) {
         if (this.fieldFocus < 0)
             this.fieldFocus = 0;
         if (this.fieldFocus >= this.fields.length)
-            this.fieldFocus = this.fields.length-1;
+            this.fieldFocus = this.fields.length - 1;
 
         context.clearRect(0, 0, 1000, 650);
         context.fillStyle = "white";
@@ -437,9 +511,9 @@ class SignInState extends State {
         for (let i = 0; i < this.fields.length; ++i) {
             switch (this.fields[i].type) {
                 case "text":
-                    context.fillText(this.fields[i].name, 202, 130+(i*2)*25, 598);
+                    context.fillText(this.fields[i].name, 202, 130 + (i * 2) * 25, 598);
                     context.beginPath();
-                    context.rect(200, 130+(i*2)*25+3, 600, 24);
+                    context.rect(200, 130 + (i * 2) * 25 + 3, 600, 24);
                     context.stroke();
                     let fieldText = this.fields[i].val;
                     if (this.fields[i].hideChars) {
@@ -448,14 +522,14 @@ class SignInState extends State {
                     if (this.fieldFocus === i) {
                         fieldText += '_';
                     }
-                    context.fillText(fieldText, 202, 130+(i*2+1)*25-2, 598);
+                    context.fillText(fieldText, 202, 130 + (i * 2 + 1) * 25 - 2, 598);
                     break;
                 case "button":
                     if (this.fieldFocus === i) {
                         context.fillStyle = "yellow";
                     }
                     context.textAlign = "center";
-                    context.fillText(this.fields[i].name, 500, 132+(i*2)*25, 598);
+                    context.fillText(this.fields[i].name, 500, 132 + (i * 2) * 25, 598);
                     context.textAlign = "left";
                     context.fillStyle = "white";
                     break;
@@ -474,37 +548,40 @@ class SignUpState extends State {
             type: "text",
             name: "Email",
             val: "",
-        },{
+        }, {
             type: "text",
             name: "Password",
             val: "",
             hideChars: true,
-        },{
+        }, {
             type: "text",
             name: "Nickname",
             val: defaultNickname,
         }];
         this.error = error;
     }
+
     get events() {
         return {
             keyup: this.keyHandler,
             keypress: this.typeHandler,
         }
     }
+
     typeHandler(scene, event) {
         if (event.key !== "Enter" && event.key !== "Backspace")
             this.fields[this.fieldFocus].val += event.key;
         scene.update();
     }
+
     keyHandler(scene, event) {
-        switch(event.keyCode) {
+        switch (event.keyCode) {
             case 27: //escape
                 scene.setState(this.callbackState);
                 break;
             case 8: //backspace
                 this.fields[this.fieldFocus].val =
-                    this.fields[this.fieldFocus].val.substr(0, this.fields[this.fieldFocus].val.length-1);
+                    this.fields[this.fieldFocus].val.substr(0, this.fields[this.fieldFocus].val.length - 1);
                 break;
             case 38: //arrow up
                 this.fieldFocus--;
@@ -513,12 +590,12 @@ class SignUpState extends State {
                 this.fieldFocus++;
                 break;
             case 13:
-                let authCallback = function(result) {
+                let authCallback = function (result) {
                     if (result === true) {
                         scene.setState(this.callbackState);
                     } else {
                         let errorMsg = "An error has occurred. Try again.";
-                        switch (result){
+                        switch (result) {
                             case "auth/email-already-in-use":
                                 errorMsg = "This email is already in use.";
                                 break;
@@ -537,11 +614,12 @@ class SignUpState extends State {
         }
         scene.update();
     }
+
     update(context) {
         if (this.fieldFocus < 0)
             this.fieldFocus = 0;
         if (this.fieldFocus >= this.fields.length)
-            this.fieldFocus = this.fields.length-1;
+            this.fieldFocus = this.fields.length - 1;
 
         context.clearRect(0, 0, 1000, 650);
         context.fillStyle = "white";
@@ -562,9 +640,9 @@ class SignUpState extends State {
         context.lineWidth = 2;
         context.textAlign = "left";
         for (let i = 0; i < this.fields.length; ++i) {
-            context.fillText(this.fields[i].name, 202, 130+(i*2)*25, 598);
+            context.fillText(this.fields[i].name, 202, 130 + (i * 2) * 25, 598);
             context.beginPath();
-            context.rect(200, 130+(i*2)*25+3, 600, 24);
+            context.rect(200, 130 + (i * 2) * 25 + 3, 600, 24);
             context.stroke();
             let fieldText = this.fields[i].val;
             if (this.fields[i].hideChars) {
@@ -573,7 +651,7 @@ class SignUpState extends State {
             if (this.fieldFocus === i) {
                 fieldText += '_';
             }
-            context.fillText(fieldText, 202, 130+(i*2+1)*25-2, 598);
+            context.fillText(fieldText, 202, 130 + (i * 2 + 1) * 25 - 2, 598);
         }
         super.update(context);
     }
@@ -587,6 +665,7 @@ class LoadingState extends State {
         this.args = promiseArgs;
         this.callback = callback;
     }
+
     update(context) {
         context.clearRect(0, 0, 1000, 650);
         context.fillStyle = "white";
@@ -602,16 +681,19 @@ class OfflineState extends State {
         super();
         this.callbackState = callbackState;
     }
+
     goBack(scene) {
         scene.setState(this.callbackState);
         scene.update();
     }
+
     get events() {
         return {
             keydown: this.goBack,
         }
     }
-    update(context){
+
+    update(context) {
         //TODO draw offline screen
         context.clearRect(0, 0, 1000, 650);
         context.fillStyle = "yellow";
@@ -625,33 +707,34 @@ class OfflineState extends State {
     }
 }
 
-class ShopState extends State{
-    constructor(){
+class ShopState extends State {
+    constructor() {
         super();
+        this.isBought = false;
     }
 
     keyHandler(scene, event) {
         switch (event.keyCode) {
-            // case 87: //w - weapon
-            //     getRandomWeapon();
-            //     break;
-            // case 65: //a - armor
-            //     getRandomArmor();
-            //     break;
+            case 87: //w - weapon
+                this.isBought = getRandomWeapon();
+                break;
+            case 65: //a - armor
+                this.isBought = getRandomArmor();
+                break;
             case 80: //p - potion
-                getRandomPotion();
+                this.isBought = getRandomPotion();
                 break;
             case 69: //e - endurance
-                incStat('Endur');
+                this.isBought = incStat('Endur');
                 break;
             case 83: //S - strength(speed)
-                incStat('Str');
+                this.isBought = incStat('Str');
                 break;
             case 73: //i - intelligence(speed)
-                incStat('Ag');
+                this.isBought = incStat('Ag');
                 break;
             case 70: //f - agility(fast)
-                incStat('Int');
+                this.isBought = incStat('Int');
                 break;
             case 27: //Esc - exit
                 scene.setState(game);
@@ -666,7 +749,7 @@ class ShopState extends State{
         }
     }
 
-    update(context){
+    update(context) {
         context.clearRect(0, 0, 1000, 650);
         context.fillStyle = "white";
         context.font = "48px manaspc";
@@ -685,6 +768,10 @@ class ShopState extends State{
         context.fillText("F:Agility attr++............80", 10, 310);
         context.fillText("E:Endurance attr++..........80", 10, 350);
         context.fillText("I:Intelligence attr++.......80", 10, 390);
+        if (this.isBought) {
+            context.fillText(`Your buy succesfull!`, 500, 500);
+            this.isBought = !this.isBought;
+        }
         super.update(context);
     }
 }
@@ -696,26 +783,26 @@ class GameState extends State {
         this.offsetY = 0;
         this.map = [[]];
         this.objectsMap = [];
-        this.messages = ["","","","","","","","",""];
+        this.messages = ["", "", "", "", "", "", "", "", ""];
         this.controller = null;
         this.mobController = null;
         this.ctx = null;
         this.fieldHeight = 30;
-        this.fieldWidth  = 50;
-        this.centerY = (this.fieldHeight/2)>>0;
-        this.centerX = (this.fieldWidth/2)>>0;
+        this.fieldWidth = 50;
+        this.centerY = (this.fieldHeight / 2) >> 0;
+        this.centerX = (this.fieldWidth / 2) >> 0;
         this.centerRectH = 11;
         this.centerRectW = 17;
     }
 
-    clearGame(){
+    clearGame() {
         let cave = dungeonGeneration.generateCave(depth);
         this.map = cave[0];
         this.objectsMap = dungeonGeneration.generateObjects();
         this.objectsMap[0].x = cave[1];
         this.objectsMap[0].y = cave[2];
-        this.controller = new Controller(this.objectsMap[0],this.map,this.objectsMap);
-        this.mobController = new MobController(this.map,this.objectsMap);
+        this.controller = new Controller(this.objectsMap[0], this.map, this.objectsMap);
+        this.mobController = new MobController(this.map, this.objectsMap);
         let player = this.objectsMap[0];
         this.offsetX = player.x - this.centerX;
         this.offsetY = player.y - this.centerY;
@@ -723,14 +810,15 @@ class GameState extends State {
         this.calcVisited();
     }
 
-    startGame(){
+    startGame() {
         depth = 1;
         this.clearGame();
-        this.messages = ["","","","","","","","",""];
+        this.messages = ["", "", "", "", "", "", "", "", ""];
         this.pushMessage(`(Welcome to the ){white}(${depth} depth!){red}`);
+        this.pushMessage(`(To get help press '?'){white}`);
     }
 
-    newLevel(){
+    newLevel() {
         depth++;
         this.clearGame();
         this.checkOffsetBorders();
@@ -799,13 +887,13 @@ class GameState extends State {
         let player = this.objectsMap[0];
         let startX = Math.max(0, player.x - player.fogRad);
         let startY = Math.max(0, player.y - player.fogRad);
-        let endX = Math.min(mapW-1, player.x + player.fogRad);
-        let endY = Math.min(mapH-1, player.y + player.fogRad);
+        let endX = Math.min(mapW - 1, player.x + player.fogRad);
+        let endY = Math.min(mapH - 1, player.y + player.fogRad);
 
 
         for (let y = startY; y <= endY; ++y) {
             for (let x = startX; x <= endX; ++x) {
-                if (Math.sqrt((x-player.x)**2 + (y-player.y)**2) <= player.fogRad)
+                if (Math.sqrt((x - player.x) ** 2 + (y - player.y) ** 2) <= player.fogRad)
                     this.map[y][x].seen = true;
             }
         }
@@ -814,14 +902,15 @@ class GameState extends State {
     isVisibleForPlayer(x, y) {
         let player = this.objectsMap[0];
 
-        return Math.sqrt((x-player.x)**2 + (y-player.y)**2) <= player.fogRad;
+        return Math.sqrt((x - player.x) ** 2 + (y - player.y) ** 2) <= player.fogRad;
     }
 
-    setNewMap(){
+    setNewMap() {
         this.map = dungeonGeneration.generateCave();
         this.objectsMap = dungeonGeneration.generateObjects();
     }
-    pushMessage(text){
+
+    pushMessage(text) {
         this.messages[7] = this.messages[6];
         this.messages[6] = this.messages[5];
         this.messages[5] = this.messages[4];
@@ -831,32 +920,34 @@ class GameState extends State {
         this.messages[1] = this.messages[0];
 
         this.messages[0] = text;
-        if(this.ctx !== null){this.update(this.ctx);}
+        if (this.ctx !== null) {
+            this.update(this.ctx);
+        }
 
         //alert(this.messages);
     }
 
 
-    drawRMenu(context){
+    drawRMenu(context) {
         context.fillStyle = "black";
         context.fillRect(0, 0, 1000, 650);
         context.fillStyle = 'white';
-        context.fillRect(805,5,190,475);
+        context.fillRect(805, 5, 190, 475);
         context.fillStyle = "black";
-        context.fillRect(807,7,186,471);
+        context.fillRect(807, 7, 186, 471);
 
         context.fillStyle = "white";
-        context.font  = "24px manaspc";
-        if(this.objectsMap[0] !== undefined){
+        context.font = "24px manaspc";
+        if (this.objectsMap[0] !== undefined) {
             context.fillText(this.objectsMap[0].name, 815, 35);
-            context.fillText("HP:" + this.objectsMap[0].hp + '/' + this.objectsMap[0].maxHP ,820,70);
-            context.fillText("MP:" + this.objectsMap[0].mp + '/' + this.objectsMap[0].maxMP ,820,100);
-            context.fillText(`Gold:${this.objectsMap[0].gold}`,820,130);
+            context.fillText("HP:" + this.objectsMap[0].hp + '/' + this.objectsMap[0].maxHP, 820, 70);
+            context.fillText("MP:" + this.objectsMap[0].mp + '/' + this.objectsMap[0].maxMP, 820, 100);
+            context.fillText(`Gold:${this.objectsMap[0].gold}`, 820, 130);
 
-            context.font  = "16px manaspc";
+            context.font = "16px manaspc";
             context.fillText("Inventory:", 820, 170);
 
-            context.font  = "12px manaspc";
+            context.font = "12px manaspc";
             context.textAlign = "left";
             context.fillText(`HP potions: ${mainHero.hpPotions}`, 820, 200);
             context.fillText(`MP potions: ${mainHero.mpPotions}`, 820, 230);
@@ -870,11 +961,12 @@ class GameState extends State {
 
 
     }
-    drawMessage(str, x, y, context){
+
+    drawMessage(str, x, y, context) {
         // input str = (/* text string */){/* color */}
-        let re0 = new RegExp("\\({1}[^\\)]+\\){1}","g");
+        let re0 = new RegExp("\\({1}[^\\)]+\\){1}", "g");
         //for getting array of such as ["(text1)","(text2)"]
-        let re1 = new RegExp("\\{{1}[^\\}]+\\}{1}","g");
+        let re1 = new RegExp("\\{{1}[^\\}]+\\}{1}", "g");
         //for getting array of such as ["{color1}","{color2}"]
         let match0 = str.match(re0);
         //array off ["(text1)","(text2)"]
@@ -882,38 +974,38 @@ class GameState extends State {
         //array off ["{color1}","{color2}"]
         let len = 0;
 
-        let re2 = new RegExp("[^\\(\\)]+","g");
+        let re2 = new RegExp("[^\\(\\)]+", "g");
         //for getting text from ["(text1)"] to "text1"
-        let re3 = new RegExp("[^\\{\\}]+","g");
+        let re3 = new RegExp("[^\\{\\}]+", "g");
         //for getting text from ["{text1}"] to "text1"
 
-        if(!match0 || !match1)return;
-        for(let i = 0;i < match0 == null ? 0 : Math.min(match0.length,match1.length);++i){
-            if(!match1[i] || !match0[i]) return;
+        if (!match0 || !match1) return;
+        for (let i = 0; i < match0 == null ? 0 : Math.min(match0.length, match1.length); ++i) {
+            if (!match1[i] || !match0[i]) return;
             context.fillStyle = match1[i].match(re3)[0];
             let text = match0[i].match(re2)[0];
-            context.fillText(text,x + +len ,y);
+            context.fillText(text, x + +len, y);
             len = len + +context.measureText(text).width;
         }
     }
 
-    drawDMenu(context){
+    drawDMenu(context) {
         context.fillStyle = 'white';
-        context.fillRect(5,485,990,160);
+        context.fillRect(5, 485, 990, 160);
         context.fillStyle = "black";
-        context.fillRect(7,487,986,156);
+        context.fillRect(7, 487, 986, 156);
 
         context.fillStyle = "white";
-        context.font  = "18px manaspc";
-        this.drawMessage(this.messages[0],10,505,context);      //0
+        context.font = "18px manaspc";
+        this.drawMessage(this.messages[0], 10, 505, context);      //0
 
-        this.drawMessage(this.messages[1],10,525-1,context);      //1
-        this.drawMessage(this.messages[2],10,545-2,context);      //2
-        this.drawMessage(this.messages[3],10,565-3,context);      //3
-        this.drawMessage(this.messages[4],10,585-4,context);      //4
-        this.drawMessage(this.messages[5],10,605-5,context);      //5
-        this.drawMessage(this.messages[6],10,625-5,context);      //6
-        this.drawMessage(this.messages[7],10,645-7,context);      //7
+        this.drawMessage(this.messages[1], 10, 525 - 1, context);      //1
+        this.drawMessage(this.messages[2], 10, 545 - 2, context);      //2
+        this.drawMessage(this.messages[3], 10, 565 - 3, context);      //3
+        this.drawMessage(this.messages[4], 10, 585 - 4, context);      //4
+        this.drawMessage(this.messages[5], 10, 605 - 5, context);      //5
+        this.drawMessage(this.messages[6], 10, 625 - 5, context);      //6
+        this.drawMessage(this.messages[7], 10, 645 - 7, context);      //7
 
     }
 
@@ -942,26 +1034,26 @@ class GameState extends State {
         let startX = this.offsetX;
         let endX = startX + this.fieldWidth - 1;
 
-        for (let y = startY; y <= endY; ++y){
+        for (let y = startY; y <= endY; ++y) {
             for (let x = startX; x <= endX; ++x) {
                 this.drawTexture(context, this.map[y][x], x - startX, y - startY, this.isVisibleForPlayer(x, y));
             }
         }
-        for (let i = 0; i < this.objectsMap.length;++i){
+        for (let i = 0; i < this.objectsMap.length; ++i) {
             let objX = this.objectsMap[i].x;
             let objY = this.objectsMap[i].y;
 
             if (objX >= startX && objX <= endX) {
                 if (objY >= startY && objY <= endY) {
-                    if(!this.objectsMap[i].isDead && this.isVisibleForPlayer(objX, objY))
-                        this.drawTexture(context, this.objectsMap[i], objX-startX, objY-startY, true);
+                    if (!this.objectsMap[i].isDead && this.isVisibleForPlayer(objX, objY))
+                        this.drawTexture(context, this.objectsMap[i], objX - startX, objY - startY, true);
                 }
             }
         }
         //alert(this.map);
     }
 
-    update(context){
+    update(context) {
         this.ctx = context;
         super.update(context);
         this.clearScene(context);
@@ -972,7 +1064,7 @@ class GameState extends State {
     }
 
     keyHandler(scene, event) {
-        switch(event.keyCode) {
+        switch (event.keyCode) {
             case 38: //arrow up
                 this.controller.moveU(scene);
                 this.mobController.move(scene);
@@ -1003,7 +1095,8 @@ class GameState extends State {
             case 83: // s - shop
                 scene.setState(shop);
                 break;
-
+            case 191: // /(?) - help
+                scene.setState(help)
         }
         this.calcOffset();
         this.calcVisited();

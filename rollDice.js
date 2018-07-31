@@ -12,7 +12,9 @@ function getRandomPotion() {
         let pot = rollDice(2, 1);
         pot === 1 ? mainHero.hpPotions++ : mainHero.mpPotions++;
         mainHero.gold -= 70;
+        return true;
     }
+    return false;
 }
 
 function incStat(a) {
@@ -29,9 +31,30 @@ function incStat(a) {
         }
         mainHero.update();
         mainHero.gold -= 80;
+        return true;
     }
+    return false;
 }
 
+function getRandomWeapon() {
+    if (mainHero.gold >= 150) {
+        mainHero.weapon = weapons[Math.floor(Math.random()*weapons.length)];
+        mainHero.update();
+        mainHero.gold -= 150;
+        return true;
+    }
+    return false;
+}
+
+function getRandomArmor() {
+    if (mainHero.gold >= 200) {
+        mainHero.armor = armor[Math.floor(Math.random()*armor.length)];
+        mainHero.update();
+        mainHero.gold -= 200;
+        return true;
+    }
+    return false;
+}
 
 function closeBattle(first, second) {
     game.pushMessage(`(${first.name}){${first.color}}( bumped with ){white}(${second.name}){${second.color}}( !){white}`);

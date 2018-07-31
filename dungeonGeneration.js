@@ -91,23 +91,27 @@ dungeonGeneration = (()=>{
             while (enemyCount < count){
                 let tryX = Math.floor(Math.random() * (dungeonWidth - 2))+1;
                 let tryY = Math.floor(Math.random() * (dungeonHeight - 2))+1;
+                let weaponID = Math.floor(Math.random()*Math.min(depth, weapons.length));
+                let armorID = Math.floor(Math.random()*Math.min(depth, armor.length));
                 if (map[tryY][tryX] instanceof Floor){
-                    let mobNum = rollDice(100,1);
+                    let mobNum = rollDice(100,1) + Math.min(depth, 100);
                     switch (true){
-                        case inRange(mobNum, -1, 48): objects.push(new Orc(tryX,tryY));
+                        case inRange(mobNum, -1, 48): objects.push(new Kobold(tryX,tryY, weaponID, armorID));
 								break;
-                        case inRange(mobNum, 47, 96): objects.push(new Kobold(tryX, tryY));
+                        case inRange(mobNum, 47, 80): objects.push(new Orc(tryX,tryY, weaponID, armorID));
 								break;
-                        case inRange(mobNum, 95, 101): objects.push(new Minotaur(tryX, tryY));
+                        case inRange(mobNum, 79, 96): objects.push(new Gargoyle(tryX,tryY, weaponID, armorID));
+                            break;
+                        case inRange(mobNum, 95, 101): objects.push(new Minotaur(tryX,tryY, weaponID, armorID));
                                 break;
                     }
                     enemyCount++;
-                   //console.log(objects);
                 }
             }
         }
         addEnemy(Math.min(Math.floor(depth * (3 + dungeonDifficulty * Math.random()) * Math.floor(Math.random()* 5)
             + 1)), Math.floor(Math.sqrt(maxFloorTiles/5)));
+        console.log(objects);
         return [map,startX,startY];
     }
 
@@ -120,4 +124,5 @@ dungeonGeneration = (()=>{
         generateCave: generateCave,
         generateObjects: generateObjects
     }
+
 })();

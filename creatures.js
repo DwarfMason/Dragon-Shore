@@ -7,21 +7,10 @@ class Creature extends SceneObject {
         this.hp = 0;
         this.mp = 0;
         this.attack = 0;
-        this.armor = {
-            name: "Poor clothes",
-            type: "light",
-            value: 2,
-        };
-        this.weapon = {
-            name: "rusty dagger",
-            type: "one hand",
-            value: 0,
-            diceVal: 4,
-            diceCount: 1,
-        };
+        this.armor = armor[0];
+        this.weapon = weapons[0];
         this.agility = 0;
         this.initiative = 0;
-        this.items = [this.weapon, this.armor];
         this.name = 'none';
         this.gold = 0;
         this.isDead = 0;
@@ -34,19 +23,19 @@ class Player extends Creature {
     constructor(race, startX, startY, name) {
         super(2);
         switch (race) {
-            case 'human':
+            case 'Human':
                 this.strength = rollDice(6, 3);
                 this.agility = rollDice(6, 3) + 2;
                 this.endurance = rollDice(6, 3) + 2;
                 this.intelligence = rollDice(6, 3);
                 break;
-            case 'orc':
+            case 'Orc':
                 this.strength = rollDice(6, 3) + 5;
-                this.agility = Math.min(rollDice(6, 3) - 4, 3);
+                this.agility = Math.min(rollDice(6, 3) - 6, 3);
                 this.endurance = rollDice(6, 3) + 3;
                 this.intelligence = Math.max(rollDice(6, 3) - 3, 3);
                 break;
-            case 'magic wombat':
+            case 'Magic wombat':
                 this.strength = Math.min(rollDice(6, 3) - 5);
                 this.agility = rollDice(6, 3) + 5;
                 this.endurance = Math.max(rollDice(6, 3) - 5, 3);
@@ -58,6 +47,11 @@ class Player extends Creature {
                 this.endurance = Math.max(rollDice(6, 3) - 6, 3);
                 this.intelligence = rollDice(6, 3);
                 break;
+            case 'Dwarf':
+                this.strength = rollDice(6,3) + 7;
+                this.agility = rollDice(6,3) - 5;
+                this.endurance = rollDice(6,3) + 5;
+                this.intelligence = 0;
         }
         this.race = race;
         this.x = startX;
@@ -91,7 +85,7 @@ class Mob extends Creature{
     }
 }
 class Orc extends Mob {
-    constructor(startX, startY) {
+    constructor(startX, startY, weaponID, armorID) {
         super(79);
         this.name = "Green orc";
         this.strength = rollDice(6, 3) + 2 + depth;
@@ -103,13 +97,15 @@ class Orc extends Mob {
         this.hp = Math.floor(this.endurance / 10) + 4;
         this.initiative = this.agility / 10 + 8;
         this.gold = Math.floor(Math.random() * 15 + depth) + 3;
+        this.weapon = weapons[weaponID];
+        this.armor = armor[armorID];
         this.color = "green";
         this.left = 1;
     }
     move(map){
         let lastx = this.x;
         let lasty = this.y;
-        if(this.left == 1){
+        if(this.left === 1){
             if (!map[this.y][this.x-1].isMovable) {
                 this.left = 0;
             }else{
@@ -127,7 +123,7 @@ class Orc extends Mob {
 }
 
 class Kobold extends Mob {
-    constructor(startX, startY) {
+    constructor(startX, startY, weaponID, armorID) {
         super(75);
         this.name = "little kobold";
         this.strength = rollDice(6, 3) - 5 + depth;
@@ -139,13 +135,15 @@ class Kobold extends Mob {
         this.hp = Math.floor(this.endurance / 10) + 4;
         this.initiative = this.agility / 10 + 8;
         this.gold = Math.floor(Math.random() * 10 + depth) + 3;
+        this.weapon = weapons[weaponID];
+        this.armor = armor[armorID];
         this.color = "violet";
         this.up = 1;
     }
     move(map){
         let lastx = this.x;
         let lasty = this.y;
-        if(this.up == 1){
+        if(this.up === 1){
             if (!map[this.y-1][this.x].isMovable) {
                 this.up = 0;
             }else{
@@ -162,8 +160,48 @@ class Kobold extends Mob {
     }
 }
 
+class Gargoyle extends Mob {
+    constructor(startX, startY, weaponID, armorID) {
+        super(71);
+        this.name = "Stone Gargoyle";
+        this.strength = rollDice(6, 3) + 2 + depth;
+        this.agility = rollDice(6, 3) + 1 + depth;
+        this.endurance = rollDice(6, 3) +5 + depth;
+        this.attack = Math.floor(this.strength / 10);
+        this.x = startX;
+        this.y = startY;
+        this.hp = Math.floor(this.endurance / 10) + 4;
+        this.initiative = this.agility / 10 + 8;
+        this.gold = Math.floor(Math.random() * 14 + depth) + 3;
+        this.weapon = weapons[weaponID];
+        this.armor = armor[armorID];
+        this.color = "#FFB459";
+        this.leftUp = 1;
+    }
+    move(map){
+        let lastx = this.x;
+        let lasty = this.y;
+        if(this.leftUp === 1){
+            if (!map[this.y - 1][this.x - 1].isMovable) {
+                this.leftUp = 0;
+            }else{
+                this.y--;
+                this.x--;
+            }
+        }else{
+            if (!map[this.y + 1][this.x + 1].isMovable) {
+                this.leftUp = 1;
+            }else{
+                this.y++;
+                this.x++;
+            }
+        }
+        return [lastx,lasty];
+    }
+}
+
 class Minotaur extends Mob {
-    constructor(startX, startY) {
+    constructor(startX, startY, weaponID, armorID) {
         super(77);
         this.name = "Blind minotaur";
         this.strength = rollDice(6, 3) + 30 + depth;
@@ -175,6 +213,8 @@ class Minotaur extends Mob {
         this.hp = Math.floor(this.endurance / 10) + 4;
         this.initiative = this.agility / 10 + 5;
         this.gold = Math.floor(Math.random() * 100) + 3;
+        this.weapon = weapons[weaponID];
+        this.armor = armor[armorID];
         this.color = "brown";
     }
     move(map){
