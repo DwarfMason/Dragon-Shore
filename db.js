@@ -74,12 +74,14 @@ async function postScore(depth) {
                 success = false;
             });
         } else {
-            db.collection("leaderboards").doc(querySnapshot.docs[0].id).set({
-                depth: depth,
-            }, {merge: true}).catch(error => {
-                console.error("Writing to DB failed", error);
-                success = false;
-            });
+            if (querySnapshot.docs[0].data().depth < depth) {
+                db.collection("leaderboards").doc(querySnapshot.docs[0].id).set({
+                    depth: depth,
+                }, {merge: true}).catch(error => {
+                    console.error("Writing to DB failed", error);
+                    success = false;
+                });
+            }
         }
     }).catch(error => {
         console.error("Accessing DB failed", error);
