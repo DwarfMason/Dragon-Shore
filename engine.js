@@ -189,15 +189,23 @@ class DescriptionState extends State {
         context.fillText(`w - ${mainHero.weapon.name} description`, 10, 100);
         context.fillText(`a - ${mainHero.armor.name} description`, 10, 130);
 
+        context.fillText(`Your character: ${mainHero.name}`, 600, 100);
+        context.fillText(`Strength: ${mainHero.strength}`, 600, 130);
+        context.fillText(`Agility: ${mainHero.agility}`, 600, 160);
+        context.fillText(`Initiative: ${mainHero.initiative} `, 600, 190);
+        context.fillText(`Endurance: ${mainHero.endurance}`, 600, 220);
+
         if(this.isArmor){
             context.font = "24px manaspc";
-            context.fillText(`${mainHero.armor.name} - ${mainHero.armor.description}`, 10, 200);
+            context.fillStyle = "yellow";
+            context.fillText(`${mainHero.armor.name} - ${mainHero.armor.description}`, 10, 400);
             this.isArmor = !this.isArmor;
         }
 
         if(this.isWeapon){
             context.font = "24px manaspc";
-            context.fillText(`${mainHero.weapon.name} - ${mainHero.weapon.description}`, 10, 200);
+            context.fillStyle = "yellow";
+            context.fillText(`${mainHero.weapon.name} - ${mainHero.weapon.description}`, 10, 400);
             this.isWeapon = !this.isWeapon;
         }
 
@@ -1008,12 +1016,13 @@ class GameState extends State {
             context.font = "16px manaspc";
             context.fillText("Inventory:", 820, 170);
 
-            context.font = "12px manaspc";
             context.textAlign = "left";
             context.fillText(`HP potions: ${mainHero.hpPotions}`, 820, 200);
             context.fillText(`MP potions: ${mainHero.mpPotions}`, 820, 230);
-            context.fillText(`Armor: ${mainHero.armor.name}`, 820, 260);
-            context.fillText(`Weapon: ${mainHero.weapon.name}`, 820, 290);
+            context.fillText(`Armor:`, 820, 260);
+            context.fillText(`${mainHero.armor.name}`, 820, 280);
+            context.fillText(`Weapon:`, 820, 310);
+            context.fillText(`${mainHero.weapon.name}`, 820, 330);
 
             for (let i = 0; i < this.objectsMap[0].baffs.length; ++i) {
                 context.fillText(this.objectsMap[0].baffs[i], 820, 170 + (+20 * +i));
