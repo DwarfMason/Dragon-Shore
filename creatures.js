@@ -25,32 +25,32 @@ class Player extends Creature {
         switch (race) {
             case 'Human':
                 this.strength = rollDice(6, 3);
-                this.agility = rollDice(6, 3) + 2;
-                this.endurance = rollDice(6, 3) + 2;
+                this.agility = rollDice(6, 3) + 12;
+                this.endurance = rollDice(6, 3) + 12;
                 this.intelligence = rollDice(6, 3);
                 break;
             case 'Orc':
-                this.strength = rollDice(6, 3) + 5;
+                this.strength = rollDice(6, 3) + 15;
                 this.agility = Math.min(rollDice(6, 3) - 6, 3);
-                this.endurance = rollDice(6, 3) + 3;
+                this.endurance = rollDice(6, 3) + 13;
                 this.intelligence = Math.max(rollDice(6, 3) - 3, 3);
                 break;
             case 'Magic wombat':
                 this.strength = Math.min(rollDice(6, 3) - 5);
-                this.agility = rollDice(6, 3) + 5;
+                this.agility = rollDice(6, 3) + 15;
                 this.endurance = Math.max(rollDice(6, 3) - 5, 3);
-                this.intelligence = rollDice(6, 3) + 10;
+                this.intelligence = rollDice(6, 3) + 17;
                 break;
             case 'Wood elf':
-                this.strength = rollDice(6, 3) + 3;
-                this.agility = rollDice(6, 3) + 10;
+                this.strength = rollDice(6, 3) + 13;
+                this.agility = rollDice(6, 3) + 15;
                 this.endurance = Math.max(rollDice(6, 3) - 6, 3);
                 this.intelligence = rollDice(6, 3);
                 break;
             case 'Dwarf':
-                this.strength = rollDice(6,3) + 7;
+                this.strength = rollDice(6,3) + 17;
                 this.agility = rollDice(6,3) - 5;
-                this.endurance = rollDice(6,3) + 5;
+                this.endurance = rollDice(6,3) + 15;
                 this.intelligence = 0;
         }
         this.race = race;
