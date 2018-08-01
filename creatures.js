@@ -31,12 +31,12 @@ class Player extends Creature {
                 break;
             case 'Orc':
                 this.strength = rollDice(6, 3) + 15;
-                this.agility = Math.min(rollDice(6, 3) - 6, 3);
+                this.agility = Math.max(rollDice(6, 3) - 6, 3);
                 this.endurance = rollDice(6, 3) + 13;
                 this.intelligence = Math.max(rollDice(6, 3) - 3, 3);
                 break;
             case 'Magic wombat':
-                this.strength = Math.min(rollDice(6, 3) - 5);
+                this.strength = Math.max(rollDice(6, 3) - 5);
                 this.agility = rollDice(6, 3) + 15;
                 this.endurance = Math.max(rollDice(6, 3) - 5, 3);
                 this.intelligence = rollDice(6, 3) + 17;
@@ -49,7 +49,7 @@ class Player extends Creature {
                 break;
             case 'Dwarf':
                 this.strength = rollDice(6,3) + 17;
-                this.agility = Math.min(rollDice(6,3) - 5, 3);
+                this.agility = Math.max(rollDice(6,3) - 5, 3);
                 this.endurance = rollDice(6,3) + 15;
                 this.intelligence = 2;
         }
