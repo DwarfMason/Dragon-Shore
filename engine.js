@@ -106,7 +106,7 @@ class SettingsState extends State{
     constructor(){
         super();
         //MAX tileSetList == 10
-        self.tileSetList = ["standart tileset"];
+        self.tileSetList = ["standart tileset", "futuristic tileset",];
         self.menuPos = 0
 
     }
@@ -429,6 +429,7 @@ class MenuState extends State {
             context.textAlign = "right";
             context.fillStyle = "white";
             context.fillText(`Welcome, ${dbUser.displayName}`, 995, 21);
+            context.textAlign = "left";
         }
         super.update(context);
     }
