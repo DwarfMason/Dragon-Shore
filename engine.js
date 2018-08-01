@@ -189,11 +189,11 @@ class DescriptionState extends State {
         context.fillText(`w - ${mainHero.weapon.name} description`, 10, 100);
         context.fillText(`a - ${mainHero.armor.name} description`, 10, 130);
 
-        context.fillText(`Your character: ${mainHero.name}`, 600, 100);
-        context.fillText(`Strength: ${mainHero.strength}`, 600, 130);
-        context.fillText(`Agility: ${mainHero.agility}`, 600, 160);
-        context.fillText(`Initiative: ${mainHero.initiative} `, 600, 190);
-        context.fillText(`Endurance: ${mainHero.endurance}`, 600, 220);
+        context.fillText(`Your character: ${mainHero.name}`, 550, 100);
+        context.fillText(`Strength: ${mainHero.strength}`, 550, 130);
+        context.fillText(`Agility: ${mainHero.agility}`, 550, 160);
+        context.fillText(`Initiative: ${mainHero.initiative} `, 550, 190);
+        context.fillText(`Endurance: ${mainHero.endurance}`, 550, 220);
 
         if(this.isArmor){
             context.font = "24px manaspc";

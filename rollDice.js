@@ -57,7 +57,7 @@ function getRandomWeapon() {
 
 function getRandomArmor() {
     if (mainHero.gold >= armorCost) {
-        mainHero.weapon = armor[Math.floor(Math.random()*armor.length)];
+        mainHero.armor = armor[Math.floor(Math.random()*armor.length)];
         mainHero.update();
         mainHero.gold -= armorCost;
         armorCost += Math.floor(0.25*armorCost);
