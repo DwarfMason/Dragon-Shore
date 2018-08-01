@@ -102,6 +102,59 @@ class CreditsState extends State {
     }
 }
 
+class SettingsState extends State{
+    constructor(){
+        super();
+        //MAX tileSetList == 10
+        self.tileSetList = ["standart tileset","test tileset1","test tileset2",];
+        self.menuPos = 0
+
+    }
+    update(context){
+        context.clearRect(0, 0, 1000, 650);
+
+        context.drawImage(dragon,36,120);
+        context.drawImage(dragonLable,203,0);
+
+        context.fillStyle = "white";
+        context.font = "24px manaspc";
+
+        for (let i = 0; i < self.tileSetList.length; ++i) {
+            if(i === TILE_SET.getCurrentTileIndex())
+                context.fillStyle = "blue";
+            else
+                context.fillStyle = "white";
+            context.fillText(self.tileSetList[i], 600, 160 + i * 50);
+        }
+        context.drawImage(sword,490,128 + self.menuPos*50);
+        super.update(context);
+    }
+    keyHandler(scene, event) {
+        switch (event.keyCode) {
+            case 27: //esc
+                scene.setState(menu);
+                break;
+            case 40: // arrowdown
+                if(self.menuPos < (self.tileSetList.length-1))
+                    self.menuPos++;
+                break;
+            case 38: // arrowup
+                if(self.menuPos >= 1)
+                    self.menuPos--;
+                break;
+            case 13: // enter
+                TILE_SET.changeTileSet(self.menuPos)
+        }
+        scene.update();
+    }
+
+    get events() {
+        return {
+            keydown: this.keyHandler,
+        }
+    }
+}
+
 class HelpState extends State {
     constructor() {
         super();
@@ -294,7 +347,7 @@ class MenuState extends State {
                         scene.setState(new LeaderboardsState(menu));
                         break;
                     case 2:
-                        alert("Not yet implemented!");
+                        scene.setState(settings);
                         break;
                     case 3:
                         scene.setState(credits);
@@ -458,8 +511,8 @@ class LeaderboardsState extends State {
         context.fillText("Press Esc to go back", 500, 600);
 
         getScores(this.scoresPerPage).then(scores => {
+            context.clearRect(0, 100, 1000, 400);
             if (scores.length) {
-                context.clearRect(0, 100, 1000, 400);
                 context.font = "24px manaspc";
                 for (let i = 0; i < scores.length; ++i) {
                     let score = scores[i];

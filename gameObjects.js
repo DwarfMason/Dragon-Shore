@@ -1,18 +1,23 @@
 
 class TileSet {
-    constructor(tilesetName = "tileset", tileSize = 8) {
-        this.path = getAsset(`${tilesetName}.png`);
-        this.pathVisited = getAsset(`${tilesetName}_visited.png`);
+    constructor(tilesetIndex = 0, tileSize = 8) {
+        this.index = tilesetIndex;
         this.tileSize = tileSize;
-        this.image = new Image();
-        this.image.src = this.path;
-        this.imageVisited = new Image();
-        this.imageVisited.src = this.pathVisited;
+        this.image = tileSetslist[tilesetIndex];
+        this.imageVisited = tileSetsVisetedlist[tilesetIndex];
     }
     getTilePos(tileId) {
         return tileId*this.tileSize;
     }
-
+    changeTileSet(tilesetIndex, tileSize = 8){
+        this.index = tilesetIndex;
+        this.tileSize = tileSize;
+        this.image = tileSetslist[tilesetIndex];
+        this.imageVisited = tileSetsVisetedlist[tilesetIndex];
+    }
+    getCurrentTileIndex(){
+        return this.index;
+    }
 }
 const TILE_SET = new TileSet();
 

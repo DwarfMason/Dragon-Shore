@@ -63,26 +63,15 @@ async function postScore(depth) {
         return false;
     }
     let success = true;
-    await db.collection("leaderboards").where("uid", "==", dbUser.uid).limit(1).get().then(querySnapshot => {
-        if (querySnapshot.empty) {
-            db.collection("leaderboards").add({
-                uid: dbUser.uid,
-                nickname: dbUser.displayName,
-                depth: depth,
-            }).catch(error => {
-                console.error("Writing to DB failed", error);
-                success = false;
-            });
-        } else {
-            if (querySnapshot.docs[0].data().depth < depth) {
-                db.collection("leaderboards").doc(querySnapshot.docs[0].id).set({
-                    depth: depth,
-                }, {merge: true}).catch(error => {
-                    console.error("Writing to DB failed", error);
-                    success = false;
-                });
-            }
-        }
+    await db.collection("leaderboards").doc(dbUser.uid).get().then(doc => {
+        let depthVal = doc.exists ? Math.max(depth, doc.data().depth) : depth;
+        doc.ref.set({
+            nickname: dbUser.displayName,
+            depth: depthVal,
+        }, {merge: true}).catch(error => {
+            console.error("Writing to DB failed", error);
+            success = false;
+        });
     }).catch(error => {
         console.error("Accessing DB failed", error);
         success = false;
@@ -99,6 +88,7 @@ async function getScores(scoresPerPage = 5) {
         if (!querySnapshot.empty) {
             querySnapshot.forEach(doc => {
                 result.push(doc.data());
+                result[result.length-1].uid = doc.id;
             });
         }
     };
