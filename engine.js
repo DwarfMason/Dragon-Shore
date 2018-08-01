@@ -304,7 +304,6 @@ class GameOver extends State {
 
     update(context) {
         context.drawImage(getRandomIMG(), 0, 0);
-        console.log(game.messages);
         context.fillStyle = "white";
         context.font = "24px manaspc";
 
