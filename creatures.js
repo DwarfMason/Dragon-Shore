@@ -42,16 +42,16 @@ class Player extends Creature {
                 this.intelligence = rollDice(6, 3) + 17;
                 break;
             case 'Wood elf':
-                this.strength = rollDice(6, 3) + 13;
-                this.agility = rollDice(6, 3) + 15;
+                this.strength = rollDice(6, 3) + 8;
+                this.agility = rollDice(6, 3) + 10;
                 this.endurance = Math.max(rollDice(6, 3) - 6, 3);
                 this.intelligence = rollDice(6, 3);
                 break;
             case 'Dwarf':
                 this.strength = rollDice(6,3) + 17;
-                this.agility = rollDice(6,3) - 5;
+                this.agility = Math.min(rollDice(6,3) - 5, 3);
                 this.endurance = rollDice(6,3) + 15;
-                this.intelligence = 0;
+                this.intelligence = 2;
         }
         this.race = race;
         this.x = startX;
@@ -129,7 +129,7 @@ class Kobold extends Mob {
         super(75);
         this.name = "little kobold";
         this.strength = rollDice(6, 3) - 5 + depth;
-        this.agility = rollDice(6, 3) + 5 + depth;
+        this.agility = rollDice(6, 3) + 3 + depth;
         this.endurance = rollDice(6, 3) - 5 + depth;
         this.attack = Math.floor(this.strength / 10);
         this.x = startX;
