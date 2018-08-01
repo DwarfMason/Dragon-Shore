@@ -150,6 +150,7 @@ class DescriptionState extends State {
         super();
         this.isWeapon  = false;
         this.isArmor = false;
+        this.isMagic = false;
     }
 
     keyHandler(scene, event) {
@@ -157,12 +158,14 @@ class DescriptionState extends State {
             case 13:
                 scene.setState(game);
                 break;
-            case 87: // w
+            case 87: // w - weapon
                 this.isWeapon = true;
                 break;
-            case 65: // a
+            case 65: // a - armor
                 this.isArmor = true;
                 break;
+            case 77: // m - magic
+                this.isMagic = true;
         }
         scene.update();
     }
@@ -188,12 +191,14 @@ class DescriptionState extends State {
 
         context.fillText(`w - ${mainHero.weapon.name} description`, 10, 100);
         context.fillText(`a - ${mainHero.armor.name} description`, 10, 130);
+        context.fillText(`m - ${mainHero.magic.name} description`, 10, 160);
 
-        context.fillText(`Your character: ${mainHero.name}`, 550, 100);
-        context.fillText(`Strength: ${mainHero.strength}`, 550, 130);
-        context.fillText(`Agility: ${mainHero.agility}`, 550, 160);
-        context.fillText(`Initiative: ${mainHero.initiative} `, 550, 190);
-        context.fillText(`Endurance: ${mainHero.endurance}`, 550, 220);
+        context.fillText(`Your character: ${mainHero.name}`, 525, 100);
+        context.fillText(`Strength: ${mainHero.strength}`, 525, 130);
+        context.fillText(`Agility: ${mainHero.agility}`, 525, 160);
+        context.fillText(`Initiative: ${mainHero.initiative} `, 525, 190);
+        context.fillText(`Endurance: ${mainHero.endurance}`, 525, 220);
+        context.fillText(`Intelligence: ${mainHero.intelligence}`, 525, 250);
 
         if(this.isArmor){
             context.font = "24px manaspc";
@@ -207,6 +212,13 @@ class DescriptionState extends State {
             context.fillStyle = "yellow";
             context.fillText(`${mainHero.weapon.name} - ${mainHero.weapon.description}`, 10, 400);
             this.isWeapon = !this.isWeapon;
+        }
+
+        if(this.isMagic){
+            context.font = "24px manaspc";
+            context.fillStyle = "yellow";
+            context.fillText(`${mainHero.magic.name} - ${mainHero.magic.description}`, 10, 400);
+            this.isMagic = !this.isMagic;
         }
 
         super.update(context);
@@ -790,6 +802,9 @@ class ShopState extends State {
             case 65: //a - armor
                 this.isBought = getRandomArmor();
                 break;
+            case 77: //m - magic
+                this.isBought = getRandomMagic();
+                break;
             case 80: //p - potion
                 this.isBought = getRandomPotion();
                 break;
@@ -832,11 +847,12 @@ class ShopState extends State {
 
         context.fillText(`W:Random weapon............${weaponCost}`, 10, 150);
         context.fillText(`A:Random armor.............${armorCost}`, 10, 190);
-        context.fillText(`P:Random potion.............${potionCost}`, 10, 230);
-        context.fillText(`S:Strength attr++...........${statCost}`, 10, 270);
-        context.fillText(`F:Agility attr++............${statCost}`, 10, 310);
-        context.fillText(`E:Endurance attr++..........${statCost}`, 10, 350);
-        context.fillText(`I:Intelligence attr++.......${statCost}`, 10, 390);
+        context.fillText(`M:Random magic.............${magicCost}`, 10, 230);
+        context.fillText(`P:Random potion.............${potionCost}`, 10, 270);
+        context.fillText(`S:Strength attr++...........${statCost}`, 10, 310);
+        context.fillText(`F:Agility attr++............${statCost}`, 10, 350);
+        context.fillText(`E:Endurance attr++..........${statCost}`, 10, 390);
+        context.fillText(`I:Intelligence attr++.......${statCost}`, 10, 430);
         if (this.isBought) {
             context.fillText(`Your buy succesful!`, 500, 500);
             this.isBought = !this.isBought;
@@ -887,6 +903,7 @@ class GameState extends State {
         statCost = 50;
         weaponCost = 150;
         armorCost = 150;
+        magicCost = 80;
         this.pushMessage(`(Welcome to the ){white}(${depth} depth!){red}`);
         this.pushMessage(`(To get help press '?'){white}`);
     }
@@ -1028,9 +1045,14 @@ class GameState extends State {
             game.drawMessage(`(Armor:){#FFB459}`, 820, 300, context);
             context.fillStyle = "white";
             context.fillText(`${mainHero.armor.name}`, 820, 320);
-            game.drawMessage(`(Weapon:){#FFB459}`, 820, 380, context);
+
+            game.drawMessage(`(Weapon:){#FFB459}`, 820, 350, context);
             context.fillStyle = "white";
-            context.fillText(`${mainHero.weapon.name}`, 820, 400);
+            context.fillText(`${mainHero.weapon.name}`, 820, 370);
+
+            game.drawMessage(`(Spell:){#FFB459}`, 820, 400, context);
+            context.fillStyle = "white";
+            context.fillText(`${mainHero.magic.name}`, 820, 420);
 
             for (let i = 0; i < this.objectsMap[0].baffs.length; ++i) {
                 context.fillText(this.objectsMap[0].baffs[i], 820, 170 + (+20 * +i));
@@ -1178,6 +1200,9 @@ class GameState extends State {
                 break;
             case 68: // d - description
                 scene.setState(description);
+                break;
+            case 32: // space - magic
+                this.controller.useSpell(scene);
                 break;
         }
         this.calcOffset();

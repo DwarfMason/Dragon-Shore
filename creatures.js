@@ -66,6 +66,7 @@ class Player extends Creature {
         this.baffs = [];
         this.hpPotions = 3;
         this.mpPotions = 3;
+        this.magic = spells[0];
         this.color = "yellow";
     }
 

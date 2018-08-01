@@ -5,6 +5,11 @@ class Controller{
         this.objectsMap = objects;
     }
 
+    useSpell(scene){
+        mainHero.magic.useSpell();
+        scene.update();
+    }
+
     checkCollision(scene){
         for (let i = 1;i < this.objectsMap.length; ++i) {
             if((this.player.x === this.objectsMap[i].x) && (this.player.y === this.objectsMap[i].y)){
@@ -90,7 +95,7 @@ class Controller{
                 mainHero.mp = Math.min(mainHero.mp, mainHero.maxMP);
                 game.pushMessage('(You drink mana potion){green}');
             }
-            mainHero.hpPotions--;
+            mainHero.mpPotions--;
         }
     }
 }

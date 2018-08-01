@@ -2,6 +2,7 @@ let potionCost;
 let statCost;
 let weaponCost;
 let armorCost;
+let magicCost;
 
 function rollDice(diceVal, diceCount) {
     let total = 0;
@@ -63,6 +64,17 @@ function getRandomArmor() {
         armorCost += Math.floor(0.25*armorCost);
         return true;
 
+    }
+    return false;
+}
+
+function getRandomMagic(){
+    if (mainHero.gold >= magicCost) {
+        mainHero.magic = spells[Math.floor(Math.random()*spells.length)];
+        mainHero.update();
+        mainHero.gold -= magicCost;
+        magicCost += Math.floor(0.25*magicCost);
+        return true;
     }
     return false;
 }
@@ -134,3 +146,4 @@ function closeBattle(first, second) {
         game.pushMessage(`(${second.name}){${second.color}}( missed ){green}(${first.name}){${first.color}}( !){green}`);
     }
 }
+
