@@ -106,7 +106,7 @@ class SettingsState extends State{
     constructor(){
         super();
         //MAX tileSetList == 10
-        self.tileSetList = ["standart tileset","community tileset",];
+        self.tileSetList = ["standart tileset"];
         self.menuPos = 0
 
     }
@@ -143,7 +143,11 @@ class SettingsState extends State{
                     self.menuPos--;
                 break;
             case 13: // enter
-                TILE_SET.changeTileSet(self.menuPos)
+                TILE_SET.changeTileSet(self.menuPos);
+                break;
+            case 32: // space
+                TILE_SET.changeTileSet(self.menuPos);
+                break;
         }
         scene.update();
     }
@@ -391,7 +395,36 @@ class MenuState extends State {
         if (this.menuPos > 5)
             this.menuPos = 0;
 
-        context.drawImage(this.menuImgs[this.menuPos], 0, 0);
+        context.drawImage(dragon,36,120);
+        context.drawImage(dragonLable,203,0);
+        switch (this.menuPos) {
+            case 0:
+                context.drawImage(sword,671,192);
+                break;
+            case 1:
+                context.drawImage(sword,455,255);
+                break;
+            case 2:
+                context.drawImage(sword,578,317);
+                break;
+            case 3:
+                context.drawImage(sword,617,381);
+                break;
+            case 4:
+                context.drawImage(sword,70,530);
+                break;
+            case 5:
+                context.drawImage(sword,478,527);
+                break;
+        }
+        context.fillStyle = "white";
+        context.font = "48px manaspc";//61
+        context.fillText("Start",796,236);
+        context.fillText("Leaderboards",572,297);
+        context.fillText("Settings",698,360);
+        context.fillText("Credits",733,425);
+        context.fillText("Sign-in",195,575);
+        context.fillText("Sign-out",595,571);
         if (dbUser) {
             context.font = "16px manaspc";
             context.textAlign = "right";
@@ -472,9 +505,8 @@ class CharCreationState extends State {
             context.fillText(`Your character: ${mainHero.name}`, 650, 100);
             context.fillText(`Strength: ${mainHero.strength}`, 650, 130);
             context.fillText(`Agility: ${mainHero.agility}`, 650, 160);
-            context.fillText(`Intelligence: ${mainHero.intelligence}`, 650, 190);
-            context.fillText(`Initiative: ${mainHero.initiative} `, 650, 220);
-            context.fillText(`Endurance: ${mainHero.endurance}`, 650, 250);
+            context.fillText(`Initiative: ${mainHero.initiative} `, 650, 190);
+            context.fillText(`Endurance: ${mainHero.endurance}`, 650, 220);
         }
     }
 }
@@ -512,8 +544,8 @@ class LeaderboardsState extends State {
         context.fillText("Press Esc to go back", 500, 600);
 
         getScores(this.scoresPerPage).then(scores => {
-            context.clearRect(0, 100, 1000, 400);
             if (scores.length) {
+                context.clearRect(0, 100, 1000, 400);
                 context.font = "24px manaspc";
                 for (let i = 0; i < scores.length; ++i) {
                     let score = scores[i];
