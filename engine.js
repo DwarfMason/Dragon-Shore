@@ -880,7 +880,7 @@ class GameState extends State {
         this.centerRectW = 17;
     }
 
-    clearGame() {
+    newCave() {
         let cave = dungeonGeneration.generateCave(depth);
         this.map = cave[0];
         this.objectsMap = dungeonGeneration.generateObjects();
@@ -897,7 +897,7 @@ class GameState extends State {
 
     startGame() {
         depth = 1;
-        this.clearGame();
+        this.newCave();
         this.messages = ["", "", "", "", "", "", "", "", ""];
         potionCost = 50;
         statCost = 50;
@@ -910,7 +910,7 @@ class GameState extends State {
 
     newLevel() {
         depth++;
-        this.clearGame();
+        this.newCave();
         this.checkOffsetBorders();
         this.pushMessage(`(Welcome to the ){white}(${depth} depth!){red}`);
     }
@@ -1062,7 +1062,11 @@ class GameState extends State {
 
     }
 
-    drawMessage(str, x, y, context) {
+    drawMessage(str, x, y, context, textSize = 0) {
+        let lastFillstyle = context.fillStyle;
+        if(textSize !== 0){
+            context.context.font = `${textSize}px manaspc`;
+        }
         // input str = (/* text string */){/* color */}
         let re0 = new RegExp("\\({1}[^\\)]+\\){1}", "g");
         //for getting array of such as ["(text1)","(text2)"]
@@ -1072,33 +1076,42 @@ class GameState extends State {
         //array off ["(text1)","(text2)"]
         let match1 = str.match(re1);
         //array off ["{color1}","{color2}"]
-        let len = 0;
+        if(!((match0 === null) || (match1 === null))){
 
-        let re2 = new RegExp("[^\\(\\)]+", "g");
-        //for getting text from ["(text1)"] to "text1"
-        let re3 = new RegExp("[^\\{\\}]+", "g");
-        //for getting text from ["{text1}"] to "text1"
+            let len = 0;
 
-        if (!match0 || !match1) return;
-        for (let i = 0; i < match0 == null ? 0 : Math.min(match0.length, match1.length); ++i) {
-            if (!match1[i] || !match0[i]) return;
-            context.fillStyle = match1[i].match(re3)[0];
-            let text = match0[i].match(re2)[0];
-            context.fillText(text, x + +len, y);
-            len = len + +context.measureText(text).width;
+            let re2 = new RegExp("[^\\(\\)]+", "g");
+            //for getting text from ["(text1)"] to "text1"
+            let re3 = new RegExp("[^\\{\\}]+", "g");
+            //for getting text from ["{text1}"] to "text1"
+
+            if (!match0 || !match1) return;
+
+            for (let i = 0; i < match0 == null ? 0 : Math.min(match0.length, match1.length); ++i) {
+                if (!match1[i] || !match0[i]) return;
+                context.fillStyle = match1[i].match(re3)[0];
+                let text = match0[i].match(re2)[0];
+                context.fillText(text, x + +len, y);
+                len = len + +context.measureText(text).width;
+            }
         }
+        else {
+            context.fillStyle = "white";
+            context.fillText(str, x, y);
+        }
+        context.fillStyle = lastFillstyle
     }
+
 
     drawDMenu(context) {
         context.fillStyle = 'white';
         context.fillRect(5, 485, 990, 160);
         context.fillStyle = "black";
         context.fillRect(7, 487, 986, 156);
-
         context.fillStyle = "white";
         context.font = "18px manaspc";
-        this.drawMessage(this.messages[0], 10, 505, context);      //0
 
+        this.drawMessage(this.messages[0], 10, 505, context);      //0
         this.drawMessage(this.messages[1], 10, 525 - 1, context);      //1
         this.drawMessage(this.messages[2], 10, 545 - 2, context);      //2
         this.drawMessage(this.messages[3], 10, 565 - 3, context);      //3
