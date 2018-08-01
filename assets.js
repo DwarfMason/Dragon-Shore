@@ -20,14 +20,14 @@ for (let i = 0; i < 6; ++i) {
 }
 let tileSetslist = [];
 
-for (let i = 0; i < 3; ++i) {
+for (let i = 0; i < 2; ++i) {
     let imgPath = getAsset(`tileset${i}.png`);
     let image = new Image();
     image.src = imgPath;
     tileSetslist.push(image);
 }
 let tileSetsVisetedlist = [];
-for (let i = 0; i < 3; ++i) {
+for (let i = 0; i < 2; ++i) {
     let imgPath = getAsset(`tileset${i}_visited.png`);
     let image = new Image();
     image.src = imgPath;

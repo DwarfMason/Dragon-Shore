@@ -106,7 +106,7 @@ class SettingsState extends State{
     constructor(){
         super();
         //MAX tileSetList == 10
-        self.tileSetList = ["standart tileset","test tileset1","test tileset2",];
+        self.tileSetList = ["standart tileset","community tileset",];
         self.menuPos = 0
 
     }
@@ -472,8 +472,9 @@ class CharCreationState extends State {
             context.fillText(`Your character: ${mainHero.name}`, 650, 100);
             context.fillText(`Strength: ${mainHero.strength}`, 650, 130);
             context.fillText(`Agility: ${mainHero.agility}`, 650, 160);
-            context.fillText(`Initiative: ${mainHero.initiative} `, 650, 190);
-            context.fillText(`Endurance: ${mainHero.endurance}`, 650, 220);
+            context.fillText(`Intelligence: ${mainHero.intelligence}`, 650, 190);
+            context.fillText(`Initiative: ${mainHero.initiative} `, 650, 220);
+            context.fillText(`Endurance: ${mainHero.endurance}`, 650, 250);
         }
     }
 }

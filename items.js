@@ -1,6 +1,6 @@
 let armor = new Array(7);
 let weapons = new Array(7);
-let spells = new Array(2);
+let spells = new Array(3);
 
 class Armor{
     constructor(name, value, description){
@@ -75,6 +75,22 @@ class EnemyCountSpell extends Magic{
     }
 }
 
+class MidasSpell extends Magic{
+    constructor(){
+        super("Midas ring" ,3, 0, "Gold >> life");
+    }
+    useSpell(){
+        if (mainHero.mp >= this.cost && mainHero.hp > 2) {
+            let gold = rollDice(20,1);
+            mainHero.mp -= this.cost;
+            mainHero.hp -= 2;
+            mainHero.gold += gold;
+            game.pushMessage(`(You should be mad to hurt yourself for ){white} (${gold} coins){yellow}`);
+        }else
+            game.pushMessage(`(You cannot do that!){red}`);
+    }
+}
+
 
 weapons[0] =  new Weapon('Rusty dagger', 0, 4, 1, 'Seems like it was lost a couple ages ago');
 weapons[1] =  new Weapon('Broken sword', 0, 6, 1, 'Looks like somebody chewed it');
@@ -94,3 +110,4 @@ armor[6] = new Armor('Dragon`s armor', 10, 'Greenpeace is in fury!');
 
 spells[0] = new EnemyCountSpell();
 spells[1] = new RandomWipeSpell();
+spells[2] = new MidasSpell();
