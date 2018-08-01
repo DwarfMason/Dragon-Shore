@@ -794,16 +794,16 @@ class ShopState extends State {
                 this.isBought = getRandomPotion();
                 break;
             case 69: //e - endurance
-                this.isBought = incStat('Endur');
+                this.isBought = incStat(3);
                 break;
-            case 83: //S - strength(speed)
-                this.isBought = incStat('Str');
+            case 83: //S - strength
+                this.isBought = incStat(1);
                 break;
-            case 73: //i - intelligence(speed)
-                this.isBought = incStat('Ag');
+            case 73: //i - intelligence
+                this.isBought = incStat(4);
                 break;
             case 70: //f - agility(fast)
-                this.isBought = incStat('Int');
+                this.isBought = incStat(2);
                 break;
             case 27: //Esc - exit
                 scene.setState(game);
@@ -838,7 +838,7 @@ class ShopState extends State {
         context.fillText(`E:Endurance attr++..........${statCost}`, 10, 350);
         context.fillText(`I:Intelligence attr++.......${statCost}`, 10, 390);
         if (this.isBought) {
-            context.fillText(`Your buy succesfull!`, 500, 500);
+            context.fillText(`Your buy succesful!`, 500, 500);
             this.isBought = !this.isBought;
         }
         super.update(context);
@@ -883,6 +883,10 @@ class GameState extends State {
         depth = 1;
         this.clearGame();
         this.messages = ["", "", "", "", "", "", "", "", ""];
+        potionCost = 50;
+        statCost = 50;
+        weaponCost = 150;
+        armorCost = 150;
         this.pushMessage(`(Welcome to the ){white}(${depth} depth!){red}`);
         this.pushMessage(`(To get help press '?'){white}`);
     }

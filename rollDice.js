@@ -1,7 +1,7 @@
-let potionCost = 50;
-let statCost = 50;
-let weaponCost = 150;
-let armorCost = 150;
+let potionCost;
+let statCost;
+let weaponCost;
+let armorCost;
 
 function rollDice(diceVal, diceCount) {
     let total = 0;
@@ -25,18 +25,19 @@ function getRandomPotion() {
 function incStat(a) {
     if (mainHero.gold >= statCost) {
         switch (a){
-            case 'Str': mainHero.strength++;
+            case 1: mainHero.strength++;
                         break;
-            case 'Ag': mainHero.agility++;
+            case 2: mainHero.agility++;
                             break;
-            case 'Endur': mainHero.endurance++;
+            case 3: mainHero.endurance++;
                               break;
-            case 'Int': mainHero.intelligence++;
+            case 4: mainHero.intelligence++;
                               break;
         }
         mainHero.update();
         mainHero.gold -= statCost;
-        statCostCost += Math.floor(0.25*statCostnCost);
+        statCost += Math.floor(0.25*statCost);
+        console.log(mainHero.agility);
         return true;
     }
     return false;

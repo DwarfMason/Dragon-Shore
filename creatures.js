@@ -66,6 +66,7 @@ class Player extends Creature {
         this.baffs = [];
         this.hpPotions = 3;
         this.mpPotions = 3;
+        this.gold = 999;
         this.color = "yellow";
     }
 
@@ -76,6 +77,7 @@ class Player extends Creature {
         this.maxMP = Math.floor(this.intelligence / 10) + 1;
     }
 }
+
 class Mob extends Creature{
     constructor(id){
         super(id);
@@ -84,6 +86,7 @@ class Mob extends Creature{
         return [0,0];
     }
 }
+
 class Orc extends Mob {
     constructor(startX, startY, weaponID, armorID) {
         super(79);
