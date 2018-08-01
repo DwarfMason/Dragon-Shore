@@ -512,8 +512,8 @@ class LeaderboardsState extends State {
         context.fillText("Press Esc to go back", 500, 600);
 
         getScores(this.scoresPerPage).then(scores => {
+            context.clearRect(0, 100, 1000, 400);
             if (scores.length) {
-                context.clearRect(0, 100, 1000, 400);
                 context.font = "24px manaspc";
                 for (let i = 0; i < scores.length; ++i) {
                     let score = scores[i];
