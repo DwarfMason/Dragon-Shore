@@ -11,7 +11,7 @@ class Controller{
     }
 
     checkCollision(scene){
-        for (let i = 1;i < this.objectsMap.length; ++i) {
+        for (let i = 1;i < this.objectsMap.length && !mainHero.isDead; ++i) {
             if((this.player.x === this.objectsMap[i].x) && (this.player.y === this.objectsMap[i].y)){
                 if(!this.objectsMap[i].isDead){
                     if (mainHero.initiative >= this.objectsMap[i].initiative)
@@ -26,6 +26,8 @@ class Controller{
                         });
                         scene.update();
                     }
+                    if(this.player.isDead)
+                        scene.setState(gameOver);
                     return 1;
                 }
             }

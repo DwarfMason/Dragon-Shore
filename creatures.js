@@ -36,7 +36,7 @@ class Player extends Creature {
                 this.intelligence = Math.max(rollDice(6, 3) - 3, 3);
                 break;
             case 'Magic wombat':
-                this.strength = Math.max(rollDice(6, 3) - 5);
+                this.strength = Math.max(rollDice(6, 3) - 5,3);
                 this.agility = rollDice(6, 3) + 15;
                 this.endurance = Math.max(rollDice(6, 3) - 5, 3);
                 this.intelligence = rollDice(6, 3) + 17;

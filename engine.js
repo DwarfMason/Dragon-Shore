@@ -304,7 +304,7 @@ class GameOver extends State {
 
     update(context) {
         context.drawImage(getRandomIMG(), 0, 0);
-
+        console.log(game.messages);
         context.fillStyle = "white";
         context.font = "24px manaspc";
 
@@ -324,7 +324,6 @@ class MenuState extends State {
     constructor() {
         super();
         this.menuPos = 0;
-        this.menuImgs = menuImgs;
     }
 
     dropMenuPos() {
@@ -419,6 +418,7 @@ class MenuState extends State {
         }
         context.fillStyle = "white";
         context.font = "48px manaspc";//61
+        context.textAlign = "left";
         context.fillText("Start",796,236);
         context.fillText("Leaderboards",572,297);
         context.fillText("Settings",698,360);

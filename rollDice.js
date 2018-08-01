@@ -80,6 +80,9 @@ function getRandomMagic(){
 }
 
 function closeBattle(first, second) {
+    if (first.isDead || second.isDead)
+        return;
+
     game.pushMessage(`(${first.name}){${first.color}}( bumped with ){white}(${second.name}){${second.color}}( !){white}`);
     if (first.agility / 10 + rollDice(6, 2) > 6 + second.agility / 10) {
         let damage = rollDice(first.weapon.diceVal, first.weapon.diceCount) - second.armor.value + first.attack;
