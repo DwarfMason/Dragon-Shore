@@ -3,8 +3,8 @@
 let game = null;//new GameState();
 let menu = null;
 let credits = null;
-let leaderboards = null; //TODO
-let settings = null; //TODO
+let leaderboards = null;
+let settings = null;
 let gameOver = null;//new GameOverState();
 let charCreation = null; // new CharCreationState()
 let shop = null; //ShopCreationState;
@@ -189,14 +189,15 @@ class HelpState extends State {
 
         context.fillText("Key bindings:", 10, 65);
 
-        context.fillText("Arrows stay for movement", 10, 100);
-        context.fillText("h - use health potion", 10, 130);
-        context.fillText("m - mana potion", 10, 160);
-        context.fillText("'space' - use magic", 10, 190);
-        context.fillText(". or >  - descend (works on ladders >)", 10, 220);
-        context.fillText("? - help menu", 10, 250);
-        context.fillText("d - description items menu", 10, 280);
-        context.fillText("s - call shop", 10, 310);
+        context.fillText("Arrows - movement", 10, 100);
+        context.fillText("o - skip turn", 10, 130);
+        context.fillText("h - health potion", 10, 160);
+        context.fillText("m - mana potion", 10, 190);
+        context.fillText("'space' - cast spell", 10, 220);
+        context.fillText(". - descend (works on ladders)", 10, 250);
+        context.fillText("? - help", 10, 280);
+        context.fillText("d - character", 10, 310);
+        context.fillText("s - shop", 10, 340);
 
         super.update(context);
     }
@@ -254,20 +255,22 @@ class DescriptionState extends State {
         context.fillText(`Strength: ${mainHero.strength}`, 525, 130);
         context.fillText(`Agility: ${mainHero.agility}`, 525, 160);
         context.fillText(`Initiative: ${mainHero.initiative} `, 525, 190);
-        context.fillText(`Endurance: ${mainHero.endurance}`, 525, 220);
+        context.fillText(`Endurance: ${mainHero.endurance}`, 530, 220);
         context.fillText(`Intelligence: ${mainHero.intelligence}`, 525, 250);
 
         if(this.isArmor){
             context.font = "24px manaspc";
             context.fillStyle = "yellow";
-            context.fillText(`${mainHero.armor.name} - ${mainHero.armor.description}`, 10, 400);
+            context.fillText(`${mainHero.armor.name} - ${mainHero.armor.description}`, 10, 450);
+            context.fillText(`It is tier - ${mainHero.armor.tier}`, 10, 470);
             this.isArmor = !this.isArmor;
         }
 
         if(this.isWeapon){
             context.font = "24px manaspc";
             context.fillStyle = "yellow";
-            context.fillText(`${mainHero.weapon.name} - ${mainHero.weapon.description}`, 10, 400);
+            context.fillText(`${mainHero.weapon.name} - ${mainHero.weapon.description}`, 10, 450);
+            context.fillText(`It's tier - ${mainHero.weapon.tier}`, 10, 480);
             this.isWeapon = !this.isWeapon;
         }
 
@@ -464,6 +467,9 @@ class CharCreationState extends State {
                 mainHero = new Player('Dwarf', 10, 10, dbUser ? dbUser.displayName : 'UNKNOWN');
                 this.isCreated = true;
                 break;
+            case 27: //Esc
+                scene.setState(menu);
+                break;
 
             case 13: //Enter
                 if (this.isCreated) {
@@ -505,8 +511,9 @@ class CharCreationState extends State {
             context.fillText(`Your character: ${mainHero.name}`, 650, 100);
             context.fillText(`Strength: ${mainHero.strength}`, 650, 130);
             context.fillText(`Agility: ${mainHero.agility}`, 650, 160);
-            context.fillText(`Initiative: ${mainHero.initiative} `, 650, 190);
-            context.fillText(`Endurance: ${mainHero.endurance}`, 650, 220);
+            context.fillText(`Intelligence: ${mainHero.intelligence}`, 650, 190);
+            context.fillText(`Initiative: ${mainHero.initiative} `, 650, 220);
+            context.fillText(`Endurance: ${mainHero.endurance}`, 650, 250);
         }
     }
 }
@@ -668,7 +675,7 @@ class SignInState extends State {
             context.fillStyle = "white";
 
         }
-        context.fillText("Press arrows to switch between login and password", 470, 560);
+        context.fillText("We do not keep your email!", 470, 560);
         context.fillText("Press Space while focused on button to click", 470, 580);
         context.fillText("Press Enter to sign in", 470, 600);
 
@@ -800,7 +807,7 @@ class SignUpState extends State {
             context.fillStyle = "white";
 
         }
-        context.fillText("Press arrows to switch between fields", 470, 580);
+        context.fillText("We do not keep your email!", 470, 580);
         context.fillText("Press Enter to sign up", 470, 600);
 
         context.strokeStyle = "white";
@@ -883,10 +890,16 @@ class ShopState extends State {
     keyHandler(scene, event) {
         switch (event.keyCode) {
             case 87: //w - weapon
-                this.isBought = getRandomWeapon();
+                this.isBought = getRandomWeapon(mainHero.weapon.tier);
                 break;
             case 65: //a - armor
-                this.isBought = getRandomArmor();
+                this.isBought = getRandomArmor(mainHero.armor.tier);
+                break;
+            case 79: //o - weapon 2
+                this.isBought = getRandomWeapon(mainHero.weapon.tier + 1);
+                break;
+            case 76: //l - armor 2
+                this.isBought = getRandomArmor(mainHero.armor.tier + 1);
                 break;
             case 77: //m - magic
                 this.isBought = getRandomMagic();
@@ -931,14 +944,16 @@ class ShopState extends State {
         context.font = "24px manaspc";
         context.textAlign = "left";
 
-        context.fillText(`W:Random weapon............${weaponCost}`, 10, 150);
-        context.fillText(`A:Random armor.............${armorCost}`, 10, 190);
-        context.fillText(`M:Random magic.............${magicCost}`, 10, 230);
-        context.fillText(`P:Random potion.............${potionCost}`, 10, 270);
-        context.fillText(`S:Strength attr++...........${statCost}`, 10, 310);
-        context.fillText(`F:Agility attr++............${statCost}`, 10, 350);
-        context.fillText(`E:Endurance attr++..........${statCost}`, 10, 390);
-        context.fillText(`I:Intelligence attr++.......${statCost}`, 10, 430);
+        context.fillText(`w:Random weapon your tier.........${weaponCostSame}`, 10, 150);
+        context.fillText(`a:Random armor your tier............${armorCostSame}`, 10, 190);
+        context.fillText(`o:Random weapon. Tier++.........${weaponCostUp}`, 10, 230);
+        context.fillText(`l:Random armor. Tier++............${armorCostUp}`, 10, 270);
+        context.fillText(`m:Random spell.............${magicCost}`, 10, 310);
+        context.fillText(`p:Random potion.............${potionCost}`, 10, 350);
+        context.fillText(`s:Strength++...........${statCost}`, 10, 390);
+        context.fillText(`f:Agility++............${statCost}`, 10, 430);
+        context.fillText(`e:Endurance++..........${statCost}`, 10, 470);
+        context.fillText(`i:Intelligence++.......${statCost}`, 10, 510);
         if (this.isBought) {
             context.fillText(`Your buy succesful!`, 500, 500);
             this.isBought = !this.isBought;
@@ -987,9 +1002,11 @@ class GameState extends State {
         this.messages = ["", "", "", "", "", "", "", "", ""];
         potionCost = 50;
         statCost = 50;
-        weaponCost = 150;
-        armorCost = 150;
-        magicCost = 80;
+        weaponCostSame = 75;
+        armorCostSame = 75;
+        armorCostUp = 50;
+        weaponCostUp = 50;
+        magicCost = 40;
         this.pushMessage(`(Welcome to the ){white}(${depth} depth!){red}`);
         this.pushMessage(`(To get help press '?'){white}`);
     }
@@ -1286,6 +1303,9 @@ class GameState extends State {
                 break;
             case 77://m - mana
                 this.controller.drinkMP();
+                this.mobController.move(scene);
+                break;
+            case 79:// o - skip turn
                 this.mobController.move(scene);
                 break;
             case 190://>

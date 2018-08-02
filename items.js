@@ -1,12 +1,13 @@
-let armor = new Array(7);
-let weapons = new Array(7);
-let spells = new Array(3);
+let weapons = null;
+let armor = null;
+let spells = null;
 
 class Armor{
-    constructor(name, value, description){
+    constructor(name, value, description, tier) {
         this.name = name;
         this.value =  value;
         this.description = description;
+        this.tier = tier;
     }
 
     onEquip(mainHero){
@@ -21,13 +22,13 @@ class Armor{
 
 class PoorClothes extends Armor{
     constructor(){
-        super('Poor clothes', 2, 'It smells like your cat!');
+        super('Poor clothes', 2, 'It smells like your cat!', 0);
     }
 }
 
 class LeatherPants extends Armor{
     constructor(){
-        super('Leather pants', 3, 'Because you did not have money for the shirt');
+        super('Leather pants', 3, 'Because you did not have money for the shirt', 1);
     }
 
     onEquip(mainHero){
@@ -37,13 +38,13 @@ class LeatherPants extends Armor{
 
 class LeatherSet extends Armor{
     constructor(){
-        super('Leather set', 5, 'Ok, maybe you are not so poor');
+        super('Leather set', 5, 'Ok, maybe you are not so poor', 1);
     }
 }
 
 class RockPlate extends Armor{
     constructor(){
-        super('Rock plate', 6, 'Haters gonna say - it is heavy');
+        super('Rock plate', 6, 'Haters gonna say - it is heavy', 1);
     }
 
     onEquip(mainHero){
@@ -57,7 +58,7 @@ class RockPlate extends Armor{
 
 class CodeShirt extends Armor{
     constructor(){
-        super('Code shirt', 7, 'It is quit boring to make this descriptions.');
+        super('Code shirt', 7, 'It is quit boring to make this descriptions.', 2);
     }
 
     onEquip(mainHero){
@@ -71,13 +72,13 @@ class CodeShirt extends Armor{
 
 class Cuirass extends Armor{
     constructor(){
-        super('Steel cuirass', 8, 'I really like it`s sound of ignoring damage!');
+        super('Steel cuirass', 8, 'I really like it`s sound of ignoring damage!', 2);
     }
 }
 
 class DragonArmor extends Armor{
     constructor(){
-        super('Dragon`s armor', 10, 'Greenpeace is in fury!');
+        super('Dragon`s armor', 10, 'Greenpeace is in fury!', 3);
     }
 
     onEquip(mainHero){
@@ -89,12 +90,13 @@ class DragonArmor extends Armor{
 
 
 class Weapon{
-    constructor(name, value, diceVal, diceCount, description){
+    constructor(name, value, diceVal, diceCount, description, tier) {
         this.name = name;
         this.value =  value;
         this.diceVal = diceVal;
         this.diceCount = diceCount;
         this.description = description;
+        this.tier = tier;
     }
 
     onEquip(mainHero){
@@ -108,13 +110,13 @@ class Weapon{
 
 class RustyDagger extends Weapon {
     constructor() {
-        super('Rusty dagger', 0, 4, 1, 'Seems like it was lost a couple ages ago');
+        super('Rusty dagger', 0, 4, 1, 'Seems like it was lost a couple ages ago', 0);
     }
 }
 
 class BrokenSword extends Weapon{
     constructor(){
-        super('Broken sword', 0, 6, 1, 'Looks like somebody chewed it');
+        super('Broken sword', 0, 6, 1, 'Looks like somebody chewed it', 1);
     }
      onEquip(mainHero){
         mainHero.agility >= 25? this.value += 3: this.value++;
@@ -123,13 +125,13 @@ class BrokenSword extends Weapon{
 
 class DaddySword extends Weapon{
     constructor(){
-        super('Daddy`s sword +1', 1, 6, 1, 'At least you know, that it deals damage');
+        super('Daddy`s sword +1', 1, 6, 1, 'At least you know, that it deals damage', 1);
     }
 }
 
 class Rock extends Weapon{
     constructor() {
-        super('Rock', 0, 4, 2, 'It helps you feel concentratedly');
+        super('Rock', 0, 4, 2, 'It helps you feel concentratedly', 1);
     }
 
     onEquip(mainHero){
@@ -143,13 +145,13 @@ class Rock extends Weapon{
 
 class BalancedSword extends Weapon{
     constructor(){
-        super('Balanced sword +3', 3, 6, 1, 'Finally! Good weapon!');
+        super('Balanced sword +3', 3, 6, 1, 'Finally! Good weapon!', 2);
     }
 }
 
 class HardMace extends Weapon{
     constructor(){
-        super('Hard mace', 2, 8, 1, 'It is quite heavy, but you can get on well with it.');
+        super('Hard mace', 2, 8, 1, 'It is quite heavy, but you can get on well with it.', 2);
     }
 
     onEquip(mainHero){
@@ -159,7 +161,7 @@ class HardMace extends Weapon{
 
 class BloodyHammer extends Weapon{
     constructor(){
-        super('Bloody hammer', 0, 12, 1, 'You are proud with it. It killed someone!');
+        super('Bloody hammer', 0, 12, 1, 'You are proud with it. It killed someone!', 3);
     }
 
     onEquip(mainHero){
@@ -242,22 +244,30 @@ class MidasSpell extends Magic{
 }
 
 
-weapons[0] =  new RustyDagger();
-weapons[1] =  new BrokenSword();
-weapons[2] =  new DaddySword();
-weapons[3] =  new Rock();
-weapons[4] =  new BalancedSword();
-weapons[5] =  new HardMace();
-weapons[6] =  new BloodyHammer();
+weapons = [
+    new RustyDagger(),
+    new BrokenSword(),
+    new DaddySword(),
+    new Rock(),
+    new BalancedSword(),
+    new HardMace(),
+    new BloodyHammer(),
+];
 
-armor[0] = new PoorClothes();
-armor[1] = new LeatherPants();
-armor[2] = new LeatherSet();
-armor[3] = new RockPlate();
-armor[4] = new CodeShirt();
-armor[5] = new Cuirass();
-armor[6] = new DragonArmor();
+armor = [
+    new PoorClothes(),
+    new LeatherPants(),
+    new LeatherSet(),
+    new RockPlate(),
+    new CodeShirt(),
+    new Cuirass(),
+    new DragonArmor(),
+];
 
-spells[0] = new EnemyCountSpell();
-spells[1] = new RandomWipeSpell();
-spells[2] = new MidasSpell();
+spells = [
+    new EnemyCountSpell(),
+    new RandomWipeSpell(),
+    new MidasSpell(),
+];
+
+let maxTier = weapons[weapons.length - 1].tier;

@@ -7,8 +7,8 @@ class Creature extends SceneObject {
         this.hp = 0;
         this.mp = 0;
         this.attack = 0;
-        this.armor = armor[0];
         this.weapon = weapons[0];
+        this.armor = armor[0];
         this.agility = 0;
         this.initiative = 0;
         this.name = 'none';
