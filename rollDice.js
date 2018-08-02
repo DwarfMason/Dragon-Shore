@@ -89,7 +89,7 @@ function closeBattle(first, second) {
     game.pushMessage(`(${first.name}){${first.color}}( bumped with ){white}(${second.name}){${second.color}}( !){white}`);
     if (first.agility / 10 + rollDice(6, 2) > 6 + second.agility / 10) {
         let damage = rollDice(first.weapon.diceVal, first.weapon.diceCount) - second.armor.value + first.attack;
-        var crit = (rollDice(20, 1) > 18) && (((first.weapon.diceVal - 1) * first.weapon.diceCount) <= damage);
+        let crit = (rollDice(20, 1) > 18) && (((first.weapon.diceVal - 1) * first.weapon.diceCount) <= damage);
         crit ? damage += damage : damage;
         damage > 0 ? (() => {
                 second.hp -= damage;
@@ -121,7 +121,7 @@ function closeBattle(first, second) {
     }
     if (second.agility / 10 + rollDice(6, 2) > 6 + first.agility / 10) {
         let damage = rollDice(second.weapon.diceVal, second.weapon.diceCount) - first.armor.value + second.attack;
-        var crit = (rollDice(20, 1) > 18) && (((second.weapon.diceVal - 1) * second.weapon.diceCount) <= damage);
+        let crit = (rollDice(20, 1) > 18) && (((second.weapon.diceVal - 1) * second.weapon.diceCount) <= damage);
         crit ? damage += damage : damage;
         damage > 0 ? (() => {
                 first.hp -= damage;
@@ -152,4 +152,50 @@ function closeBattle(first, second) {
         game.pushMessage(`(${second.name}){${second.color}}( missed ){green}(${first.name}){${first.color}}( !){green}`);
     }
 }
+
+
+function mobCloseBattle(first, second) {
+    if (first.isDead || second.isDead)
+        return;
+
+    if (first.agility / 10 + rollDice(6, 2) > 6 + second.agility / 10) {
+        let damage = rollDice(first.weapon.diceVal, first.weapon.diceCount) - second.armor.value + first.attack;
+        let crit = (rollDice(20, 1) > 18) && (((first.weapon.diceVal - 1) * first.weapon.diceCount) <= damage);
+        crit ? damage += damage : damage;
+        damage > 0 ? (() => {
+                second.hp -= damage;
+
+            })() :
+            (() => {
+                damage = 0;
+
+            })();
+        if (second.hp <= 0) {
+            game.pushMessage(`(You hear terrifying howl){red}`);
+            first.gold += second.gold;
+            second.isDead = 1;
+            return;
+        }
+    }
+    if (second.agility / 10 + rollDice(6, 2) > 6 + first.agility / 10) {
+        let damage = rollDice(second.weapon.diceVal, second.weapon.diceCount) - first.armor.value + second.attack;
+        let crit = (rollDice(20, 1) > 18) && (((second.weapon.diceVal - 1) * second.weapon.diceCount) <= damage);
+        crit ? damage += damage : damage;
+        damage > 0 ? (() => {
+                first.hp -= damage;
+
+            })() :
+            (() => {
+                damage = 0;
+
+            })();
+        if (first.hp <= 0) {
+            game.pushMessage(`(You hear terrifying howl){red}`);
+            second.gold += first.gold;
+            first.isDead = 1;
+            return;
+        }
+    }
+}
+
 
