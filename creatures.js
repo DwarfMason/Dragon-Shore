@@ -91,9 +91,9 @@ class Orc extends Mob {
     constructor(startX, startY, weaponID, armorID) {
         super(79);
         this.name = "Green orc";
-        this.strength = rollDice(6, 3) + 2 + depth;
-        this.agility = rollDice(6, 3) - 4 + depth;
-        this.endurance = rollDice(6, 3) + 1 + depth;
+        this.strength = rollDice(6, 3) + 2 + Math.floor(Math.random()*Math.floor(depth/2));
+        this.agility = rollDice(6, 3) - 4 + Math.floor(Math.random()*Math.floor(depth/2));
+        this.endurance = rollDice(6, 3) + 1 + Math.floor(Math.random()*Math.floor(depth/2));
         this.attack = Math.floor(this.strength / 10);
         this.x = startX;
         this.y = startY;
@@ -129,9 +129,9 @@ class Kobold extends Mob {
     constructor(startX, startY, weaponID, armorID) {
         super(75);
         this.name = "little kobold";
-        this.strength = rollDice(6, 3) - 5 + depth;
-        this.agility = rollDice(6, 3) + 3 + depth;
-        this.endurance = rollDice(6, 3) - 5 + depth;
+        this.strength = rollDice(6, 3) - 5 + Math.floor(Math.random()*Math.floor(depth/2));
+        this.agility = rollDice(6, 3) + 3 + Math.floor(Math.random()*Math.floor(depth/2));
+        this.endurance = rollDice(6, 3) - 5 + Math.floor(Math.random()*Math.floor(depth/2));
         this.attack = Math.floor(this.strength / 10);
         this.x = startX;
         this.y = startY;
@@ -167,9 +167,9 @@ class Gargoyle extends Mob {
     constructor(startX, startY, weaponID, armorID) {
         super(71);
         this.name = "Stone Gargoyle";
-        this.strength = rollDice(6, 3) + 2 + depth;
-        this.agility = rollDice(6, 3) + 1 + depth;
-        this.endurance = rollDice(6, 3) +5 + depth;
+        this.strength = rollDice(6, 3) + 2 + Math.floor(Math.random()*Math.floor(depth/2));
+        this.agility = rollDice(6, 3) + 1 + Math.floor(Math.random()*Math.floor(depth/2));
+        this.endurance = rollDice(6, 3) +5 + Math.floor(Math.random()*Math.floor(depth/2));
         this.attack = Math.floor(this.strength / 10);
         this.x = startX;
         this.y = startY;
@@ -207,9 +207,9 @@ class Minotaur extends Mob {
     constructor(startX, startY, weaponID, armorID) {
         super(77);
         this.name = "Blind minotaur";
-        this.strength = rollDice(6, 3) + 30 + depth;
-        this.agility = rollDice(6, 3) - 5 + depth;
-        this.endurance = rollDice(6, 3) + 5 + depth;
+        this.strength = rollDice(6, 3) + 30 + Math.floor(Math.random()*Math.floor(depth/2));
+        this.agility = rollDice(6, 3) - 5 + Math.floor(Math.random()*Math.floor(depth/2));
+        this.endurance = rollDice(6, 3) + 5 + Math.floor(Math.random()*Math.floor(depth/2));
         this.attack = Math.floor(this.strength / 10);
         this.x = startX;
         this.y = startY;

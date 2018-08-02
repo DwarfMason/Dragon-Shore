@@ -17,7 +17,7 @@ function getRandomPotion() {
         let pot = rollDice(2, 1);
         pot === 1 ? mainHero.hpPotions++ : mainHero.mpPotions++;
         mainHero.gold -= potionCost;
-        potionCost += Math.floor(0.25*potionCost);
+        potionCost += 10;
         return true;
     }
     return false;
@@ -37,8 +37,7 @@ function incStat(a) {
         }
         mainHero.update();
         mainHero.gold -= statCost;
-        statCost += Math.floor(0.25*statCost);
-        console.log(mainHero.agility);
+        statCost += 25;
         return true;
     }
     return false;
@@ -46,10 +45,12 @@ function incStat(a) {
 
 function getRandomWeapon() {
     if (mainHero.gold >= weaponCost) {
+        mainHero.weapon.onChange(mainHero);
         mainHero.weapon = weapons[Math.floor(Math.random()*weapons.length)];
+        mainHero.weapon.onEquip(mainHero);
         mainHero.update();
         mainHero.gold -= weaponCost;
-        weaponCost += Math.floor(0.25*weaponCost);
+        weaponCost += 50;
         return true;
 
     }
@@ -58,10 +59,12 @@ function getRandomWeapon() {
 
 function getRandomArmor() {
     if (mainHero.gold >= armorCost) {
+        mainHero.armor.onChange(mainHero);
         mainHero.armor = armor[Math.floor(Math.random()*armor.length)];
+        mainHero.armor.onEquip(mainHero);
         mainHero.update();
         mainHero.gold -= armorCost;
-        armorCost += Math.floor(0.25*armorCost);
+        armorCost += 50;
         return true;
 
     }
@@ -73,7 +76,7 @@ function getRandomMagic(){
         mainHero.magic = spells[Math.floor(Math.random()*spells.length)];
         mainHero.update();
         mainHero.gold -= magicCost;
-        magicCost += Math.floor(0.25*magicCost);
+        magicCost += 50;
         return true;
     }
     return false;

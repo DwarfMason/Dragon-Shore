@@ -8,7 +8,85 @@ class Armor{
         this.value =  value;
         this.description = description;
     }
+
+    onEquip(mainHero){
+        return 0;
+    }
+
+
+    onChange(mainHero){
+        return 0;
+    }
 }
+
+class PoorClothes extends Armor{
+    constructor(){
+        super('Poor clothes', 2, 'It smells like your cat!');
+    }
+}
+
+class LeatherPants extends Armor{
+    constructor(){
+        super('Leather pants', 3, 'Because you did not have money for the shirt');
+    }
+
+    onEquip(mainHero){
+        mainHero.gold >= 50? this.value += 3: this.value;
+    }
+}
+
+class LeatherSet extends Armor{
+    constructor(){
+        super('Leather set', 5, 'Ok, maybe you are not so poor');
+    }
+}
+
+class RockPlate extends Armor{
+    constructor(){
+        super('Rock plate', 6, 'Haters gonna say - it is heavy');
+    }
+
+    onEquip(mainHero){
+        mainHero.endurance += 10;
+    }
+
+    onChange(mainHero){
+        mainHero.endurance -= 10;
+    }
+}
+
+class CodeShirt extends Armor{
+    constructor(){
+        super('Code shirt', 7, 'It is quit boring to make this descriptions.');
+    }
+
+    onEquip(mainHero){
+        mainHero.intelligence += 15;
+    }
+
+    onChange(mainHero){
+        mainHero.intelligence -= 10;
+    }
+}
+
+class Cuirass extends Armor{
+    constructor(){
+        super('Steel cuirass', 8, 'I really like it`s sound of ignoring damage!');
+    }
+}
+
+class DragonArmor extends Armor{
+    constructor(){
+        super('Dragon`s armor', 10, 'Greenpeace is in fury!');
+    }
+
+    onEquip(mainHero){
+        mainHero.endurance += 10;
+    }
+}
+
+
+
 
 class Weapon{
     constructor(name, value, diceVal, diceCount, description){
@@ -18,7 +96,79 @@ class Weapon{
         this.diceCount = diceCount;
         this.description = description;
     }
+
+    onEquip(mainHero){
+        return 0;
+    }
+
+    onChange(mainHero){
+        return 0;
+    }
 }
+
+class RustyDagger extends Weapon {
+    constructor() {
+        super('Rusty dagger', 0, 4, 1, 'Seems like it was lost a couple ages ago');
+    }
+}
+
+class BrokenSword extends Weapon{
+    constructor(){
+        super('Broken sword', 0, 6, 1, 'Looks like somebody chewed it');
+    }
+     onEquip(mainHero){
+        mainHero.agility >= 25? this.value += 3: this.value++;
+     }
+}
+
+class DaddySword extends Weapon{
+    constructor(){
+        super('Daddy`s sword +1', 1, 6, 1, 'At least you know, that it deals damage');
+    }
+}
+
+class Rock extends Weapon{
+    constructor() {
+        super('Rock', 0, 4, 2, 'It helps you feel concentratedly');
+    }
+
+    onEquip(mainHero){
+        mainHero.intelligence += 5;
+    }
+
+    onChange(mainHero){
+        mainHero.intelligence -= 5;
+    }
+}
+
+class BalancedSword extends Weapon{
+    constructor(){
+        super('Balanced sword +3', 3, 6, 1, 'Finally! Good weapon!');
+    }
+}
+
+class HardMace extends Weapon{
+    constructor(){
+        super('Hard mace', 2, 8, 1, 'It is quite heavy, but you can get on well with it.');
+    }
+
+    onEquip(mainHero){
+        mainHero.endurance >= 20? mainHero.strength += 5: mainHero.strength;
+    }
+}
+
+class BloodyHammer extends Weapon{
+    constructor(){
+        super('Bloody hammer', 0, 12, 1, 'You are proud with it. It killed someone!');
+    }
+
+    onEquip(mainHero){
+        mainHero.magic = spells[1];
+    }
+}
+
+
+
 
 class Magic {
    constructor(name,cost, radius, description){
@@ -92,21 +242,21 @@ class MidasSpell extends Magic{
 }
 
 
-weapons[0] =  new Weapon('Rusty dagger', 0, 4, 1, 'Seems like it was lost a couple ages ago');
-weapons[1] =  new Weapon('Broken sword', 0, 6, 1, 'Looks like somebody chewed it');
-weapons[2] =  new Weapon('Daddy`s sword +1', 1, 6, 1, 'At least you know, that it deals damage');
-weapons[3] =  new Weapon('Rock', 0, 4, 2, 'For some reason it is more comfortable than sword');
-weapons[4] =  new Weapon('Balanced sword +3', 3, 6, 1, 'Finally! Good weapon!');
-weapons[5] =  new Weapon('Hard mace', 2, 8, 1, 'It is quite heavy, but you can get on well with it.');
-weapons[6] =  new Weapon('Bloody hammer', 0, 12, 1, 'You are proud with it. It killed someone!');
+weapons[0] =  new RustyDagger();
+weapons[1] =  new BrokenSword();
+weapons[2] =  new DaddySword();
+weapons[3] =  new Rock();
+weapons[4] =  new BalancedSword();
+weapons[5] =  new HardMace();
+weapons[6] =  new BloodyHammer();
 
-armor[0] = new Armor('Poor clothes', 2, 'It smells like your cat!');
-armor[1] = new Armor('Leather pants', 3, 'Because you did not have money for the shirt');
-armor[2] = new Armor('Leather set', 5, 'Ok, maybe you are not so poor');
-armor[3] = new Armor('Rock plate', 6, 'Haters gonna say - it is heavy');
-armor[4] = new Armor('Code shirt', 7, 'It is quit boring to make this descriptions.');
-armor[5] = new Armor('Steel cuirass', 8, 'I really like it`s sound of ignoring damage!');
-armor[6] = new Armor('Dragon`s armor', 10, 'Greenpeace is in fury!');
+armor[0] = new PoorClothes();
+armor[1] = new LeatherPants();
+armor[2] = new LeatherSet();
+armor[3] = new RockPlate();
+armor[4] = new CodeShirt();
+armor[5] = new Cuirass();
+armor[6] = new DragonArmor();
 
 spells[0] = new EnemyCountSpell();
 spells[1] = new RandomWipeSpell();
