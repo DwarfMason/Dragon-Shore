@@ -317,7 +317,17 @@ class GameOver extends State {
         context.fillText(`Armor: ${mainHero.armor.name}`, 20, 270);
         context.fillText("Press Enter to exit...", 100, 600);
         context.font = "12px manaspc";
-        game.drawMessage(`Case of death: ${game.messages[2]}`, 20, 630, context);
+
+        game.drawMessage(game.messages[0], 30, 505 - 100, context);      //0
+        game.drawMessage(game.messages[1], 30, 525 - 100 - 1, context);      //1
+        game.drawMessage(game.messages[2], 30, 545 - 100 - 2, context);      //2
+        game.drawMessage(game.messages[3], 30, 565 - 100 - 3, context);      //3
+        game.drawMessage(game.messages[4], 30, 585 - 100 - 4, context);      //4
+        game.drawMessage(game.messages[5], 30, 605 - 100 - 5, context);      //5
+        game.drawMessage(game.messages[6], 30, 625 - 100 - 5, context);      //6
+        game.drawMessage(game.messages[7], 30, 645 - 100 - 7, context);      //7
+
+
         super.update(context);
     }
 }

@@ -46,6 +46,9 @@ class Controller{
                 this.player.x--;
             }
         }
+        else {
+
+        }
 
     }
     moveL(scene){
@@ -54,6 +57,9 @@ class Controller{
             if(this.checkCollision(scene)){
                 this.player.x++;
             }
+        }
+        else {
+
         }
 
     }
@@ -64,6 +70,9 @@ class Controller{
                 this.player.y--;
             }
         }
+        else {
+
+        }
 
     }
     moveU(scene){
@@ -73,6 +82,9 @@ class Controller{
             if(this.checkCollision(scene)){
                 this.player.y++;
             }
+        }
+        else {
+
         }
     }
 
@@ -120,7 +132,7 @@ class MobController{
         }
     }
     checkPlayerCollision(scene){
-        for (let i = 1;i < this.objectsMap.length; ++i) {
+        for (let i = 1;i < this.objectsMap.length && !mainHero.isDead; ++i) {
             if((this.objectsMap[0].x === this.objectsMap[i].x) && (this.objectsMap[0].y === this.objectsMap[i].y)){
                 if(!this.objectsMap[i].isDead){
                     if (mainHero.initiative >= this.objectsMap[i].initiative)
@@ -136,6 +148,16 @@ class MobController{
                         scene.update();
                     }
                     return 1;
+                }
+            }
+            for (let j = 1; j < this.objectsMap.length ;++j){
+                if (j == i)
+                    continue;
+                if((this.objectsMap[j].x === this.objectsMap[i].x) && (this.objectsMap[j].y === this.objectsMap[i].y)){
+                    if(!this.objectsMap[i].isDead){
+                        mobCloseBattle(this.objectsMap[j], this.objectsMap[i],0);
+                        console.log("mob battle");
+                    }
                 }
             }
         }
