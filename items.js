@@ -243,6 +243,35 @@ class MidasSpell extends Magic{
     }
 }
 
+class MindVision extends Magic{
+    constructor(){
+        super("Mind Vision", 1, 0, "Yes, you think absolutely right");
+    }
+
+    useSpell(){
+        if (mainHero.mp >= this.cost) {
+            let closest = null;
+            let dest = 1e100;
+            game.objectsMap.forEach((item, i, arr)=>{
+                let d = (mainHero.x - item.x)**2 + (mainHero.y - item.y)**2;
+                if (d < dest && item != mainHero) {
+                    closest = item;
+                    dest = d;
+                }
+            });
+
+            if (closest != null){
+                game.pushMessage(`(I feel somebody with:){white} ( ${closest.strength}){red}( strength ){white}` +
+                `(and ){white}(${closest.agility}){green}( agility){white} (${closest.initiative > mainHero.initiative? 
+                    ` You will strike first`:` You will strike second`}){green}`);
+            }else
+                game.pushMessage(`(You are a weak sorcerer, or everyone dead){white}`);
+            mainHero.mp -= this.cost;
+        }else
+            game.pushMessage(`(You do not have enough mana!){blue}`);
+    }
+}
+
 
 weapons = [
     new RustyDagger(),
@@ -268,6 +297,7 @@ spells = [
     new EnemyCountSpell(),
     new RandomWipeSpell(),
     new MidasSpell(),
+    new MindVision(),
 ];
 
 let maxTier = weapons[weapons.length - 1].tier;
