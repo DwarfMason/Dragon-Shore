@@ -46,7 +46,7 @@ function incStat(a) {
 }
 
 function getRandomWeapon(tier) {
-    if (tier === maxTier) {
+    if (mainHero.weapon.tier === maxTier) {
         return false;
     }
 
@@ -84,7 +84,7 @@ function getRandomWeapon(tier) {
 }
 
 function getRandomArmor(tier) {
-    if (tier === maxTier) {
+    if (mainHero.armor.tier === maxTier) {
         return false;
     }
 
