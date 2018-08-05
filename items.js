@@ -286,7 +286,10 @@ class EvilPlay extends Magic {
     }
 
     useSpell() {
-        if (mainHero.mp < this.cost) game.pushMessage(`(Not enough mana!){blue}`);
+        if (mainHero.mp < this.cost){
+            game.pushMessage(`(Not enough mana!){blue}`);
+            return;
+        }
         let newHP, newMP, newAtt, newInit;
         newHP = Math.floor(Math.random() * 5) - 2;
         newMP = Math.floor(Math.random() * 5) - 2;
@@ -299,6 +302,7 @@ class EvilPlay extends Magic {
         mainHero.attackBuff += newAtt;
         mainHero.initiative += newInit;
         mainHero.update();
+        mainHero.mp -= this.cost;
     }
 }
 
