@@ -9,6 +9,7 @@ class Creature extends SceneObject {
         this.attack = 0;
         this.weapon = weapons[0];
         this.armor = armor[0];
+        this.magic = spells[0];
         this.agility = 0;
         this.initiative = 0;
         this.name = 'none';
@@ -16,6 +17,11 @@ class Creature extends SceneObject {
         this.isDead = 0;
         this.color = "white";
         this.fogRad = 5;
+        this.enduranceBuff = 0;
+        this.intBuff = 0;
+        this.attackBuff = 0;
+        this.initiativeBuff = 0;
+        this.agilityBuff = 0;
     }
 }
 
@@ -40,6 +46,7 @@ class Player extends Creature {
                 this.agility = rollDice(6, 3) + 15;
                 this.endurance = Math.max(rollDice(6, 3) - 5, 3);
                 this.intelligence = rollDice(6, 3) + 17;
+                this.magic = spells[4];
                 break;
             case 'Wood elf':
                 this.strength = rollDice(6, 3) + 8;
@@ -66,15 +73,19 @@ class Player extends Creature {
         this.baffs = [];
         this.hpPotions = 3;
         this.mpPotions = 3;
-        this.magic = spells[0];
         this.color = "yellow";
+        this.clearEndur = this.endurance;
+        this.clearInt = this.intelligence;
+        this.clearAtt = this.attack;
     }
 
     update(){
-        this.initiative = this.agility / 10 + 8;
-        this.attack = Math.floor(this.strength / 10);
-        this.maxHP = Math.floor(this.endurance / 10) + 4;
-        this.maxMP = Math.floor(this.intelligence / 10) + 1;
+        this.endurance = this.enduranceBuff + this.clearEndur;
+        this.intelligence = this.clearInt + this.intBuff;
+        this.initiative = this.agility / 10 + 8 + this.initiativeBuff;
+        this.attack = Math.max(Math.floor(this.strength / 10) + this.attackBuff, 1);
+        this.maxHP = Math.max(Math.floor(this.endurance / 10) + 4, 1);
+        this.maxMP = Math.max(Math.floor(this.intelligence / 10) + 4, 1);
     }
 }
 
