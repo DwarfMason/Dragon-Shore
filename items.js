@@ -92,6 +92,38 @@ class DragonArmor extends Armor {
     }
 }
 
+class SpikedArmor extends Armor {
+    constructor(){
+        super(`Spiked armor`, 8, `Come and hug me!`, 3);
+    }
+
+    onEquip(mainHero){
+        mainHero.attackBuff += 2;
+        mainHero.update();
+    }
+
+    onChange(mainHero){
+        mainHero.attackBuff -= 2;
+        mainHero.update();
+    }
+}
+
+class LeftBoot extends Armor{
+    constructor(){
+        super(`LeftBoot`, 3, `Pair defends better`, 3);
+    }
+
+    onEquip(mainHero){
+        mainHero.agilityBuff+=15;
+        mainHero.update();
+    }
+
+    onChange(mainHero){
+        mainHero.agilityBuff-=15;
+        mainHero.update();
+    }
+}
+
 
 class Weapon {
     constructor(name, value, diceVal, diceCount, description, tier) {
@@ -175,6 +207,26 @@ class BloodyHammer extends Weapon {
 
     onEquip(mainHero) {
         mainHero.magic = spells[1];
+    }
+}
+
+class Slingshot extends Weapon{
+    constructor(){
+        super(`Slingshot`, 0, 8, 1, `God bless here is so much stone!`, 3);
+    }
+
+    onEquip(mainHero){
+        mainHero.agility > 30? this.value += 5: this.value = 0;
+    }
+}
+
+class WingedCrossbow extends Weapon{
+    constructor(){
+        super(`Winged crossbow`, 4, 8, 1, `Use instead of club`);
+    }
+
+    onEquip(mainHero){
+        mainHero.agilityBuff -= 5;
     }
 }
 
@@ -315,6 +367,8 @@ weapons = [
     new BalancedSword(),
     new HardMace(),
     new BloodyHammer(),
+    new Slingshot(),
+    new WingedCrossbow(),
 ];
 
 armor = [
@@ -325,6 +379,8 @@ armor = [
     new CodeShirt(),
     new Cuirass(),
     new DragonArmor(),
+    new SpikedArmor(),
+    new LeftBoot(),
 ];
 
 spells = [
