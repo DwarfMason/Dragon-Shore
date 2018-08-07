@@ -280,7 +280,7 @@ class Minotaur extends Mob {
 
 class SewerRat extends Mob {
     constructor(startX, startY, weaponID, armorID) {
-        super(114);
+        super(82);
         this.name = "Sewer rat";
         this.strength = rollDice(6, 3) - 5;
         this.agility = rollDice(6, 3) + 5;
