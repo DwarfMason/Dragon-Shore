@@ -1,13 +1,11 @@
-//TODO: сделать экран с результатами
-
-let game = null;//new GameState();
+let game = null;
 let menu = null;
 let credits = null;
 let leaderboards = null;
 let settings = null;
-let gameOver = null;//new GameOverState();
-let charCreation = null; // new CharCreationState()
-let shop = null; //ShopCreationState;
+let gameOver = null;
+let charCreation = null;
+let shop = null;
 let help = null;
 let description = null;
 
@@ -24,7 +22,7 @@ class Scene {
     setState(state) {
         //remove old handlers
         for (let oldEvent in this.eventList) {
-            console.log("Remove old handlers", oldEvent, this.eventList[oldEvent]);
+            //console.log("Remove old handlers", oldEvent, this.eventList[oldEvent]);
             if (this.eventList.hasOwnProperty(oldEvent) && this.eventList[oldEvent] !== null) {
                 window.removeEventListener(oldEvent, this.eventList[oldEvent]);
             }
@@ -34,7 +32,7 @@ class Scene {
         this.state = state;
         let events = this.state.events;
         for (let event in events) {
-            console.log("Add new handlers", event, events[event]);
+            //console.log("Add new handlers", event, events[event]);
             if (events.hasOwnProperty(event) && events[event] !== null) {
                 this.eventList[event] = e => {
                     events[event].call(this.state, this, e);
@@ -62,7 +60,6 @@ class State {
     }
 
     update(context) {
-
     }
 }
 
@@ -318,6 +315,10 @@ class GameOver extends State {
         context.fillText("Press Enter to exit...", 100, 600);
         context.font = "12px manaspc";
 
+        for (let i = 0; i < 8; ++i) {
+            game.drawMessage(game.messages[i], 30, 405 + 19*i, context);
+        }
+        /*
         game.drawMessage(game.messages[0], 30, 505 - 100, context);      //0
         game.drawMessage(game.messages[1], 30, 525 - 100 - 1, context);      //1
         game.drawMessage(game.messages[2], 30, 545 - 100 - 2, context);      //2
@@ -326,8 +327,7 @@ class GameOver extends State {
         game.drawMessage(game.messages[5], 30, 605 - 100 - 5, context);      //5
         game.drawMessage(game.messages[6], 30, 625 - 100 - 5, context);      //6
         game.drawMessage(game.messages[7], 30, 645 - 100 - 7, context);      //7
-
-
+        */
         super.update(context);
     }
 }
@@ -790,7 +790,7 @@ class SignUpState extends State {
                         scene.setState(new SignUpState(this.callbackState, errorMsg));
                     }
                     scene.update();
-                }
+                };
                 let email = this.fields[0].val;
                 let pass = this.fields[1].val;
                 let nickname = this.fields[2].val;
@@ -1114,15 +1114,9 @@ class GameState extends State {
     }
 
     pushMessage(text) {
-        this.messages[7] = this.messages[6];
-        this.messages[6] = this.messages[5];
-        this.messages[5] = this.messages[4];
-        this.messages[4] = this.messages[3];
-        this.messages[3] = this.messages[2];
-        this.messages[2] = this.messages[1];
-        this.messages[1] = this.messages[0];
+        this.messages.unshift(text);
+        this.messages = this.messages.slice(0, 8);
 
-        this.messages[0] = text;
         if (this.ctx !== null) {
             this.update(this.ctx);
         }
@@ -1224,15 +1218,10 @@ class GameState extends State {
         context.fillStyle = "white";
         context.font = "18px manaspc";
 
-        this.drawMessage(this.messages[0], 10, 505, context);      //0
-        this.drawMessage(this.messages[1], 10, 525 - 1, context);      //1
-        this.drawMessage(this.messages[2], 10, 545 - 2, context);      //2
-        this.drawMessage(this.messages[3], 10, 565 - 3, context);      //3
-        this.drawMessage(this.messages[4], 10, 585 - 4, context);      //4
-        this.drawMessage(this.messages[5], 10, 605 - 5, context);      //5
-        this.drawMessage(this.messages[6], 10, 625 - 5, context);      //6
-        this.drawMessage(this.messages[7], 10, 645 - 7, context);      //7
 
+        for (let i = 0; i < 8; ++i) {
+            this.drawMessage(this.messages[i], 10, 505 + 19*i, context);
+        }
     }
 
     clearScene(context) {
