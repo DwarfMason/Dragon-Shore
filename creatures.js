@@ -20,6 +20,7 @@ class Creature extends SceneObject {
         this.attackBuff = 0;
         this.initiativeBuff = 0;
         this.agilityBuff = 0;
+        this.strengthBuff = 0;
     }
 }
 
@@ -72,6 +73,7 @@ class Player extends Creature {
         this.hpPotions = 3;
         this.mpPotions = 3;
         this.color = "yellow";
+        this.clearStrength = this.strength;
         this.clearAgility = this.agility;
         this.clearEndur = this.endurance;
         this.clearInt = this.intelligence;
@@ -82,9 +84,10 @@ class Player extends Creature {
         this.intelligence = this.clearInt + this.intBuff;
         this.agility = this.clearAgility + this.agilityBuff;
         this.initiative = this.agility / 10 + 8 + this.initiativeBuff;
+        this.strength = this.clearStrength + this.strengthBuff;
         this.attack = Math.max(Math.floor(this.strength / 10) + this.attackBuff, 1);
-        this.maxHP = Math.max(Math.floor(this.endurance / 10) + 4, 1);
-        this.maxMP = Math.max(Math.floor(this.intelligence / 10) + 4, 1);
+        this.maxHP = Math.floor(this.endurance / 10) + 4;
+        this.maxMP = Math.floor(this.intelligence / 10) + 1;
         this.hp > this.maxHP ? this.hp = this.maxHP : this.hp;
         this.mp > this.maxMP ? this.mp = this.maxMP : this.mp;
     }

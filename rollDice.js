@@ -28,13 +28,13 @@ function getRandomPotion() {
 function incStat(a) {
     if (mainHero.gold >= statCost) {
         switch (a){
-            case 1: mainHero.strength++;
+            case 1: mainHero.clearStrength++;
                         break;
-            case 2: mainHero.agility++;
+            case 2: mainHero.clearAgility++;
                             break;
-            case 3: mainHero.endurance++;
+            case 3: mainHero.clearEndur++;
                               break;
-            case 4: mainHero.intelligence++;
+            case 4: mainHero.clearInt++;
                               break;
         }
         mainHero.update();

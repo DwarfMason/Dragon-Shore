@@ -185,7 +185,7 @@ class Rock extends Weapon {
 
 class BalancedSword extends Weapon {
     constructor() {
-        super('Balanced sword +3', 3, 6, 1, 'Finally! Good weapon!', 2);
+        super('Balanced sword', 3, 6, 1, 'Finally! Good weapon!', 2);
     }
 }
 
@@ -314,7 +314,7 @@ class MindVision extends Magic {
             let dest = 1e100;
             game.objectsMap.forEach((item, i, arr) => {
                 let d = (mainHero.x - item.x) ** 2 + (mainHero.y - item.y) ** 2;
-                if (d < dest && item != mainHero) {
+                if (d < dest && item !== mainHero) {
                     closest = item;
                     dest = d;
                 }
@@ -358,6 +358,80 @@ class EvilPlay extends Magic {
     }
 }
 
+/*class Fireball extends Magic{
+    constructor() {
+        super("Fire ball", 2, 0, "And fire comes through walls");
+    }
+
+    useSpell() {
+        if (mainHero.mp < this.cost){
+            game.pushMessage(`(Not enough mana!){blue}`);
+            return;
+        }
+        game.pushMessage(`(Choose direction for attack){white}`);
+        while(window.onkeyup !== 38 && window.onkeyup !== 40 && window.onkeyup !== 37 && window.onkeyup. !== 39) {
+            switch (window.onkeypress) {
+                case 38:  //arrow up
+                    game.pushMessage(`(Fireball flew away){yellow}`);
+                    game.objectsMap.forEach((item, i, arr) => {
+                        if (item !== mainHero && item.x === mainHero.x && item.y > mainHero.y) {
+                            item.hp -= floor(mainHero.intelligence / 10);
+                            item.hp <= 0 ? (() => {
+                                    item.isDead = true;
+                                    game.pushMessage(`(You hear terrifying howl){red}`)
+                                })() :
+                                game.pushMessage(`(You hit someone){red}`);
+                        }
+                    });
+                    break;
+                case 40: // arrow down
+                    game.pushMessage(`(Fireball flew away){yellow}`);
+                    game.objectsMap.forEach((item, i, arr) => {
+                        if (item !== mainHero && item.x === mainHero.x && item.y < mainHero.y) {
+                            item.hp -= floor(mainHero.intelligence / 10);
+                            item.hp <= 0 ? (() => {
+                                    item.isDead = true;
+                                    game.pushMessage(`(You hear terrifying howl){red}`)
+                                })() :
+                                game.pushMessage(`(You hit someone){red}`);
+                        }
+                    });
+                    break;
+                case 37: // arrow left
+                    game.pushMessage(`(Fireball flew away){yellow}`);
+                    game.objectsMap.forEach((item, i, arr) => {
+                        if (item !== mainHero && item.x < mainHero.x && item.y === mainHero.y) {
+                            item.hp -= floor(mainHero.intelligence / 10);
+                            item.hp <= 0 ? (() => {
+                                    item.isDead = true;
+                                    game.pushMessage(`(You hear terrifying howl){red}`)
+                                })() :
+                                game.pushMessage(`(You hit someone){red}`);
+                        }
+                    });
+                    break;
+                case 39: // arrow right
+                    game.pushMessage(`(Fireball flew away){yellow}`);
+                    game.objectsMap.forEach((item, i, arr) => {
+                        if (item !== mainHero && item.x > mainHero.x && item.y === mainHero.y) {
+                            item.hp -= floor(mainHero.intelligence / 10);
+                            item.hp <= 0 ? (() => {
+                                    item.isDead = true;
+                                    game.pushMessage(`(You hear terrifying howl){red}`)
+                                })() :
+                                game.pushMessage(`(You hit someone){red}`);
+                        }
+                    });
+                    break;
+                default:
+                    mainHero.mp -= this.cost;
+            }
+        }
+        mainHero.update();
+        mainHero.mp -= this.cost;
+    }
+}*/
+
 
 weapons = [
     new RustyDagger(),
@@ -389,6 +463,7 @@ spells = [
     new MidasSpell(),
     new MindVision(),
     new EvilPlay(),
+    //new Fireball(),
 ];
 
 let maxTier = weapons[weapons.length - 1].tier;
