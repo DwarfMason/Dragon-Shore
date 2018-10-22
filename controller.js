@@ -6,8 +6,9 @@ class Controller{
     }
 
     useSpell(scene){
-        mainHero.magic.useSpell();
+        let handler = mainHero.magic.useSpell();
         scene.update();
+        return handler;
     }
 
     checkCollision(scene){

@@ -93,33 +93,33 @@ class DragonArmor extends Armor {
 }
 
 class SpikedArmor extends Armor {
-    constructor(){
+    constructor() {
         super(`Spiked armor`, 8, `Come and hug me!`, 3);
     }
 
-    onEquip(mainHero){
+    onEquip(mainHero) {
         mainHero.attackBuff += 2;
         mainHero.update();
     }
 
-    onChange(mainHero){
+    onChange(mainHero) {
         mainHero.attackBuff -= 2;
         mainHero.update();
     }
 }
 
-class LeftBoot extends Armor{
-    constructor(){
+class LeftBoot extends Armor {
+    constructor() {
         super(`LeftBoot`, 3, `Pair defends better`, 3);
     }
 
-    onEquip(mainHero){
-        mainHero.agilityBuff+=15;
+    onEquip(mainHero) {
+        mainHero.agilityBuff += 15;
         mainHero.update();
     }
 
-    onChange(mainHero){
-        mainHero.agilityBuff-=15;
+    onChange(mainHero) {
+        mainHero.agilityBuff -= 15;
         mainHero.update();
     }
 }
@@ -210,22 +210,22 @@ class BloodyHammer extends Weapon {
     }
 }
 
-class Slingshot extends Weapon{
-    constructor(){
+class Slingshot extends Weapon {
+    constructor() {
         super(`Slingshot`, 0, 8, 1, `God bless here is so much stone!`, 3);
     }
 
-    onEquip(mainHero){
-        mainHero.agility > 30? this.value += 5: this.value = 0;
+    onEquip(mainHero) {
+        mainHero.agility > 30 ? this.value += 5 : this.value = 0;
     }
 }
 
-class WingedCrossbow extends Weapon{
-    constructor(){
+class WingedCrossbow extends Weapon {
+    constructor() {
         super(`Winged crossbow`, 4, 8, 1, `Use instead of club`);
     }
 
-    onEquip(mainHero){
+    onEquip(mainHero) {
         mainHero.agilityBuff -= 5;
     }
 }
@@ -239,8 +239,12 @@ class Magic {
         this.name = name;
     }
 
+    keyHandler(keyCode) {
+        return null;
+    }
+
     useSpell(scene) {
-        return 0;
+        return null;
     }
 }
 
@@ -266,6 +270,7 @@ class RandomWipeSpell extends Magic {
             game.pushMessage(`(Spell did not work!){white}`);
         } else
             game.pushMessage(`(You do not have enough mana!){blue}`);
+        return super.useSpell();
     }
 }
 
@@ -283,6 +288,7 @@ class EnemyCountSpell extends Magic {
             mainHero.mp -= this.cost;
         } else
             game.pushMessage(`(You do not have enough mana!){blue}`);
+        return super.useSpell();
     }
 }
 
@@ -300,6 +306,7 @@ class MidasSpell extends Magic {
             game.pushMessage(`(You should be mad to hurt yourself for ){white} (${gold} coins){yellow}`);
         } else
             game.pushMessage(`(You cannot do that!){red}`);
+        return super.useSpell();
     }
 }
 
@@ -329,6 +336,7 @@ class MindVision extends Magic {
             mainHero.mp -= this.cost;
         } else
             game.pushMessage(`(You do not have enough mana!){blue}`);
+        return super.useSpell();
     }
 }
 
@@ -338,7 +346,7 @@ class EvilPlay extends Magic {
     }
 
     useSpell() {
-        if (mainHero.mp < this.cost){
+        if (mainHero.mp < this.cost) {
             game.pushMessage(`(Not enough mana!){blue}`);
             return;
         }
@@ -355,82 +363,88 @@ class EvilPlay extends Magic {
         mainHero.initiative += newInit;
         mainHero.update();
         mainHero.mp -= this.cost;
+        return super.useSpell();
     }
 }
 
-/*class Fireball extends Magic{
+class Fireball extends Magic {
     constructor() {
         super("Fire ball", 2, 0, "And fire comes through walls");
     }
 
     useSpell() {
-        if (mainHero.mp < this.cost){
+        if (mainHero.mp < this.cost) {
             game.pushMessage(`(Not enough mana!){blue}`);
-            return;
+            return super.useSpell();
         }
         game.pushMessage(`(Choose direction for attack){white}`);
-        while(window.onkeyup !== 38 && window.onkeyup !== 40 && window.onkeyup !== 37 && window.onkeyup. !== 39) {
-            switch (window.onkeypress) {
-                case 38:  //arrow up
-                    game.pushMessage(`(Fireball flew away){yellow}`);
-                    game.objectsMap.forEach((item, i, arr) => {
-                        if (item !== mainHero && item.x === mainHero.x && item.y > mainHero.y) {
-                            item.hp -= floor(mainHero.intelligence / 10);
-                            item.hp <= 0 ? (() => {
-                                    item.isDead = true;
-                                    game.pushMessage(`(You hear terrifying howl){red}`)
-                                })() :
-                                game.pushMessage(`(You hit someone){red}`);
-                        }
-                    });
-                    break;
-                case 40: // arrow down
-                    game.pushMessage(`(Fireball flew away){yellow}`);
-                    game.objectsMap.forEach((item, i, arr) => {
-                        if (item !== mainHero && item.x === mainHero.x && item.y < mainHero.y) {
-                            item.hp -= floor(mainHero.intelligence / 10);
-                            item.hp <= 0 ? (() => {
-                                    item.isDead = true;
-                                    game.pushMessage(`(You hear terrifying howl){red}`)
-                                })() :
-                                game.pushMessage(`(You hit someone){red}`);
-                        }
-                    });
-                    break;
-                case 37: // arrow left
-                    game.pushMessage(`(Fireball flew away){yellow}`);
-                    game.objectsMap.forEach((item, i, arr) => {
-                        if (item !== mainHero && item.x < mainHero.x && item.y === mainHero.y) {
-                            item.hp -= floor(mainHero.intelligence / 10);
-                            item.hp <= 0 ? (() => {
-                                    item.isDead = true;
-                                    game.pushMessage(`(You hear terrifying howl){red}`)
-                                })() :
-                                game.pushMessage(`(You hit someone){red}`);
-                        }
-                    });
-                    break;
-                case 39: // arrow right
-                    game.pushMessage(`(Fireball flew away){yellow}`);
-                    game.objectsMap.forEach((item, i, arr) => {
-                        if (item !== mainHero && item.x > mainHero.x && item.y === mainHero.y) {
-                            item.hp -= floor(mainHero.intelligence / 10);
-                            item.hp <= 0 ? (() => {
-                                    item.isDead = true;
-                                    game.pushMessage(`(You hear terrifying howl){red}`)
-                                })() :
-                                game.pushMessage(`(You hit someone){red}`);
-                        }
-                    });
-                    break;
-                default:
-                    mainHero.mp -= this.cost;
-            }
-        }
         mainHero.update();
-        mainHero.mp -= this.cost;
+        return this;
     }
-}*/
+
+    keyHandler(keyCode) {
+        console.log("Fireball ", keyCode);
+        switch (keyCode) {
+            case 38:  //arrow up
+                game.pushMessage(`(Fireball flew away){yellow}`);
+                game.objectsMap.forEach((item, i, arr) => {
+                    if (item !== mainHero && item.x === mainHero.x && item.y < mainHero.y) {
+                        item.hp -= Math.floor(mainHero.intelligence / 10);
+                        item.hp <= 0 ? (() => {
+                                item.isDead = true;
+                                game.pushMessage(`(You hear terrifying howl){red}`)
+                            })() :
+                            game.pushMessage(`(You hit someone){red}`);
+                    }
+                });
+                break;
+            case 40: // arrow down
+                game.pushMessage(`(Fireball flew away){yellow}`);
+                game.objectsMap.forEach((item, i, arr) => {
+                    if (item !== mainHero && item.x === mainHero.x && item.y > mainHero.y) {
+                        item.hp -= Math.floor(mainHero.intelligence / 10);
+                        item.hp <= 0 ? (() => {
+                                item.isDead = true;
+                                game.pushMessage(`(You hear terrifying howl){red}`)
+                            })() :
+                            game.pushMessage(`(You hit someone){red}`);
+                    }
+                });
+                break;
+            case 37: // arrow left
+                game.pushMessage(`(Fireball flew away){yellow}`);
+                game.objectsMap.forEach((item, i, arr) => {
+                    if (item !== mainHero && item.x < mainHero.x && item.y === mainHero.y) {
+                        item.hp -= Math.floor(mainHero.intelligence / 10);
+                        item.hp <= 0 ? (() => {
+                                item.isDead = true;
+                                game.pushMessage(`(You hear terrifying howl){red}`)
+                            })() :
+                            game.pushMessage(`(You hit someone){red}`);
+                    }
+                });
+                break;
+            case 39: // arrow right
+                game.pushMessage(`(Fireball flew away){yellow}`);
+                game.objectsMap.forEach((item, i, arr) => {
+                    if (item !== mainHero && item.x > mainHero.x && item.y === mainHero.y) {
+                        item.hp -= Math.floor(mainHero.intelligence / 10);
+                        item.hp <= 0 ? (() => {
+                                item.isDead = true;
+                                game.pushMessage(`(You hear terrifying howl){red}`)
+                            })() :
+                            game.pushMessage(`(You hit someone){red}`);
+                    }
+                });
+                break;
+            case 27: // Esc
+            default:
+                return null;
+        }
+        mainHero.mp -= this.cost;
+        return null;
+    }
+}
 
 
 weapons = [
@@ -463,7 +477,8 @@ spells = [
     new MidasSpell(),
     new MindVision(),
     new EvilPlay(),
-    //new Fireball(),
+    new Fireball(),
 ];
 
-let maxTier = weapons[weapons.length - 1].tier;
+let
+    maxTier = weapons[weapons.length - 1].tier;

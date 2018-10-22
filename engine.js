@@ -989,6 +989,7 @@ class GameState extends State {
         this.centerX = (this.fieldWidth / 2) >> 0;
         this.centerRectH = 11;
         this.centerRectW = 17;
+        this.spellAwaiting = null;
     }
 
     newCave() {
@@ -1290,49 +1291,55 @@ class GameState extends State {
     }
 
     keyHandler(scene, event) {
-        switch (event.keyCode) {
-            case 38: //arrow up
-                this.controller.moveU(scene);
-                this.mobController.move(scene);
-                break;
-            case 40: //arrow down
-                this.controller.moveD(scene);
-                this.mobController.move(scene);
-                break;
-            case 37://arrow left
-                this.controller.moveL(scene);
-                this.mobController.move(scene);
-                break;
-            case 39://arrow r
-                this.controller.moveR(scene);
-                this.mobController.move(scene);
-                break;
-            case 72://h - health
-                this.controller.drinkHP();
-                this.mobController.move(scene);
-                break;
-            case 77://m - mana
-                this.controller.drinkMP();
-                this.mobController.move(scene);
-                break;
-            case 79:// o - skip turn
-                this.mobController.move(scene);
-                break;
-            case 190://>
-                this.controller.enter();
-                break;
-            case 83: // s - shop
-                scene.setState(shop);
-                break;
-            case 191: // /(?) - help
-                scene.setState(help);
-                break;
-            case 68: // d - description
-                scene.setState(description);
-                break;
-            case 32: // space - magic
-                this.controller.useSpell(scene);
-                break;
+        console.log("Spell key handler", this.spellAwaiting);
+        if (this.spellAwaiting) {
+            this.spellAwaiting.keyHandler.apply(this.spellAwaiting, [event.keyCode]);
+            this.spellAwaiting = null;
+        } else {
+            switch (event.keyCode) {
+                case 38: //arrow up
+                    this.controller.moveU(scene);
+                    this.mobController.move(scene);
+                    break;
+                case 40: //arrow down
+                    this.controller.moveD(scene);
+                    this.mobController.move(scene);
+                    break;
+                case 37://arrow left
+                    this.controller.moveL(scene);
+                    this.mobController.move(scene);
+                    break;
+                case 39://arrow r
+                    this.controller.moveR(scene);
+                    this.mobController.move(scene);
+                    break;
+                case 72://h - health
+                    this.controller.drinkHP();
+                    this.mobController.move(scene);
+                    break;
+                case 77://m - mana
+                    this.controller.drinkMP();
+                    this.mobController.move(scene);
+                    break;
+                case 79:// o - skip turn
+                    this.mobController.move(scene);
+                    break;
+                case 190://>
+                    this.controller.enter();
+                    break;
+                case 83: // s - shop
+                    scene.setState(shop);
+                    break;
+                case 191: // /(?) - help
+                    scene.setState(help);
+                    break;
+                case 68: // d - description
+                    scene.setState(description);
+                    break;
+                case 32: // space - magic
+                    this.spellAwaiting = this.controller.useSpell(scene);
+                    break;
+            }
         }
         this.calcOffset();
         this.calcVisited();
