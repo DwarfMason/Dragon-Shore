@@ -1,5 +1,3 @@
-//TODO: сделать экран с результатами
-
 let game = null;//new GameState();
 let menu = null;
 let credits = null;
@@ -1125,7 +1123,7 @@ class CheatsState extends State {
 }
 
 class GameState extends State {
-    constructor(dialog = 0) {
+    constructor() {
         super();
         this.offsetX = 0;
         this.offsetY = 0;
