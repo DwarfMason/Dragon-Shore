@@ -1,6 +1,7 @@
 let weapons = null;
 let armor = null;
 let spells = null;
+let maxTier = 1;
 
 class Armor {
     constructor(name, value, description, tier) {
@@ -222,7 +223,7 @@ class Slingshot extends Weapon {
 
 class WingedCrossbow extends Weapon {
     constructor() {
-        super(`Winged crossbow`, 4, 8, 1, `Use instead of club`);
+        super(`Winged crossbow`, 4, 8, 1, `Use instead of club`, 3);
     }
 
     onEquip(mainHero) {
@@ -480,5 +481,4 @@ spells = [
     new Fireball(),
 ];
 
-let
-    maxTier = weapons[weapons.length - 1].tier;
+maxTier = weapons[weapons.length - 1].tier;
