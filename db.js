@@ -68,6 +68,7 @@ async function postScore(depth) {
         doc.ref.set({
             nickname: dbUser.displayName,
             depth: depthVal,
+            version: VERSION.getId()
         }, {merge: true}).catch(error => {
             console.error("Writing to DB failed", error);
             success = false;
