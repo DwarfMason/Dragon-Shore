@@ -972,6 +972,151 @@ class ShopState extends State {
     }
 }
 
+class CheatsState extends State {
+    constructor() {
+        super();
+        this.fieldFocus = 0;
+        this.fields = [{
+            type: "text",
+            name: "Enter cheat code:",
+            val: "",
+        }];
+    }
+
+    get events() {
+        return {
+            keyup: this.keyHandler,
+            keypress: this.typeHandler,
+        }
+    }
+
+    typeHandler(scene, event) {
+        if (this.fields[this.fieldFocus].type === "text") {
+            if (event.key !== "Enter" && event.key !== "Backspace")
+                this.fields[this.fieldFocus].val += event.key;
+        }
+        scene.update();
+    }
+
+    keyHandler(scene, event) {
+        switch (event.keyCode) {
+            case 27: //escape
+                scene.setState(game);
+                break;
+            case 8: //backspace
+                if (this.fields[this.fieldFocus].type === "text") {
+                    this.fields[this.fieldFocus].val =
+                        this.fields[this.fieldFocus].val.substr(0, this.fields[this.fieldFocus].val.length - 1);
+                }
+                break;
+            case 38: //arrow up
+                this.fieldFocus--;
+                break;
+            case 40: //arrow down
+                this.fieldFocus++;
+                break;
+            case 32: //space
+                if (this.fields[this.fieldFocus].type === "text") {
+                    this.fields[this.fieldFocus].val += " ";
+                }
+                break;
+            case 13: // Enter
+                if (firebase) {
+                    // Of course this code won't work with real cheaters lol
+                    firebase = null;
+                    db = null;
+                    firebaseConfig = null;
+                }
+                let cheatArgs = this.fields[0].val.split(' ');
+                switch (cheatArgs[0]) {
+                    case 'kingmidas':
+                        mainHero.gold = 100000;
+                        break;
+                    case 'ubermensch':
+                        mainHero.race = "Master race";
+                        mainHero.strength = 100;
+                        mainHero.agility = 100;
+                        mainHero.endurance = 100;
+                        mainHero.intelligence = 100;
+                        mainHero.initiative = 100;
+                        break;
+                    case 'archimage':
+                        mainHero.mp = 100;
+                        break;
+                    case 'longlive':
+                        mainHero.hp = 100;
+                        break;
+                    case 'killmeplz':
+                        mainHero.hp = 0;
+                        break;
+                    case 'gimme_spell':
+                        let spellId = +cheatArgs[1] || 0;
+                        mainHero.magic = spells[spellId];
+                        break;
+                    case 'gimme_weapon':
+                        let wpnId = +cheatArgs[1] || 0;
+                        mainHero.weapon = weapons[wpnId];
+                        break;
+                    case 'gimme_armor':
+                        let armorId = +cheatArgs[1] || 0;
+                        mainHero.armor = armor[armorId];
+                        break;
+                }
+        }
+        scene.update();
+    }
+
+    update(context) {
+        if (this.fieldFocus < 0)
+            this.fieldFocus = 0;
+        if (this.fieldFocus >= this.fields.length)
+            this.fieldFocus = this.fields.length - 1;
+
+        context.clearRect(0, 0, 1000, 650);
+        context.fillStyle = "white";
+        context.font = "48px manaspc";
+        context.textAlign = "center";
+        context.fillText("Cheats", 470, 40);
+        context.font = "24px manaspc";
+
+        context.fillStyle = "red";
+        context.fillText("With great power comes great responsibility!", 470, 540);
+        context.fillStyle = "white";
+
+        context.strokeStyle = "white";
+        context.lineWidth = 2;
+        context.textAlign = "left";
+        for (let i = 0; i < this.fields.length; ++i) {
+            switch (this.fields[i].type) {
+                case "text":
+                    context.fillText(this.fields[i].name, 202, 130 + (i * 2) * 25, 598);
+                    context.beginPath();
+                    context.rect(200, 130 + (i * 2) * 25 + 3, 600, 24);
+                    context.stroke();
+                    let fieldText = this.fields[i].val;
+                    if (this.fields[i].hideChars) {
+                        fieldText = "*".repeat(this.fields[i].val.length);
+                    }
+                    if (this.fieldFocus === i) {
+                        fieldText += '_';
+                    }
+                    context.fillText(fieldText, 202, 130 + (i * 2 + 1) * 25 - 2, 598);
+                    break;
+                case "button":
+                    if (this.fieldFocus === i) {
+                        context.fillStyle = "yellow";
+                    }
+                    context.textAlign = "center";
+                    context.fillText(this.fields[i].name, 500, 132 + (i * 2) * 25, 598);
+                    context.textAlign = "left";
+                    context.fillStyle = "white";
+                    break;
+            }
+        }
+        super.update(context);
+    }
+}
+
 class GameState extends State {
     constructor(dialog = 0) {
         super();
@@ -1338,6 +1483,9 @@ class GameState extends State {
                     break;
                 case 32: // space - magic
                     this.spellAwaiting = this.controller.useSpell(scene);
+                    break;
+                case 192: //tilda
+                    scene.setState(new CheatsState());
                     break;
             }
         }
