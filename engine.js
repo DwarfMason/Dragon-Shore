@@ -1028,17 +1028,18 @@ class CheatsState extends State {
                     firebaseConfig = null;
                 }
                 let cheatArgs = this.fields[0].val.split(' ');
+                this.fields[0].val = "";
                 switch (cheatArgs[0]) {
                     case 'kingmidas':
                         mainHero.gold = 100000;
                         break;
                     case 'ubermensch':
                         mainHero.race = "Master race";
-                        mainHero.strength = 100;
-                        mainHero.agility = 100;
-                        mainHero.endurance = 100;
-                        mainHero.intelligence = 100;
-                        mainHero.initiative = 100;
+                        mainHero.clearStrength = 100;
+                        mainHero.clearAgility = 100;
+                        mainHero.clearEndur = 100;
+                        mainHero.clearInt = 100;
+                        mainHero.initiativeBuff = 100;
                         break;
                     case 'archimage':
                         mainHero.mp = 100;
@@ -1046,8 +1047,13 @@ class CheatsState extends State {
                     case 'longlive':
                         mainHero.hp = 100;
                         break;
-                    case 'killmeplz':
+                    case 'ghost':
+                        mainHero.race = "Dead soul";
+                        mainHero.isDead = true;
                         mainHero.hp = 0;
+                        break;
+                    case 'killmeplz':
+                        scene.setState(gameOver);
                         break;
                     case 'gimme_spell':
                         let spellId = +cheatArgs[1] || 0;
@@ -1063,6 +1069,7 @@ class CheatsState extends State {
                         break;
                 }
         }
+        mainHero.update();
         scene.update();
     }
 
