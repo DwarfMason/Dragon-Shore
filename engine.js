@@ -442,6 +442,11 @@ class MenuState extends State {
             context.fillText(`Welcome, ${dbUser.displayName}`, 995, 21);
             context.textAlign = "left";
         }
+        context.font = "16px manaspc";
+        context.textAlign = "right";
+        context.fillStyle = "white";
+        context.fillText(VERSION.toString(), 995, 630);
+        context.textAlign = "left";
         super.update(context);
     }
 }
@@ -530,7 +535,7 @@ class LeaderboardsState extends State {
     constructor(callbackState) {
         super();
         this.callbackState = callbackState;
-        this.scoresPerPage = 10;
+        this.scoresPerPage = 20;
     }
 
     get events() {
@@ -788,7 +793,7 @@ class SignUpState extends State {
                         scene.setState(new SignUpState(this.callbackState, errorMsg));
                     }
                     scene.update();
-                }
+                };
                 let email = this.fields[0].val;
                 let pass = this.fields[1].val;
                 let nickname = this.fields[2].val;
