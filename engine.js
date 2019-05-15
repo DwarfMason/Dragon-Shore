@@ -1478,6 +1478,7 @@ class GameState extends State {
                     break;
                 case 79:// o - skip turn
                     this.mobController.move(scene);
+                    mainHero.addEffect(new Bleed("Bleed", 3, this.objectsMap[0]));
                     break;
                 case 190://>
                     this.controller.enter();

@@ -21,6 +21,13 @@ class Creature extends SceneObject {
         this.initiativeBuff = 0;
         this.agilityBuff = 0;
         this.strengthBuff = 0;
+
+        this.effects = [];
+    }
+
+    addEffect(buff){
+        this.effects.push(buff);
+        console.log('Балтика 9 и на работу');
     }
 }
 

@@ -131,6 +131,15 @@ class MobController{
             }
 
         }
+        this.objectsMap.forEach (
+            function countBuffs(currentValue){
+                currentValue.effects.forEach(
+                    function effectPlz(currentValue){
+                        currentValue.effect();
+                        console.log('дело сделано');
+                    });
+            }
+        );
     }
     checkPlayerCollision(scene){
         for (let i = 1;i < this.objectsMap.length && !mainHero.isDead; ++i) {
