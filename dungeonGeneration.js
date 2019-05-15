@@ -1,4 +1,4 @@
-let wall = new Wall();
+ let wall = new Wall();
 let floor = new Floor();
 
 dungeonGeneration = (()=>{
@@ -111,8 +111,22 @@ dungeonGeneration = (()=>{
                 }
             }
         }
+
+        function addShrines(count){
+            let shrinesLeft = count;
+            while (shrinesLeft !== 0){
+                let tryX = Math.floor(Math.random() * (dungeonWidth - 2))+1;
+                let tryY = Math.floor(Math.random() * (dungeonHeight - 2))+1;
+                if (map[tryY][tryX] instanceof Floor){
+                    map[tryY][tryX] = new Shrine();
+                    shrinesLeft --;
+                }
+            }
+        }
+
         addEnemy(Math.min(Math.floor(depth * (3 + dungeonDifficulty * Math.random()) * (Math.floor(Math.random()* 5)
             + 1)), Math.floor(Math.sqrt(maxFloorTiles))));
+        addShrines(Math.round(Math.random() * 2));
         return [map,startX,startY];
     }
 

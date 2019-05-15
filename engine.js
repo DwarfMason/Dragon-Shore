@@ -9,7 +9,7 @@ let shop = null; //ShopCreationState;
 let help = null;
 let description = null;
 
-let depth;
+let depth = 1;
 
 class Scene {
     constructor(canvas) {
@@ -196,6 +196,7 @@ class HelpState extends State {
         context.fillText("? - help", 10, 280);
         context.fillText("d - character", 10, 310);
         context.fillText("s - shop", 10, 340);
+        context.fillText("p(near shrines) - prey", 10, 370);
 
         super.update(context);
     }
@@ -1311,17 +1312,17 @@ class GameState extends State {
             game.drawMessage(`(HP ){green} (potions: ${mainHero.hpPotions}){white}`, 820, 200, context);
             game.drawMessage(`(MP){blue} ( potions: ${mainHero.mpPotions}){white}`, 820, 220, context);
 
-            game.drawMessage(`(Armor:){#FFB459}`, 820, 300, context);
+            game.drawMessage(`(Armor:){#FFB459}`, 820, 270, context);
             context.fillStyle = "white";
-            context.fillText(`${mainHero.armor.name}`, 820, 320);
+            context.fillText(`${mainHero.armor.name}`, 820, 290);
 
-            game.drawMessage(`(Weapon:){#FFB459}`, 820, 350, context);
+            game.drawMessage(`(Weapon:){#FFB459}`, 820, 320, context);
             context.fillStyle = "white";
-            context.fillText(`${mainHero.weapon.name}`, 820, 370);
+            context.fillText(`${mainHero.weapon.name}`, 820, 340);
 
-            game.drawMessage(`(Spell:){#FFB459}`, 820, 400, context);
+            game.drawMessage(`(Spell:){#FFB459}`, 820, 370, context);
             context.fillStyle = "white";
-            context.fillText(`${mainHero.magic.name}`, 820, 420);
+            context.fillText(`${mainHero.magic.name}`, 820, 390);
 
             for (let i = 0; i < this.objectsMap[0].baffs.length; ++i) {
                 context.fillText(this.objectsMap[0].baffs[i], 820, 170 + (+20 * +i));
@@ -1478,7 +1479,10 @@ class GameState extends State {
                     break;
                 case 79:// o - skip turn
                     this.mobController.move(scene);
-                    mainHero.addEffect(new Bleed("Bleed", 3, this.objectsMap[0]));
+                    break;
+                case 80:// p - prey
+                    this.controller.prey(scene);
+                    this.mobController.move(scene);
                     break;
                 case 190://>
                     this.controller.enter();

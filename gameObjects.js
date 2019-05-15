@@ -48,6 +48,13 @@ class Floor extends  Terrain {
         this.isMovable = 1;
     }
 }
+class Shrine extends Terrain {
+    constructor() {
+        super(84);      //T
+        this.enabled = 1;
+        this.isMovable = 1;
+    }
+}
 class StartPoint extends  Terrain {
     constructor() {
         super(60);      //<
