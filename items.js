@@ -352,10 +352,10 @@ class EvilPlay extends Magic {
             return;
         }
         let newHP, newMP, newAtt, newInit;
-        newHP = Math.floor(Math.random() * 5) - 2;
-        newMP = Math.floor(Math.random() * 5) - 2;
-        newAtt = Math.floor(Math.random() * 5) - 2;
-        newInit = Math.floor(Math.random() * 5) - 2;
+        newHP = Math.floor(Math.random() * 7) - 1;
+        newMP = Math.floor(Math.random() * 7) - 1;
+        newAtt = Math.floor(Math.random() * 7) - 1;
+        newInit = Math.floor(Math.random() * 7) - 1;
         game.pushMessage(`(Evil powers gave you ){white} (${newHP} endur){red}( ${newMP} int){blue}( ${newAtt} attack){yellow}` +
             `( ${newInit} initiative){violet}`);
         mainHero.enduranceBuff += newHP;
