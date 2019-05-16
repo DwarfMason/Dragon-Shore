@@ -899,11 +899,84 @@ class ShopState extends State {
     constructor() {
         super();
         this.isBought = false;
+        this.shopItems = [
+            {
+                "name": "New weapon [same tier]",
+                "price": () => weaponCostSame,
+                "action": () => {
+                    this.isBought = getRandomWeapon(mainHero.weapon.tier);
+                }
+            },
+            {
+                "name": "New weapon [higher tier]",
+                "price": () => weaponCostUp,
+                "action": () => {
+                    this.isBought = getRandomWeapon(mainHero.weapon.tier + 1);
+                }
+            },
+            {
+                "name": "New armor [same tier]",
+                "price": () => armorCostSame,
+                "action": () => {
+                    this.isBought = getRandomArmor(mainHero.armor.tier);
+                }
+            },
+            {
+                "name": "New armor [higher tier]",
+                "price": () => armorCostUp,
+                "action": () => {
+                    this.isBought = getRandomArmor(mainHero.armor.tier + 1);
+                }
+            },
+            {
+                "name": "New spell",
+                "price": () => magicCost,
+                "action": () => {
+                    this.isBought = getRandomMagic();
+                }
+            },
+            {
+                "name": "Random potion",
+                "price": () => potionCost,
+                "action": () => {
+                    this.isBought = getRandomPotion();
+                }
+            },
+            {
+                "name": "I wish I had more strength",
+                "price": () => statCost,
+                "action": () => {
+                    this.isBought = incStat(1);
+                }
+            },
+            {
+                "name": "I wish I was faster",
+                "price": () => statCost,
+                "action": () => {
+                    this.isBought = incStat(2);
+                }
+            },
+            {
+                "name": "I wish I had more endurance",
+                "price": () => statCost,
+                "action": () => {
+                    this.isBought = incStat(3);
+                }
+            },
+            {
+                "name": "I wish I was smarter",
+                "price": () => statCost,
+                "action": () => {
+                    this.isBought = incStat(4);
+                }
+            },
+        ];
+        this.fieldFocus = 0;
     }
 
     keyHandler(scene, event) {
         switch (event.keyCode) {
-            case 87: //w - weapon
+            /*case 87: //w - weapon
                 this.isBought = getRandomWeapon(mainHero.weapon.tier);
                 break;
             case 65: //a - armor
@@ -932,11 +1005,25 @@ class ShopState extends State {
                 break;
             case 70: //f - agility(fast)
                 this.isBought = incStat(2);
+                break;*/
+            case 38: //arrow up
+                this.fieldFocus--;
+                break;
+            case 40: //arrow down
+                this.fieldFocus++;
+                break;
+            case 32: //space and enter
+            case 13:
+                this.shopItems[this.fieldFocus]["action"]();
                 break;
             case 27: //Esc - exit
                 scene.setState(game);
                 break;
         }
+        if (this.fieldFocus < 0)
+            this.fieldFocus = this.shopItems.length - 1;
+        if (this.fieldFocus >= this.shopItems.length)
+            this.fieldFocus = 0;
         scene.update();
     }
 
@@ -953,12 +1040,27 @@ class ShopState extends State {
         context.textAlign = "center";
 
         context.fillText("Random shop", 500, 40);
-        context.fillText(`Your Gold: ${mainHero.gold}`, 500, 600);
+        context.fillText(`You have: ${mainHero.gold}`, 500, 600);
 
-        context.font = "24px manaspc";
         context.textAlign = "left";
 
-        context.fillText(`w:Random weapon your tier.........${weaponCostSame}`, 10, 150);
+        context.font = "36px manaspc";
+        context.fillText("What do you want, stranger?", 10, 90);
+
+        context.font = "18px manaspc";
+        for (let i in this.shopItems) {
+            let selected = i == this.fieldFocus;
+            let itemY = 132 + i*(18 + 2);
+            context.fillStyle = selected ? "yellow" : "white";
+            context.fillText(`${this.shopItems[i]["name"]}`, 10, itemY);
+            if (selected) {
+                context.textAlign = "right";
+                context.fillText(`${this.shopItems[i]["price"]()}`, 980, itemY);
+                context.textAlign = "left";
+            }
+        }
+        context.fillStyle = "white";
+        /*context.fillText(`w:Random weapon your tier.........${weaponCostSame}`, 10, 150);
         context.fillText(`a:Random armor your tier............${armorCostSame}`, 10, 190);
         context.fillText(`o:Random weapon. Tier++.........${weaponCostUp}`, 10, 230);
         context.fillText(`l:Random armor. Tier++............${armorCostUp}`, 10, 270);
@@ -967,9 +1069,10 @@ class ShopState extends State {
         context.fillText(`s:Strength++...........${statCost}`, 10, 390);
         context.fillText(`f:Agility++............${statCost}`, 10, 430);
         context.fillText(`e:Endurance++..........${statCost}`, 10, 470);
-        context.fillText(`i:Intelligence++.......${statCost}`, 10, 510);
+        context.fillText(`i:Intelligence++.......${statCost}`, 10, 510);*/
         if (this.isBought) {
-            context.fillText(`Your buy succesful!`, 500, 500);
+            context.font = "24px manaspc";
+            context.fillText(`Your buy successful!`, 10, 500);
             this.isBought = !this.isBought;
         }
         super.update(context);
