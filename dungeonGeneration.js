@@ -126,7 +126,7 @@ dungeonGeneration = (()=>{
 
         addEnemy(Math.min(Math.floor(depth * (3 + dungeonDifficulty * Math.random()) * (Math.floor(Math.random()* 5)
             + 1)), Math.floor(Math.sqrt(maxFloorTiles))));
-        addShrines(Math.round(Math.random() * 2));
+        addShrines(1 + Math.round(Math.random()));
         return [map,startX,startY];
     }
 

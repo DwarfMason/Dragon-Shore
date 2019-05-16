@@ -127,19 +127,22 @@ class Controller {
                     return;
                 }
 
-                    if (this.map[j][i] instanceof Shrine && this.map[j][i].enabled === 1) {
-                        game.pushMessage(`(You preyed for success of your journey){blue}`);
-                        let chosen = buffs[Math.round(Math.random() * 2)];
-                        let constr = chosen.constructor;
-                        if (chosen.type === 'good')
-                            buffer = Math.floor(Math.random() * 45);
-                        else
-                            buffer = Math.floor(Math.random() * 3);
-                        mainHero.addEffect(new constr(buffer, mainHero));
-                        game.pushMessage(`(Now you are){white}( ${chosen.name}){yellow}`);
-                        this.map[j][i].enabled = 0;
-                        return;
+                if (this.map[j][i] instanceof Shrine && this.map[j][i].enabled === 1) {
+                    game.pushMessage(`(You preyed for success of your journey){blue}`);
+                    let chosen = buffs[Math.floor(Math.random() * buffs.length)];
+                    let constr = chosen.constructor;
+                    if (chosen.type === 'good')
+                        buffer = Math.floor(1 + 40 * Math.floor(Math.random() * 1.8 + 0.5));
+                    else if (chosen.type === 'damaging') {
+                        buffer = Math.floor(1 + Math.random() * 3);
+                    } else if (chosen.type === 'evil') {
+                        buffer = 1 + 15 * Math.floor(Math.random() * 1.8 + 0.5);
                     }
+                    mainHero.addEffect(new constr(buffer, mainHero));
+                    game.pushMessage(`(Now you are){white}( ${chosen.name}){${chosen.color}}`);
+                    this.map[j][i].enabled = 0;
+                    return;
+                }
             }
         game.pushMessage(`(There is no){white} ( shrine!){yellow}`);
     }
@@ -161,13 +164,10 @@ class MobController {
             }
 
         }
+        //Buff effects
         this.objectsMap.forEach(
             function countBuffs(currentValue) {
-                currentValue.effects.forEach(
-                    function effectPlz(currentValue) {
-                        currentValue.effect();
-                        console.log('дело сделано');
-                    });
+                currentValue.effect.effect();
             }
         );
     }
