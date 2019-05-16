@@ -22,12 +22,11 @@ class Creature extends SceneObject {
         this.agilityBuff = 0;
         this.strengthBuff = 0;
 
-        this.effects = [];
+        this.effect = new Bleed(0, this);
     }
 
     addEffect(buff){
-        this.effects.push(buff);
-        console.log('Балтика 9 и на работу');
+        this.effect = buff;
     }
 }
 
@@ -76,7 +75,6 @@ class Player extends Creature {
         this.attack = Math.floor(this.strength / 10);
         this.initiative = this.agility / 10 + 8;
         this.name = name;
-        this.baffs = [];
         this.hpPotions = 3;
         this.mpPotions = 3;
         this.color = "yellow";

@@ -1324,12 +1324,13 @@ class GameState extends State {
             context.fillStyle = "white";
             context.fillText(`${mainHero.magic.name}`, 820, 390);
 
-            for (let i = 0; i < this.objectsMap[0].baffs.length; ++i) {
-                context.fillText(this.objectsMap[0].baffs[i], 820, 170 + (+20 * +i));
+            game.drawMessage(`(Buff:){#FFB459}`, 820, 420, context);
+            context.fillStyle = "white";
+            if (mainHero.effect !== null && mainHero.effect.length !== 0) {
+                game.drawMessage(`(${mainHero.effect.name}){${mainHero.effect.color}}`, 820, 440, context);
+                context.fillText(`(${mainHero.effect.length} turns left)`, 820, 460);
             }
         }
-
-
     }
 
     drawMessage(str, x, y, context, textSize = 0) {
@@ -1481,8 +1482,8 @@ class GameState extends State {
                     this.mobController.move(scene);
                     break;
                 case 80:// p - prey
-                    this.controller.prey(scene);
                     this.mobController.move(scene);
+                    this.controller.prey(scene);
                     break;
                 case 190://>
                     this.controller.enter();
