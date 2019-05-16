@@ -261,7 +261,7 @@ class DescriptionState extends State {
             context.font = "24px manaspc";
             context.fillStyle = "yellow";
             context.fillText(`${mainHero.armor.name} - ${mainHero.armor.description}`, 10, 450);
-            context.fillText(`It is tier - ${mainHero.armor.tier}`, 10, 470);
+            context.fillText(`It has tier ${mainHero.armor.tier}`, 10, 480);
             this.isArmor = !this.isArmor;
         }
 
@@ -269,14 +269,14 @@ class DescriptionState extends State {
             context.font = "24px manaspc";
             context.fillStyle = "yellow";
             context.fillText(`${mainHero.weapon.name} - ${mainHero.weapon.description}`, 10, 450);
-            context.fillText(`It's tier - ${mainHero.weapon.tier}`, 10, 480);
+            context.fillText(`It has tier ${mainHero.weapon.tier}`, 10, 480);
             this.isWeapon = !this.isWeapon;
         }
 
         if(this.isMagic){
             context.font = "24px manaspc";
             context.fillStyle = "yellow";
-            context.fillText(`${mainHero.magic.name} - ${mainHero.magic.description}`, 10, 400);
+            context.fillText(`${mainHero.magic.name} - ${mainHero.magic.description}`, 10, 450);
             this.isMagic = !this.isMagic;
         }
 
@@ -976,36 +976,6 @@ class ShopState extends State {
 
     keyHandler(scene, event) {
         switch (event.keyCode) {
-            /*case 87: //w - weapon
-                this.isBought = getRandomWeapon(mainHero.weapon.tier);
-                break;
-            case 65: //a - armor
-                this.isBought = getRandomArmor(mainHero.armor.tier);
-                break;
-            case 79: //o - weapon 2
-                this.isBought = getRandomWeapon(mainHero.weapon.tier + 1);
-                break;
-            case 76: //l - armor 2
-                this.isBought = getRandomArmor(mainHero.armor.tier + 1);
-                break;
-            case 77: //m - magic
-                this.isBought = getRandomMagic();
-                break;
-            case 80: //p - potion
-                this.isBought = getRandomPotion();
-                break;
-            case 69: //e - endurance
-                this.isBought = incStat(3);
-                break;
-            case 83: //S - strength
-                this.isBought = incStat(1);
-                break;
-            case 73: //i - intelligence
-                this.isBought = incStat(4);
-                break;
-            case 70: //f - agility(fast)
-                this.isBought = incStat(2);
-                break;*/
             case 38: //arrow up
                 this.fieldFocus--;
                 break;
@@ -1060,16 +1030,6 @@ class ShopState extends State {
             }
         }
         context.fillStyle = "white";
-        /*context.fillText(`w:Random weapon your tier.........${weaponCostSame}`, 10, 150);
-        context.fillText(`a:Random armor your tier............${armorCostSame}`, 10, 190);
-        context.fillText(`o:Random weapon. Tier++.........${weaponCostUp}`, 10, 230);
-        context.fillText(`l:Random armor. Tier++............${armorCostUp}`, 10, 270);
-        context.fillText(`m:Random spell.............${magicCost}`, 10, 310);
-        context.fillText(`p:Random potion.............${potionCost}`, 10, 350);
-        context.fillText(`s:Strength++...........${statCost}`, 10, 390);
-        context.fillText(`f:Agility++............${statCost}`, 10, 430);
-        context.fillText(`e:Endurance++..........${statCost}`, 10, 470);
-        context.fillText(`i:Intelligence++.......${statCost}`, 10, 510);*/
         if (this.isBought) {
             context.font = "24px manaspc";
             context.fillText(`Your buy successful!`, 10, 500);
