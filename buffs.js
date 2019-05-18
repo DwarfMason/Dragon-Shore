@@ -1,5 +1,5 @@
 class Buff {
-    constructor(name, length, type, color, owner){
+    constructor(name, length, type, color, owner) {
         this.name = name;
         this.length = length;
         this.owner = owner;
@@ -7,26 +7,28 @@ class Buff {
         this.color = color;
     }
 
-    effect(){
+    effect() {
         return 0;
     }
 }
 
-class Bleed extends Buff{
-    constructor(length, owner){
+class Bleed extends Buff {
+    constructor(length, owner) {
         super("Bleeding", length, "damaging", "red", owner);
     }
-    effect(){
-        if (this.length > 0){
-            this.owner.hp --;
+
+    effect() {
+        if (this.length > 0) {
+            if (this.owner.hp > 1)
+                this.owner.hp--;
             this.length--;
             game.pushMessage(`(You are bleeding!){red}`);
         }
     }
 }
 
-class marsBless extends Buff{
-    constructor(length, owner){
+class marsBless extends Buff {
+    constructor(length, owner) {
         super("Mars blessed", length, "good", "yellow", owner);
         if (owner !== null) {
             this.bonus = 5;
@@ -35,8 +37,8 @@ class marsBless extends Buff{
         }
     }
 
-    effect(){
-        if (this.length > 0){
+    effect() {
+        if (this.length > 0) {
             this.length--;
             if (this.length === 0) {
                 this.owner.attackBuff -= this.bonus;
@@ -46,8 +48,8 @@ class marsBless extends Buff{
     }
 }
 
-class Apathy extends Buff{
-    constructor(length, owner){
+class Apathy extends Buff {
+    constructor(length, owner) {
         super("in a bad mood", length, "evil", "cyan", owner);
         if (owner !== null) {
             this.bonus = 3;
@@ -56,8 +58,8 @@ class Apathy extends Buff{
         }
     }
 
-    effect(){
-        if (this.length > 0){
+    effect() {
+        if (this.length > 0) {
             this.length--;
             if (this.length === 0) {
                 this.owner.attackBuff += this.bonus;
@@ -67,8 +69,8 @@ class Apathy extends Buff{
     }
 }
 
-class Heal extends Buff{
-    constructor(length, owner){
+class Heal extends Buff {
+    constructor(length, owner) {
         super("completely healed", length, "good", "green", owner);
         if (owner !== null) {
             this.owner.hp = this.owner.maxHP;
@@ -77,7 +79,22 @@ class Heal extends Buff{
         }
     }
 
-    effect(){
+    effect() {
+        return;
+    }
+}
+
+class Luck extends Buff {
+    constructor(length, owner) {
+        super("even more rich", length, "good", "yellow", owner);
+        if (owner !== null) {
+            this.owner.gold += 100;
+            this.owner.update();
+            this.length = 0;
+        }
+    }
+
+    effect() {
         return;
     }
 }
@@ -85,6 +102,7 @@ class Heal extends Buff{
 buffs = [
     new Bleed(null, null),
     new marsBless(null, null),
-    new Apathy( null, null),
-    new Heal( null, null),
+    new Apathy(null, null),
+    new Heal(null, null),
+    new Luck( null, null),
 ];
