@@ -99,10 +99,34 @@ class Luck extends Buff {
     }
 }
 
+class WrathOfSeth extends Buff {
+    constructor(length, owner) {
+        super("feeling the wrath", length, "good", "red", owner);
+        if (owner !== null) {
+            this.savedHP = this.owner.hp;
+            this.bonus = 5;
+            this.owner.attackBuff += this.bonus;
+            this.owner.update();
+        }
+    }
+    effect() {
+        if (this.length > 0) {
+            this.length--;
+            this.owner.hp = this.savedHP;
+            if (this.length === 0) {
+                this.savedHP = 0;
+                this.owner.attackBuff -= this.bonus;
+                this.owner.update();
+            }
+        }
+    }
+}
+
 buffs = [
     new Bleed(null, null),
     new marsBless(null, null),
     new Apathy(null, null),
     new Heal(null, null),
-    new Luck( null, null),
+    new Luck(null, null),
+    new WrathOfSeth(null, null),
 ];
