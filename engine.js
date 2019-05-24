@@ -898,7 +898,7 @@ class OfflineState extends State {
 class ShopState extends State {
     constructor() {
         super();
-        this.isBought = false;
+        this.isBought = undefined;
         this.shopItems = [
             {
                 "name": "New weapon [same tier]",
@@ -1034,6 +1034,11 @@ class ShopState extends State {
             context.font = "24px manaspc";
             context.fillText(`Your buy successful!`, 10, 500);
             this.isBought = !this.isBought;
+        }
+        else if (this.isBought === false) {
+            context.font = "24px manaspc";
+            context.fillText(`Not enough gold!`, 10, 500);
+            this.isBought = null;
         }
         super.update(context);
     }
